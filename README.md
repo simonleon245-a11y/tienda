@@ -4,6 +4,7 @@ Walking sim de terror psicológico en primera persona, Unity 3D, estilo low-poly
 
 ## Documentación
 
+- [`Docs/BuildChecklist.md`](Docs/BuildChecklist.md) — **empezar por acá**: checklist paso a paso de cero al juego jugable, en orden.
 - [`Docs/GDD.md`](Docs/GDD.md) — historia completa, actos, mecánicas y estructura de escenas.
 - [`Docs/AssetList.md`](Docs/AssetList.md) — assets necesarios y cómo generarlos con IA (sin comprar nada).
 - [`Docs/SceneBlockout.md`](Docs/SceneBlockout.md) — guía paso a paso para armar cada escena en el Editor de Unity.
@@ -30,4 +31,4 @@ El proyecto vive en [`GameProject/`](GameProject). Incluye la estructura de carp
 
 ### Siguiente paso (manual, en el Editor)
 
-Este repo no incluye archivos `.unity` de escena: requieren el Editor para colocar geometría, bakear NavMesh e iluminar. Seguir `Docs/SceneBlockout.md` para construir `House_Act1`, `House_Act2` y `House_Act3`, colocar los scripts en los GameObjects correspondientes y conectar las referencias en el Inspector.
+Este repo no incluye archivos `.unity` de escena: requieren el Editor para colocar geometría, bakear NavMesh e iluminar. Seguir [`Docs/BuildChecklist.md`](Docs/BuildChecklist.md) de punta a punta — ahí está el orden completo, desde instalar Unity hasta el build final.
