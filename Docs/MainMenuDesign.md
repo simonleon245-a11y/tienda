@@ -32,6 +32,7 @@ MainMenuScene
     │   │   ├── Toggle Pantalla Completa
     │   │   ├── Dropdown Calidad Gráfica
     │   │   ├── Toggle VSync
+    │   │   ├── Dropdown Límite de FPS (30/60/90/120/144/240/Sin límite — se deshabilita si VSync está activo)
     │   │   └── Slider Brillo (calibración, ver nota abajo)
     │   ├── AudioTabPanel
     │   │   ├── Slider Volumen General
@@ -53,6 +54,10 @@ MainMenuScene
 - `SettingsMenuUI` en `SettingsPanel`: asignar los 3 sub-paneles de pestañas y cada Dropdown/Slider/Toggle. Los botones de pestaña llaman a `ShowVideoTab` / `ShowAudioTab` / `ShowControlsTab`.
 - `ConfirmationDialog` en `QuitConfirmationDialog`: asignar `messageLabel`, `confirmButton`, `cancelButton`.
 - `GameSettingsManager` en un GameObject vacío en la escena del menú (con `DontDestroyOnLoad`, persiste al resto del juego): asignar el `AudioMixer` y el `Volume` de post-procesado (URP) para el brillo.
+
+## Límite de FPS
+
+Unity ignora `Application.targetFrameRate` mientras VSync esté activo (`QualitySettings.vSyncCount > 0`), así que el dropdown de FPS se deshabilita automáticamente (`SettingsMenuUI.OnVSyncToggled`) cuando VSync está prendido, para no mostrarle al jugador una opción que no hace nada. Opciones: 30 / 60 / 90 / 120 / 144 / 240 / Sin límite.
 
 ## Brillo (calibración, típico de juegos de terror)
 

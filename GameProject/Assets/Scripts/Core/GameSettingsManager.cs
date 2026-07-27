@@ -23,10 +23,13 @@ namespace Horror.Core
         [SerializeField] private float minExposure = -3f;
         [SerializeField] private float maxExposure = 1f;
 
+        public static readonly int[] FpsLimitOptions = { 30, 60, 90, 120, 144, 240, -1 };
+
         private const string KeyResolutionIndex = "res_index";
         private const string KeyFullscreenMode = "fullscreen_mode";
         private const string KeyQualityLevel = "quality_level";
         private const string KeyVSync = "vsync";
+        private const string KeyFpsLimitIndex = "fps_limit_index";
         private const string KeyMaster = "vol_master";
         private const string KeyAmbience = "vol_ambience";
         private const string KeySfx = "vol_sfx";
@@ -69,6 +72,7 @@ namespace Horror.Core
 
             ApplyQualityLevel(PlayerPrefs.GetInt(KeyQualityLevel, QualitySettings.GetQualityLevel()));
             ApplyVSync(PlayerPrefs.GetInt(KeyVSync, 1) == 1);
+            ApplyFpsLimit(PlayerPrefs.GetInt(KeyFpsLimitIndex, System.Array.IndexOf(FpsLimitOptions, 60)));
 
             ApplyMasterVolume(PlayerPrefs.GetFloat(KeyMaster, 0.8f));
             ApplyAmbienceVolume(PlayerPrefs.GetFloat(KeyAmbience, 0.8f));
@@ -105,6 +109,20 @@ namespace Horror.Core
         {
             QualitySettings.vSyncCount = enabled ? 1 : 0;
             PlayerPrefs.SetInt(KeyVSync, enabled ? 1 : 0);
+        }
+
+        /// Unity ignora targetFrameRate mientras vSyncCount > 0, así que este límite solo
+        /// tiene efecto real con VSync desactivado. Ver SettingsMenuUI para el wiring de la UI.
+        public void ApplyFpsLimit(int optionIndex)
+        {
+            optionIndex = Mathf.Clamp(optionIndex, 0, FpsLimitOptions.Length - 1);
+            Application.targetFrameRate = FpsLimitOptions[optionIndex];
+            PlayerPrefs.SetInt(KeyFpsLimitIndex, optionIndex);
+        }
+
+        public static string FormatFpsLabel(int fps)
+        {
+            return fps <= 0 ? "Sin límite" : $"{fps} FPS";
         }
 
         public void ApplyMasterVolume(float linear01)
@@ -168,6 +186,7 @@ namespace Horror.Core
             PlayerPrefs.DeleteKey(KeyFullscreenMode);
             PlayerPrefs.DeleteKey(KeyQualityLevel);
             PlayerPrefs.DeleteKey(KeyVSync);
+            PlayerPrefs.DeleteKey(KeyFpsLimitIndex);
             PlayerPrefs.DeleteKey(KeyMaster);
             PlayerPrefs.DeleteKey(KeyAmbience);
             PlayerPrefs.DeleteKey(KeySfx);

@@ -16,6 +16,7 @@ namespace Horror.UI
         [SerializeField] private Toggle fullscreenToggle;
         [SerializeField] private Dropdown qualityDropdown;
         [SerializeField] private Toggle vsyncToggle;
+        [SerializeField] private Dropdown fpsLimitDropdown;
         [SerializeField] private Slider brightnessSlider;
 
         [Header("Audio")]
@@ -70,6 +71,16 @@ namespace Horror.UI
             vsyncToggle.isOn = QualitySettings.vSyncCount > 0;
             qualityDropdown.value = QualitySettings.GetQualityLevel();
 
+            fpsLimitDropdown.ClearOptions();
+            var fpsOptions = new System.Collections.Generic.List<string>();
+            foreach (int fps in GameSettingsManager.FpsLimitOptions)
+            {
+                fpsOptions.Add(GameSettingsManager.FormatFpsLabel(fps));
+            }
+            fpsLimitDropdown.AddOptions(fpsOptions);
+            fpsLimitDropdown.value = System.Array.IndexOf(GameSettingsManager.FpsLimitOptions, 60);
+            fpsLimitDropdown.interactable = !vsyncToggle.isOn;
+
             brightnessSlider.value = PlayerPrefs.GetFloat("brightness", 0.5f);
             masterVolumeSlider.value = PlayerPrefs.GetFloat("vol_master", 0.8f);
             ambienceVolumeSlider.value = PlayerPrefs.GetFloat("vol_ambience", 0.8f);
@@ -106,6 +117,13 @@ namespace Horror.UI
         {
             if (isInitializing) return;
             GameSettingsManager.Instance.ApplyVSync(enabled);
+            fpsLimitDropdown.interactable = !enabled;
+        }
+
+        public void OnFpsLimitChanged(int optionIndex)
+        {
+            if (isInitializing) return;
+            GameSettingsManager.Instance.ApplyFpsLimit(optionIndex);
         }
 
         public void OnBrightnessChanged(float value)
