@@ -1,4 +1,5 @@
 using UnityEngine;
+using Horror.Core;
 
 namespace Horror.Player
 {
@@ -48,12 +49,17 @@ namespace Horror.Player
 
         private void HandleLook()
         {
-            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+            float sensitivity = GameSettingsManager.Instance != null
+                ? GameSettingsManager.Instance.MouseSensitivity
+                : mouseSensitivity;
+            bool invertY = GameSettingsManager.Instance != null && GameSettingsManager.Instance.InvertYAxis;
+
+            float mouseX = Input.GetAxis("Mouse X") * sensitivity;
+            float mouseY = Input.GetAxis("Mouse Y") * sensitivity * (invertY ? 1f : -1f);
 
             transform.Rotate(Vector3.up * mouseX);
 
-            pitch = Mathf.Clamp(pitch - mouseY, minPitch, maxPitch);
+            pitch = Mathf.Clamp(pitch + mouseY, minPitch, maxPitch);
             if (cameraPivot != null)
             {
                 cameraPivot.localRotation = Quaternion.Euler(pitch, 0f, 0f);

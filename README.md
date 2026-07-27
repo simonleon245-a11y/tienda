@@ -7,6 +7,9 @@ Walking sim de terror psicológico en primera persona, Unity 3D, estilo low-poly
 - [`Docs/GDD.md`](Docs/GDD.md) — historia completa, actos, mecánicas y estructura de escenas.
 - [`Docs/AssetList.md`](Docs/AssetList.md) — assets necesarios y cómo generarlos con IA (sin comprar nada).
 - [`Docs/SceneBlockout.md`](Docs/SceneBlockout.md) — guía paso a paso para armar cada escena en el Editor de Unity.
+- [`Docs/ModelPrompts.md`](Docs/ModelPrompts.md) — prompts exactos para generar los modelos 3D low-poly con IA.
+- [`Docs/AudioPrompts.md`](Docs/AudioPrompts.md) — prompts exactos para ambiente, voces y efectos de sonido.
+- [`Docs/MainMenuDesign.md`](Docs/MainMenuDesign.md) — concepto y blockout del menú principal (diegético, sin pantalla genérica).
 
 ## Proyecto Unity
 
