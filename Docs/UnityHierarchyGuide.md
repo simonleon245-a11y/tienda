@@ -101,7 +101,9 @@ Ver el árbol completo del Canvas en `Docs/MainMenuDesign.md`. Además, agregar 
 ```
 House_Act1
 ├── _Systems
-│   └── AudioIntensityManager        (AudioIntensityManager.cs)
+│   ├── AudioIntensityManager        (AudioIntensityManager.cs)
+│   └── SceneBootstrap               (SceneBootstrap.cs — crea GameManager/GameSettingsManager
+│                                      si la escena se abre directo en el Editor, sin pasar por MainMenu)
 │
 ├── Player                            [Tag: Player] [Layer: Player]
 │   ├── CharacterController, PlayerController.cs, PlayerInteractor.cs, HideState.cs
@@ -115,7 +117,7 @@ House_Act1
 │   ├── Bedroom
 │   │   ├── Bed
 │   │   ├── Nightstand
-│   │   ├── Window_Intact              [Interactable, Layer: Interactable]
+│   │   ├── Window_Intact              (WindowLookEvent.cs) [Layer: Interactable]
 │   │   ├── Window_Broken              (inactivo al inicio)
 │   │   ├── WindowKnockEvent           (WindowKnockEvent.cs)
 │   │   ├── ClosetDoor_Bedroom         [Layer: Walls]
@@ -157,7 +159,11 @@ House_Act1
 │
 └── UI (Canvas HUD)
     ├── BatteryUI                       (BatteryUI.cs)
-    └── InteractionPrompt               (InteractionPrompt.cs)
+    ├── InteractionPrompt               (InteractionPrompt.cs)
+    └── PausePanel                      (PauseMenuController.cs en la raíz de PausePanel)
+        ├── PauseRoot                   (Reanudar / Opciones / Salir al menú, inactivo al inicio)
+        ├── SettingsSubPanel             (misma estructura que SettingsPanel del MainMenu, con SettingsMenuUI.cs)
+        └── QuitToMenuConfirmationDialog (ConfirmationDialog.cs)
 ```
 
 ## 8. GameObjects — Escena `Flashback`
@@ -166,7 +172,9 @@ House_Act1
 Flashback
 ├── FlashbackCamera
 ├── FlashbackAudioSource
-└── FlashbackSequenceController   (Timeline o script simple que reproduce la secuencia y descarga la escena al terminar)
+└── FlashbackSequenceController   (FlashbackSequenceController.cs — al terminar la duración
+                                    llama a GameManager.RestartCycle(), que carga House_Act1
+                                    en modo Single y descarga esta escena automáticamente)
 ```
 
 ## 9. Convención de nombres para lo generado con IA
