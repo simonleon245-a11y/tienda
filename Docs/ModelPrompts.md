@@ -24,6 +24,51 @@ photorealistic, PBR materials, high detail, smooth shading, subdivision surface,
 
 ---
 
+## Estructura de la casa
+
+**Importante — leer antes de generar esto:** el *interior* (los cuartos donde el jugador camina: dormitorio, pasillo, cocina, armarios) **no conviene generarlo como un mesh único de IA**. Necesitás poder mover paredes, ubicar puertas exactas, bakear NavMesh y armar el truco del pasillo en bucle del Acto 3 — todo eso se hace mucho más fácil con las paredes/pisos como cubos escalados en Unity (ProBuilder o primitivas), tal como ya indica `Docs/SceneBlockout.md`. Los prompts de acá abajo son para la **casa vista desde afuera** (lo que se ve por la ventana, el establishing shot inicial, y una posible silueta bajo la tormenta), donde sí sirve un modelo generado de una sola vez porque nunca se camina sobre él ni necesita colisión precisa.
+
+**Casa completa, vista exterior (para el plano que se ve por la ventana / silueta bajo la lluvia):**
+```
+A small isolated two-story house at night, wooden siding, pitched roof, single dim light in one window, standing alone in heavy rain, ominous and abandoned feeling, low-poly, PS1 horror style, flat shading, hard edges, limited color palette, dithered low-res texture, blocky simple geometry, no photorealism, retro survival horror asset
+```
+
+**Versión alternativa (casa de un piso, si preferís algo más chico/rural):**
+```
+A small isolated one-story wooden house at night, sagging porch, single chimney, dim light in one window, surrounded by darkness and rain, ominous and abandoned feeling, low-poly, PS1 horror style, flat shading, hard edges, limited color palette, dithered low-res texture, blocky simple geometry, no photorealism, retro survival horror asset
+```
+
+> Nota: generá esta casa a baja resolución de textura y sin preocuparte por el interior (los modelos de texto-a-3D no van a resolver bien cuartos internos) — se usa solo como "caja" vista desde afuera. En Unity, colocala detrás de la ventana del dormitorio, sin colisión, e iluminala con relámpagos ocasionales (Light con flicker) para el efecto de silueta.
+
+**Kit modular exterior** (si en algún momento agregás una escena donde el jugador sale o se ve la entrada de cerca — más flexible que la casa completa de una sola pieza):
+
+**Segmento de pared exterior con revestimiento de madera:**
+```
+A wooden exterior house wall panel segment, horizontal siding boards, weathered and worn, low-poly, PS1 horror style, flat shading, hard edges, limited color palette, dithered low-res texture, blocky simple geometry, no photorealism, retro survival horror asset
+```
+
+**Sección de techo a dos aguas:**
+```
+A pitched roof section with dark wooden shingles, simple gable shape, low-poly, PS1 horror style, flat shading, hard edges, limited color palette, dithered low-res texture, blocky simple geometry, no photorealism, retro survival horror asset
+```
+
+**Puerta principal de entrada:**
+```
+A weathered wooden front door with a small window pane and an old metal knob, low-poly, PS1 horror style, flat shading, hard edges, limited color palette, dithered low-res texture, blocky simple geometry, no photorealism, retro survival horror asset
+```
+
+**Chimenea:**
+```
+A simple brick chimney stack, weathered and slightly crumbling, low-poly, PS1 horror style, flat shading, hard edges, limited color palette, dithered low-res texture, blocky simple geometry, no photorealism, retro survival horror asset
+```
+
+**Porche de entrada con escalones:**
+```
+A small wooden porch with sagging steps and a simple railing, low-poly, PS1 horror style, flat shading, hard edges, limited color palette, dithered low-res texture, blocky simple geometry, no photorealism, retro survival horror asset
+```
+
+---
+
 ## Dormitorio
 
 **Cama:**
@@ -177,6 +222,7 @@ old faded family photograph, grainy analog film look, low-res pixel art texture,
 
 ## Orden sugerido de generación
 
+0. Casa exterior (silueta bajo la lluvia) — no bloquea nada del gameplay, pero es el primer plano que ve el jugador (menú principal y vista por la ventana), conviene tenerlo temprano para probar la atmósfera general.
 1. Ventana (intacta + rota), armario del dormitorio, cama — necesarios para el Acto 1.
 2. Mesada, vísceras, charco de sangre (decal), armario de revelación — Acto 2.
 3. Espejo, cuchillo, marco de foto, celular — Acto 3 (los props más importantes narrativamente).
