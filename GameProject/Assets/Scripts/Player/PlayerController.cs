@@ -23,7 +23,12 @@ namespace Horror.Player
         [SerializeField] private float runNoise = 1f;
         [SerializeField] private float crouchNoise = 0.05f;
 
-        public bool MovementEnabled { get; set; } = false;
+        [Header("Estado inicial")]
+        [Tooltip("Dejar tildado para probar la escena suelta. En House_Act1, WindowKnockEvent " +
+                 "toma control de esto apenas arranca y lo pisa igual.")]
+        [SerializeField] private bool startWithMovementEnabled = true;
+
+        public bool MovementEnabled { get; set; }
         public bool IsCrouching { get; private set; }
         public float CurrentNoiseLevel { get; private set; }
 
@@ -34,6 +39,7 @@ namespace Horror.Player
         private void Awake()
         {
             controller = GetComponent<CharacterController>();
+            MovementEnabled = startWithMovementEnabled;
         }
 
         private void Update()
