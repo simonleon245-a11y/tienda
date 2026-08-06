@@ -206,7 +206,12 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
   width: 24px; height: 2.5px;
   background: var(--navy);
   border-radius: 2px;
+  transition: transform .25s ease, opacity .2s ease;
+  transform-origin: center;
 }
+.nav-toggle.active span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.nav-toggle.active span:nth-child(2) { opacity: 0; }
+.nav-toggle.active span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
 /* ===== Hero ===== */
 .hero {
@@ -221,6 +226,15 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
   z-index: 0;
   background-size: cover;
   background-position: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-bg {
+    animation: kenburns 18s ease-out forwards;
+  }
+}
+@keyframes kenburns {
+  from { transform: scale(1); }
+  to { transform: scale(1.09); }
 }
 .hero-bg::before {
   content: "";
@@ -243,6 +257,33 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
   mix-blend-mode: screen;
 }
 .hero-inner { position: relative; z-index: 1; max-width: 780px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-inner > * {
+    opacity: 0;
+    animation: fadeUp .7s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  .hero-inner > *:nth-child(1) { animation-delay: .1s; }
+  .hero-inner > *:nth-child(2) { animation-delay: .2s; }
+  .hero-inner > *:nth-child(3) { animation-delay: .32s; }
+  .hero-inner > *:nth-child(4) { animation-delay: .42s; }
+  .hero-inner > *:nth-child(5) { animation-delay: .52s; }
+  .hero-inner > *:nth-child(6) { animation-delay: .62s; }
+  .hero-inner > *:nth-child(7) { animation-delay: .72s; }
+  .hero-inner > *:nth-child(8) { animation-delay: .82s; }
+
+  .hero-checklist li { opacity: 0; animation: fadeUp .5s ease forwards; }
+  .hero-checklist li:nth-child(1) { animation-delay: .66s; }
+  .hero-checklist li:nth-child(2) { animation-delay: .72s; }
+  .hero-checklist li:nth-child(3) { animation-delay: .78s; }
+  .hero-checklist li:nth-child(4) { animation-delay: .84s; }
+  .hero-checklist li:nth-child(5) { animation-delay: .9s; }
+  .hero-checklist li:nth-child(6) { animation-delay: .96s; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 .eyebrow {
   font-family: var(--font-heading);
@@ -568,6 +609,65 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
   transition: transform .2s ease;
 }
 .whatsapp-float:hover { transform: scale(1.08); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .whatsapp-float { animation: pulseRing 2.6s ease-out infinite; }
+  .whatsapp-float:hover { animation-play-state: paused; }
+}
+@keyframes pulseRing {
+  0% { box-shadow: 0 10px 24px rgba(0,0,0,.3), 0 0 0 0 rgba(37,211,102,.55); }
+  70% { box-shadow: 0 10px 24px rgba(0,0,0,.3), 0 0 0 14px rgba(37,211,102,0); }
+  100% { box-shadow: 0 10px 24px rgba(0,0,0,.3), 0 0 0 0 rgba(37,211,102,0); }
+}
+
+/* ===== Scroll reveal ===== */
+@media (prefers-reduced-motion: no-preference) {
+  .js-anim main h2,
+  .js-anim .kicker,
+  .js-anim .service-card,
+  .js-anim .why-item,
+  .js-anim .gallery-item,
+  .js-anim .brands-card,
+  .js-anim .contact-card,
+  .js-anim .map-card,
+  .js-anim .intro-grid > div,
+  .js-anim .empresas-grid > div,
+  .js-anim .empresas-list {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .65s cubic-bezier(.2,.8,.2,1), transform .65s cubic-bezier(.2,.8,.2,1);
+  }
+  .js-anim main h2.is-visible,
+  .js-anim .kicker.is-visible,
+  .js-anim .service-card.is-visible,
+  .js-anim .why-item.is-visible,
+  .js-anim .gallery-item.is-visible,
+  .js-anim .brands-card.is-visible,
+  .js-anim .contact-card.is-visible,
+  .js-anim .map-card.is-visible,
+  .js-anim .intro-grid > div.is-visible,
+  .js-anim .empresas-grid > div.is-visible,
+  .js-anim .empresas-list.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .js-anim .services-grid > *:nth-child(2),
+  .js-anim .intro-grid > *:nth-child(2),
+  .js-anim .empresas-grid > *:nth-child(2),
+  .js-anim .contact-grid > *:nth-child(2) { transition-delay: .12s; }
+
+  .js-anim .why-grid > *:nth-child(2),
+  .js-anim .gallery-grid > *:nth-child(2) { transition-delay: .08s; }
+  .js-anim .why-grid > *:nth-child(3),
+  .js-anim .gallery-grid > *:nth-child(3) { transition-delay: .16s; }
+  .js-anim .why-grid > *:nth-child(4),
+  .js-anim .gallery-grid > *:nth-child(4) { transition-delay: .24s; }
+  .js-anim .why-grid > *:nth-child(5),
+  .js-anim .gallery-grid > *:nth-child(5) { transition-delay: .32s; }
+  .js-anim .why-grid > *:nth-child(6),
+  .js-anim .gallery-grid > *:nth-child(6) { transition-delay: .4s; }
+}
 
 /* ===== Responsive ===== */
 @media (max-width: 960px) {
