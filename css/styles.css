@@ -150,6 +150,7 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
 }
 
 .brand { display: flex; align-items: center; gap: 12px; }
+.brand-logo-img { height: 40px; width: auto; display: block; }
 .brand-icon { color: var(--red); flex-shrink: 0; }
 .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
 .brand-line1 {
@@ -217,10 +218,17 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
 .hero-bg {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse at top right, rgba(13,59,140,.55), transparent 55%),
-    linear-gradient(120deg, #0a0c10 0%, #15171c 45%, #1c0e10 100%);
   z-index: 0;
+  background-size: cover;
+  background-position: center;
+}
+.hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top right, rgba(13,59,140,.5), transparent 55%),
+    linear-gradient(120deg, rgba(9,11,15,.93) 0%, rgba(21,23,28,.87) 45%, rgba(28,14,16,.92) 100%);
 }
 .hero-stripes {
   position: absolute;
@@ -361,6 +369,16 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
   border-top: 5px solid var(--blue);
 }
 .service-card-accent { border-top-color: var(--red); }
+.service-media {
+  margin: -34px -34px 22px;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+.service-media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .service-icon {
   width: 56px; height: 56px;
   border-radius: 50%;
@@ -406,8 +424,33 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
 .why-item h3 { font-size: 1.2rem; margin-bottom: .3em; }
 .why-item p { color: var(--gray-600); font-size: .92rem; margin: 0; }
 
+/* ===== Galeria ===== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.gallery-item {
+  display: block;
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.gallery-item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .35s ease;
+}
+.gallery-item:hover img { transform: scale(1.06); }
+
 /* ===== Empresas ===== */
+.section-dark { position: relative; overflow: hidden; }
 .empresas-grid {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 50px;
@@ -487,6 +530,13 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
   padding-bottom: 40px;
   border-bottom: 1px solid rgba(255,255,255,.1);
 }
+.footer-badge {
+  width: 64px; height: 64px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.15);
+  margin-bottom: 12px;
+}
 .footer-brand .brand-line1 { color: var(--white); }
 .footer-brand p { color: var(--gray-300); margin-top: 10px; font-style: italic; }
 .footer-col h4 {
@@ -526,6 +576,7 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
   .why-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-inner { grid-template-columns: 1fr; }
   .map-card { min-height: 280px; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 780px) {
@@ -535,6 +586,7 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
   .brand-text { min-width: 0; }
   .brand-line1 { font-size: 1.05rem; letter-spacing: 0; white-space: nowrap; }
   .brand-line2 { display: none; }
+  .brand-logo-img { height: 30px; }
   .header-actions { flex-shrink: 0; }
   .main-nav {
     position: fixed;
@@ -552,6 +604,7 @@ h2.center { text-align: center; max-width: 720px; margin-inline: auto; margin-bo
   .header-actions .btn-whatsapp { display: none; }
   .hero-checklist { grid-template-columns: 1fr; }
   .why-grid { grid-template-columns: 1fr; }
+  .gallery-grid { grid-template-columns: 1fr; }
   .section { padding: 60px 0; }
   .hero { padding: 90px 0 60px; }
 }
