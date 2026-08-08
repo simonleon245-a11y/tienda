@@ -1,3 +1,39 @@
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/fonts/Nunito-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/fonts/Nunito-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/fonts/Nunito-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/fonts/Poppins-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/fonts/Poppins-700.woff2") format("woff2");
+}
+
 :root {
   --navy: #0a1b42;
   --navy-2: #0f2557;
@@ -11,7 +47,8 @@
   --border: #e2e8f5;
   --radius: 16px;
   --shadow: 0 10px 30px rgba(10, 27, 66, 0.12);
-  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-heading: "Poppins", "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -37,7 +74,7 @@ img { max-width: 100%; display: block; }
 
 a { color: inherit; text-decoration: none; }
 
-h1, h2, h3 { line-height: 1.2; margin: 0 0 12px; }
+h1, h2, h3 { font-family: var(--font-heading); font-weight: 700; line-height: 1.25; margin: 0 0 12px; letter-spacing: -0.01em; }
 p { margin: 0 0 16px; color: var(--muted); }
 
 /* ---------- Buttons ---------- */
@@ -48,6 +85,7 @@ p { margin: 0 0 16px; color: var(--muted); }
   gap: 8px;
   padding: 12px 22px;
   border-radius: 999px;
+  font-family: var(--font-heading);
   font-weight: 600;
   font-size: 0.95rem;
   border: 2px solid transparent;
@@ -97,6 +135,7 @@ p { margin: 0 0 16px; color: var(--muted); }
   align-items: center;
   gap: 10px;
   color: #fff;
+  font-family: var(--font-heading);
   font-weight: 700;
 }
 
@@ -198,6 +237,7 @@ p { margin: 0 0 16px; color: var(--muted); }
   color: #eaf1fc;
   padding: 6px 14px;
   border-radius: 999px;
+  font-family: var(--font-heading);
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.03em;
@@ -251,6 +291,7 @@ p { margin: 0 0 16px; color: var(--muted); }
   background: rgba(30, 79, 163, 0.09);
   padding: 5px 14px;
   border-radius: 999px;
+  font-family: var(--font-heading);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -377,9 +418,11 @@ p { margin: 0 0 16px; color: var(--muted); }
   box-shadow: var(--shadow);
 }
 .price-card__amount {
+  font-family: var(--font-heading);
   font-size: 2.6rem;
-  font-weight: 800;
+  font-weight: 700;
   margin-bottom: 22px;
+  font-variant-numeric: tabular-nums;
 }
 .price-card__currency { font-size: 1.6rem; vertical-align: top; margin-right: 2px; }
 .price-card__unit {
@@ -399,7 +442,26 @@ p { margin: 0 0 16px; color: var(--muted); }
   font-size: 0.94rem;
   color: #e5ecfb;
 }
-.price-card__list li::before { content: "🇬🇧🇺🇸  "; }
+.price-card__list li {
+  position: relative;
+  padding-left: 28px;
+}
+.price-card__list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* ---------- Contact ---------- */
 .contact {
@@ -421,7 +483,6 @@ p { margin: 0 0 16px; color: var(--muted); }
 .contact__content { position: relative; z-index: 2; max-width: 560px; margin: 0 auto; }
 .contact h2 { color: #fff; }
 .contact p { color: #d6e0fa; }
-.contact__note { margin-top: 22px; font-size: 0.9rem; color: #b9c6e8; }
 
 /* ---------- Footer ---------- */
 .footer {
