@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nicolas-leon-englishtutor.netlify.app/sitemap.xml
