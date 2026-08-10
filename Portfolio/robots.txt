@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://simonleon245-a11y.github.io/simon-rodriguez-portfolio/sitemap.xml
