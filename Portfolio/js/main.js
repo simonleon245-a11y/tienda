@@ -15,7 +15,11 @@
    marcador de posición para que el diseño se vea completo.
 ----------------------------------------------------------- */
 const photos = [
-  // { src: 'assets/photos/01.jpg', caption: '' },
+  { src: 'assets/photos/01.webp', caption: '' },
+  { src: 'assets/photos/02.webp', caption: '' },
+  { src: 'assets/photos/03.webp', caption: '' },
+  { src: 'assets/photos/04.webp', caption: '' },
+  { src: 'assets/photos/05.jpg', caption: '' },
 ];
 
 /* -----------------------------------------------------------
