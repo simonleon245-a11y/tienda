@@ -20,6 +20,11 @@ const photos = [
   { src: 'assets/photos/03.webp', caption: '' },
   { src: 'assets/photos/04.webp', caption: '' },
   { src: 'assets/photos/05.jpg', caption: '' },
+  { src: 'assets/photos/06.webp', caption: '' },
+  { src: 'assets/photos/07.webp', caption: '' },
+  { src: 'assets/photos/08.jpg', caption: '' },
+  { src: 'assets/photos/09.webp', caption: '' },
+  { src: 'assets/photos/10.webp', caption: '' },
 ];
 
 /* -----------------------------------------------------------
