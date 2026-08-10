@@ -24,8 +24,8 @@ const photos = [
    sin espacios ni símbolos, ej: '521234567890') para activar
    el botón de WhatsApp.
 ----------------------------------------------------------- */
-const whatsappNumber = ''; // ej: '521234567890'
-const phoneDisplayText = ''; // ej: '+52 123 456 7890'
+const whatsappNumber = '573008262703'; // ej: '521234567890'
+const phoneDisplayText = '+57 300 826 2703'; // ej: '+52 123 456 7890'
 
 document.addEventListener('DOMContentLoaded', () => {
   initHeader();
