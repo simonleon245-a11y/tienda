@@ -311,6 +311,9 @@ section {
   max-width: 1400px;
   margin: 0 auto;
 }
+.gallery-subheading {
+  margin-top: clamp(4rem, 9vw, 7rem);
+}
 .gallery-item {
   position: relative;
   overflow: hidden;

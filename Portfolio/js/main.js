@@ -20,10 +20,17 @@ const photos = [
   { src: 'assets/photos/03.webp', caption: '' },
   { src: 'assets/photos/04.webp', caption: '' },
   { src: 'assets/photos/05.jpg', caption: '' },
-  { src: 'assets/photos/06.webp', caption: '' },
-  { src: 'assets/photos/07.webp', caption: '' },
   { src: 'assets/photos/08.jpg', caption: '' },
   { src: 'assets/photos/09.webp', caption: '' },
+];
+
+/* -----------------------------------------------------------
+   PAISAJES: mismo formato que FOTOS, para la sección de
+   fotografía sin personas.
+----------------------------------------------------------- */
+const landscapePhotos = [
+  { src: 'assets/photos/06.webp', caption: '' },
+  { src: 'assets/photos/07.webp', caption: '' },
   { src: 'assets/photos/10.webp', caption: '' },
   { src: 'assets/photos/11.webp', caption: '' },
   { src: 'assets/photos/12.webp', caption: '' },
@@ -42,7 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeader();
   initNav();
   initReveal();
-  initGallery();
+  initGallery('galleryGrid', photos, 6);
+  initGallery('galleryGridPaisajes', landscapePhotos, 3);
   initLightbox();
   initCursor();
   initFilmFallback();
@@ -100,30 +108,30 @@ function initReveal() {
   items.forEach((el) => observer.observe(el));
 }
 
-/* Build the gallery grid from the `photos` array */
-function initGallery() {
-  const grid = document.getElementById('galleryGrid');
-  const count = photos.length > 0 ? photos.length : 6;
+/* Build a gallery grid from a list of photos */
+function initGallery(gridId, photoList, placeholderCount) {
+  const grid = document.getElementById(gridId);
+  const count = photoList.length > 0 ? photoList.length : placeholderCount;
 
   for (let i = 0; i < count; i++) {
     const item = document.createElement('div');
     item.className = 'gallery-item';
 
-    if (photos[i]) {
+    if (photoList[i]) {
       const img = document.createElement('img');
-      img.src = photos[i].src;
-      img.alt = photos[i].caption || 'Fotografía de Simón Rodríguez';
+      img.src = photoList[i].src;
+      img.alt = photoList[i].caption || 'Fotografía de Simón Rodríguez';
       img.loading = 'lazy';
       item.appendChild(img);
 
-      if (photos[i].caption) {
+      if (photoList[i].caption) {
         const overlay = document.createElement('div');
         overlay.className = 'overlay';
-        overlay.innerHTML = `<span>${photos[i].caption}</span>`;
+        overlay.innerHTML = `<span>${photoList[i].caption}</span>`;
         item.appendChild(overlay);
       }
 
-      item.addEventListener('click', () => openLightbox(photos[i].src, img.alt));
+      item.addEventListener('click', () => openLightbox(photoList[i].src, img.alt));
     } else {
       const placeholder = document.createElement('div');
       placeholder.className = 'placeholder-tile';

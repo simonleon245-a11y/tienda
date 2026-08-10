@@ -20,15 +20,22 @@ Portfolio/
 
 ## Cómo agregar las fotos
 
+La galería tiene dos secciones: **Retratos** (fotos con personas) y
+**Paisajes** (fotos sin personas).
+
 1. Copia los archivos de imagen dentro de `assets/photos/` (ej. `01.jpg`,
    `02.jpg`, `retrato-maria.jpg`...).
-2. Abre `js/main.js` y edita el arreglo `photos` al inicio del archivo,
-   agregando una línea por cada foto:
+2. Abre `js/main.js` y edita el arreglo correspondiente al inicio del
+   archivo, agregando una línea por cada foto:
 
    ```js
    const photos = [
      { src: 'assets/photos/01.jpg', caption: 'Retrato, 2025' },
      { src: 'assets/photos/02.jpg', caption: '' },
+   ];
+
+   const landscapePhotos = [
+     { src: 'assets/photos/06.jpg', caption: '' },
    ];
    ```
 
