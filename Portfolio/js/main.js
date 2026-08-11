@@ -204,9 +204,16 @@ function initCursor() {
 function initFilmFallback() {
   const video = document.getElementById('filmVideo');
   const fallback = document.getElementById('filmFallback');
-  video.addEventListener('loadedmetadata', () => {
+  const hideFallback = () => {
     fallback.style.display = 'none';
-  });
+  };
+  // readyState >= 1 (HAVE_METADATA) means metadata already loaded before
+  // this listener was attached, so 'loadedmetadata' would never fire.
+  if (video.readyState >= 1) {
+    hideFallback();
+  } else {
+    video.addEventListener('loadedmetadata', hideFallback);
+  }
   video.addEventListener('error', () => {
     fallback.style.display = 'block';
   });
