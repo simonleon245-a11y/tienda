@@ -144,21 +144,24 @@ Por qué PWA y no un `.apk`/`.ipa` para descargar directo:
   empresas, no para el público). La PWA es la única forma real de
   "instalar sin tienda" que funciona igual en ambos.
 
-Pasos, cuando tengas lista la web donde se va a alojar (dímelo cuando la
-tengas y conecto esto ahí):
-1. `npx expo export --platform web` genera la versión web de la app en
-   `dist/`.
-2. Esa carpeta se sube tal cual a tu hosting (Vercel, Netlify, o el que
-   uses para tu web).
-3. Se agrega un `manifest.json` (nombre, ícono, colores) y un service
-   worker para que el navegador ofrezca "Agregar a pantalla de inicio" —
-   Expo genera la mayor parte de esto automáticamente al exportar para web.
-4. Nota importante: los anuncios de AdMob (paso 5) **no** funcionan dentro
-   de la versión web/PWA, solo en apps nativas. Si además quieres ofrecer
-   un `.apk` de Android descargable (con AdMob funcionando) como opción
-   adicional para quien prefiera instalar la app nativa, se genera con
-   `npx eas build --platform android --profile preview` (queda un `.apk`
-   descargable, sin pasar por Google Play).
+Ya está montado y listo para publicar:
+- `public/manifest.json` + `public/index.html` (nombre, ícono, colores,
+  modo pantalla completa) hacen que el navegador ofrezca "Agregar a
+  pantalla de inicio" como una app real, no como un simple marcador.
+- `vercel.json` en esta carpeta le dice a Vercel cómo compilarla
+  (`npx expo export --platform web`, carpeta de salida `dist`).
+- La página de presentación vive aparte, en `../Website/` (explica la
+  app, cómo instalarla y el plan Premium, con un botón que abre esta app).
+
+**Instrucciones completas de publicación (gratis, con Vercel):
+[`Website/README.md`](../Website/README.md).**
+
+Nota importante: los anuncios de AdMob (paso 5) **no** funcionan dentro
+de la versión web/PWA, solo en apps nativas. Si además quieres ofrecer
+un `.apk` de Android descargable (con AdMob funcionando) como opción
+adicional para quien prefiera instalar la app nativa, se genera con
+`npx eas build --platform android --profile preview` (queda un `.apk`
+descargable, sin pasar por Google Play).
 
 Ya probé que `npx expo start --web` carga la app completa en el navegador
 sin errores (pantalla, tarjetas, selector de género, tarjeta premium, todo
@@ -196,8 +199,11 @@ Hoy el código ya está listo del lado de la app (`src/services/premium.ts`):
   ilimitado (los usuarios gratis tienen 1 uso gratis por día/mes en cada
   categoría).
 - El botón "Suscribirme" abre `PREMIUM_CHECKOUT_URL` (variable en tu
-  `.env`) — hoy está vacía, así que el botón avisa que aún no está
-  disponible.
+  `.env`, y también en Vercel como variable de entorno del proyecto de
+  la app) — hoy está vacía, así que el botón avisa que aún no está
+  disponible. La página web (`../Website/index.html`) tiene su propio
+  botón de "Suscribirme" con el mismo comportamiento — cuando tengas el
+  link de pago real, hay que ponerlo en **ambos** lugares.
 
 Lo que falta, y que arma junto con tu página web:
 1. Una cuenta comercial en Wompi (comercios.wompi.co) y un enlace/producto

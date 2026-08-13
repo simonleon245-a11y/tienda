@@ -1,0 +1,16 @@
+{
+  "name": "Recos Diarias",
+  "short_name": "Recos Diarias",
+  "description": "Un álbum y una película nuevos cada día, un libro nuevo cada mes, según los géneros que elijas.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F0B1E",
+  "theme_color": "#5B21B6",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
