@@ -48,9 +48,9 @@ export async function scheduleRecommendationNotifications(language: Language = '
       body: t.dailyNotificationBody,
     },
     trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.DAILY,
       hour: DAILY_HOUR,
       minute: 0,
-      repeats: true,
     },
   });
 
@@ -60,10 +60,10 @@ export async function scheduleRecommendationNotifications(language: Language = '
       body: t.monthlyNotificationBody,
     },
     trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.MONTHLY,
       day: MONTHLY_DAY,
       hour: MONTHLY_HOUR,
       minute: 0,
-      repeats: true,
     },
   });
 }
