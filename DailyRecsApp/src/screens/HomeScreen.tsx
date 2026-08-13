@@ -90,7 +90,7 @@ export default function HomeScreen() {
 
         <RecommendationCard
           categoryLabel="Álbum del día"
-          frequencyLabel="Nuevo cada día"
+          frequencyLabel="Nuevo cada día · poco mainstream"
           genreLabel={genreLabel(MUSIC_GENRES, prefs.album)}
           loading={album.loading}
           error={album.error}

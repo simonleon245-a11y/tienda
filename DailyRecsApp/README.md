@@ -8,9 +8,14 @@ Hecha con **React Native + Expo** (TypeScript), un solo código para las dos tie
 
 ## ¿Cómo funciona?
 
-- **Álbum del día**: se elige de forma determinista entre los álbumes más
-  populares del género elegido (vía Last.fm). Mismo día + mismo género = mismo
-  álbum. Cambia automáticamente cada día a medianoche.
+- **Álbum del día**: se elige de forma determinista entre álbumes del género
+  elegido (vía Last.fm), mismo día + mismo género = mismo álbum. Para evitar
+  los superéxitos obvios, la app descarta el centenar de álbumes más
+  populares del ranking de Last.fm para ese género y elige entre el resto:
+  artistas menos mainstream o emergentes que igual aparecen en el chart del
+  género (o sea, con oyentes reales, no ruido aleatorio). Cambia
+  automáticamente cada día a medianoche. Ajustable en
+  `src/services/lastfm.ts` (constantes `SKIP_PAGES`/`TOTAL_PAGES`).
 - **Película del día**: igual, pero con TMDb (The Movie Database).
 - **Libro del mes**: igual, pero se recalcula una vez al mes (vía Google Books).
 - Los géneros se guardan en el propio teléfono (no hay backend ni cuentas de

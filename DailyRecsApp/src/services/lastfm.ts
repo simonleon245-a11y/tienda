@@ -4,7 +4,15 @@ import { getCached, setCached } from './storage';
 import { AlbumPick } from '@/types';
 
 const BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
-const POOL_SIZE = 50;
+
+// Last.fm ordena tag.gettopalbums por popularidad (rank 1 = más escuchado).
+// Para priorizar bandas menos conocidas / emergentes, traemos un pool grande
+// y descartamos el tramo más mainstream (los primeros PAGE_SIZE*SKIP_PAGES
+// puestos del ranking), quedándonos con el resto: siguen siendo álbumes
+// relevantes para el género (aparecen en el chart), pero no los hits obvios.
+const PAGE_SIZE = 50;
+const TOTAL_PAGES = 6; // pool bruto de hasta 300 álbumes
+const SKIP_PAGES = 1; // descarta el primer centenar más popular (rank 1-50)
 
 interface LastfmImage {
   '#text': string;
@@ -28,6 +36,36 @@ function bestImage(images?: LastfmImage[]): string | null {
   return preferred?.['#text'] || null;
 }
 
+function artistNameOf(album: LastfmAlbum): string {
+  return typeof album.artist === 'string' ? album.artist : album.artist?.name ?? '';
+}
+
+async function fetchTopAlbumsPage(tag: string, page: number): Promise<LastfmAlbum[]> {
+  const url = `${BASE_URL}?method=tag.gettopalbums&tag=${encodeURIComponent(
+    tag
+  )}&api_key=${ENV.LASTFM_API_KEY}&format=json&limit=${PAGE_SIZE}&page=${page}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Last.fm respondió ${res.status}`);
+  }
+  const json = await res.json();
+  return json?.topalbums?.album ?? [];
+}
+
+/** Quita duplicados por artista para que el pool final no esté dominado
+ * por una sola banda con varios álbumes en el chart. */
+function dedupeByArtist(albums: LastfmAlbum[]): LastfmAlbum[] {
+  const seen = new Set<string>();
+  const result: LastfmAlbum[] = [];
+  for (const album of albums) {
+    const key = artistNameOf(album).toLowerCase();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    result.push(album);
+  }
+  return result;
+}
+
 async function fetchTopAlbumsPool(tag: string): Promise<LastfmAlbum[]> {
   const cacheKey = `lastfm-pool:${tag}:${todayKey()}`;
   const cached = await getCached<LastfmAlbum[]>(cacheKey);
@@ -39,30 +77,28 @@ async function fetchTopAlbumsPool(tag: string): Promise<LastfmAlbum[]> {
     );
   }
 
-  const url = `${BASE_URL}?method=tag.gettopalbums&tag=${encodeURIComponent(
-    tag
-  )}&api_key=${ENV.LASTFM_API_KEY}&format=json&limit=${POOL_SIZE}`;
-
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Last.fm respondió ${res.status}`);
-  }
-  const json = await res.json();
-  const albums: LastfmAlbum[] = json?.topalbums?.album ?? [];
-  if (albums.length === 0) {
+  const pages = await Promise.all(
+    Array.from({ length: TOTAL_PAGES }, (_, i) => fetchTopAlbumsPage(tag, i + 1))
+  );
+  const rawPool = pages.flat();
+  if (rawPool.length === 0) {
     throw new Error(`No se encontraron álbumes para el género "${tag}".`);
   }
 
-  await setCached(cacheKey, albums);
-  return albums;
+  const underground = dedupeByArtist(rawPool.slice(SKIP_PAGES * PAGE_SIZE));
+  // Si el género tiene poco catálogo en Last.fm y el tramo "menos mainstream"
+  // queda vacío, mejor mostrar algo (todo el pool deduplicado) que fallar.
+  const pool = underground.length > 0 ? underground : dedupeByArtist(rawPool);
+
+  await setCached(cacheKey, pool);
+  return pool;
 }
 
 export async function getDailyAlbum(genreId: string): Promise<AlbumPick> {
   const pool = await fetchTopAlbumsPool(genreId);
   const index = pickIndex(dailySeed(genreId), pool.length);
   const album = pool[index];
-  const artistName =
-    typeof album.artist === 'string' ? album.artist : album.artist?.name ?? 'Desconocido';
+  const artistName = artistNameOf(album) || 'Desconocido';
 
   return {
     id: album.mbid || `${album.name}-${artistName}`,
