@@ -6,6 +6,7 @@ import mobileAds, {
 } from 'react-native-google-mobile-ads';
 import { ENV } from '@/utils/env';
 import { incrementGenreChangeCount } from './storage';
+import { checkPremiumStatus } from './premium';
 
 // Cada cuántos cambios de género se muestra un intersticial, para no
 // saturar de anuncios a alguien que solo está explorando géneros.
@@ -56,8 +57,10 @@ export async function initializeAds(): Promise<void> {
 }
 
 /** Llamar cada vez que el usuario cambia de género; muestra un
- * intersticial cada INTERSTITIAL_FREQUENCY cambios, si ya está cargado. */
+ * intersticial cada INTERSTITIAL_FREQUENCY cambios, si ya está cargado.
+ * No hace nada si el usuario tiene la suscripción premium. */
 export async function maybeShowInterstitial(): Promise<void> {
+  if (await checkPremiumStatus()) return;
   const count = await incrementGenreChangeCount();
   if (count % INTERSTITIAL_FREQUENCY !== 0) return;
   if (interstitial && interstitialLoaded) {

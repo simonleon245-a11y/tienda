@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, StatusBar } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, StatusBar, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '@/theme';
 import RecommendationCard from '@/components/RecommendationCard';
@@ -7,13 +7,23 @@ import GenrePickerModal from '@/components/GenrePickerModal';
 import BannerAd from '@/components/BannerAd';
 import MusicLinks from '@/components/MusicLinks';
 import WatchProviders from '@/components/WatchProviders';
+import PremiumUpsellCard from '@/components/PremiumUpsellCard';
 import { MUSIC_GENRES, MOVIE_GENRES, BOOK_GENRES, genreLabel } from '@/constants/genres';
-import { getGenrePreferences, setGenrePreference } from '@/services/storage';
+import {
+  getGenrePreferences,
+  setGenrePreference,
+  getRerollCount,
+  incrementRerollCount,
+} from '@/services/storage';
 import { getDailyAlbum } from '@/services/lastfm';
 import { getDailyMovie } from '@/services/tmdb';
 import { getMonthlyBook } from '@/services/googleBooks';
 import { maybeShowInterstitial } from '@/services/ads';
+import { checkPremiumStatus, openUpgradeFlow, FREE_REROLLS_PER_PERIOD } from '@/services/premium';
+import { todayKey, monthKey } from '@/utils/dailySeed';
 import { AlbumPick, BookPick, Category, GenrePreferences, MoviePick } from '@/types';
+
+type Variants = Record<Category, number>;
 
 interface AsyncSlice<T> {
   data: T | null;
@@ -34,24 +44,26 @@ export default function HomeScreen() {
   const [movie, setMovie] = useState<AsyncSlice<MoviePick>>({ data: null, loading: true, error: null });
   const [book, setBook] = useState<AsyncSlice<BookPick>>({ data: null, loading: true, error: null });
   const [activePicker, setActivePicker] = useState<Category | null>(null);
+  const [isPremium, setIsPremium] = useState(false);
+  const [variants, setVariants] = useState<Variants>({ album: 0, movie: 0, book: 0 });
 
-  const loadAlbum = useCallback((genreId: string) => {
+  const loadAlbum = useCallback((genreId: string, variant = 0) => {
     setAlbum({ data: null, loading: true, error: null });
-    getDailyAlbum(genreId)
+    getDailyAlbum(genreId, variant)
       .then((data) => setAlbum({ data, loading: false, error: null }))
       .catch((err) => setAlbum({ data: null, loading: false, error: err.message }));
   }, []);
 
-  const loadMovie = useCallback((genreId: string) => {
+  const loadMovie = useCallback((genreId: string, variant = 0) => {
     setMovie({ data: null, loading: true, error: null });
-    getDailyMovie(genreId)
+    getDailyMovie(genreId, variant)
       .then((data) => setMovie({ data, loading: false, error: null }))
       .catch((err) => setMovie({ data: null, loading: false, error: err.message }));
   }, []);
 
-  const loadBook = useCallback((genreId: string) => {
+  const loadBook = useCallback((genreId: string, variant = 0) => {
     setBook({ data: null, loading: true, error: null });
-    getMonthlyBook(genreId)
+    getMonthlyBook(genreId, variant)
       .then((data) => setBook({ data, loading: false, error: null }))
       .catch((err) => setBook({ data: null, loading: false, error: err.message }));
   }, []);
@@ -63,16 +75,53 @@ export default function HomeScreen() {
       loadMovie(loaded.movie);
       loadBook(loaded.book);
     });
+    checkPremiumStatus().then(setIsPremium);
   }, [loadAlbum, loadMovie, loadBook]);
 
   const handleSelectGenre = async (category: Category, genreId: string) => {
     setActivePicker(null);
     const updated = await setGenrePreference(category, genreId);
     setPrefs(updated);
+    setVariants((v) => ({ ...v, [category]: 0 }));
     if (category === 'album') loadAlbum(genreId);
     if (category === 'movie') loadMovie(genreId);
     if (category === 'book') loadBook(genreId);
     maybeShowInterstitial();
+  };
+
+  const handleUpgradePress = () => {
+    openUpgradeFlow().catch((err) =>
+      Alert.alert('Suscripción no disponible todavía', err.message)
+    );
+  };
+
+  const handleReroll = async (category: Category) => {
+    if (!prefs) return;
+    const genreId = prefs[category];
+    const periodKey = category === 'book' ? monthKey() : todayKey();
+    const scopeKey = `${category}:${genreId}:${periodKey}`;
+
+    if (!isPremium) {
+      const usedRerolls = await getRerollCount(scopeKey);
+      if (usedRerolls >= FREE_REROLLS_PER_PERIOD) {
+        Alert.alert(
+          'Ya usaste tu "ver otra opción" gratis',
+          'Con Recos Premium tienes recomendaciones ilimitadas y sin anuncios por $3/mes.',
+          [
+            { text: 'Ahora no', style: 'cancel' },
+            { text: 'Ver Premium', onPress: handleUpgradePress },
+          ]
+        );
+        return;
+      }
+      await incrementRerollCount(scopeKey);
+    }
+
+    const nextVariant = variants[category] + 1;
+    setVariants((v) => ({ ...v, [category]: nextVariant }));
+    if (category === 'album') loadAlbum(genreId, nextVariant);
+    if (category === 'movie') loadMovie(genreId, nextVariant);
+    if (category === 'book') loadBook(genreId, nextVariant);
   };
 
   if (!prefs) {
@@ -97,7 +146,8 @@ export default function HomeScreen() {
           loading={album.loading}
           error={album.error}
           onChangeGenre={() => setActivePicker('album')}
-          onRetry={() => loadAlbum(prefs.album)}
+          onRetry={() => loadAlbum(prefs.album, variants.album)}
+          onReroll={() => handleReroll('album')}
         >
           {album.data && (
             <>
@@ -132,7 +182,8 @@ export default function HomeScreen() {
           loading={movie.loading}
           error={movie.error}
           onChangeGenre={() => setActivePicker('movie')}
-          onRetry={() => loadMovie(prefs.movie)}
+          onRetry={() => loadMovie(prefs.movie, variants.movie)}
+          onReroll={() => handleReroll('movie')}
         >
           {movie.data && (
             <>
@@ -167,7 +218,8 @@ export default function HomeScreen() {
           loading={book.loading}
           error={book.error}
           onChangeGenre={() => setActivePicker('book')}
-          onRetry={() => loadBook(prefs.book)}
+          onRetry={() => loadBook(prefs.book, variants.book)}
+          onReroll={() => handleReroll('book')}
         >
           {book.data && (
             <View style={styles.itemRow}>
@@ -190,9 +242,11 @@ export default function HomeScreen() {
             </View>
           )}
         </RecommendationCard>
+
+        {!isPremium && <PremiumUpsellCard onSubscribe={handleUpgradePress} />}
       </ScrollView>
 
-      <BannerAd />
+      {!isPremium && <BannerAd />}
 
       <GenrePickerModal
         visible={activePicker === 'album'}

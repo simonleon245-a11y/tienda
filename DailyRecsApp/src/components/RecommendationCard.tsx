@@ -10,6 +10,7 @@ interface Props {
   error: string | null;
   onChangeGenre: () => void;
   onRetry: () => void;
+  onReroll: () => void;
   children: React.ReactNode;
 }
 
@@ -21,6 +22,7 @@ export default function RecommendationCard({
   error,
   onChangeGenre,
   onRetry,
+  onReroll,
   children,
 }: Props) {
   return (
@@ -51,9 +53,14 @@ export default function RecommendationCard({
         <View style={styles.chip}>
           <Text style={styles.chipText}>{genreLabel}</Text>
         </View>
-        <Pressable style={styles.changeButton} onPress={onChangeGenre}>
-          <Text style={styles.changeButtonText}>Cambiar género</Text>
-        </Pressable>
+        <View style={styles.footerButtons}>
+          <Pressable style={styles.changeButton} onPress={onReroll} disabled={loading}>
+            <Text style={styles.changeButtonText}>🔀 Ver otra opción</Text>
+          </Pressable>
+          <Pressable style={styles.changeButton} onPress={onChangeGenre}>
+            <Text style={styles.changeButtonText}>Cambiar género</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -112,6 +119,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: theme.spacing(1.5),
+  },
+  footerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing(1),
   },
   chip: {
     backgroundColor: theme.colors.chip,

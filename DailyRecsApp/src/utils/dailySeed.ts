@@ -32,10 +32,16 @@ export function pickIndex(seed: string, poolSize: number): number {
   return hashString(seed) % poolSize;
 }
 
-export function dailySeed(genreId: string, date: Date = new Date()): string {
-  return `${todayKey(date)}::${genreId}`;
+/**
+ * `variant` mueve el índice elegido dentro del mismo pool sin romper el
+ * determinismo: 0 es la recomendación normal del día/mes, 1/2/3... son
+ * los "ver otra opción" (reroll), siempre en el mismo orden para un
+ * mismo día + género.
+ */
+export function dailySeed(genreId: string, date: Date = new Date(), variant = 0): string {
+  return `${todayKey(date)}::${genreId}::${variant}`;
 }
 
-export function monthlySeed(genreId: string, date: Date = new Date()): string {
-  return `${monthKey(date)}::${genreId}`;
+export function monthlySeed(genreId: string, date: Date = new Date(), variant = 0): string {
+  return `${monthKey(date)}::${genreId}::${variant}`;
 }

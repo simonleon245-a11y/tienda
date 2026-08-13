@@ -5,6 +5,8 @@ const KEYS = {
   genrePrefs: 'recos:genrePrefs',
   cachePrefix: 'recos:cache:',
   genreChangeCount: 'recos:genreChangeCount',
+  isPremium: 'recos:isPremium',
+  rerollPrefix: 'recos:reroll:',
 };
 
 const DEFAULT_PREFS: GenrePreferences = {
@@ -53,5 +55,27 @@ export async function incrementGenreChangeCount(): Promise<number> {
   const raw = await AsyncStorage.getItem(KEYS.genreChangeCount);
   const next = (raw ? parseInt(raw, 10) : 0) + 1;
   await AsyncStorage.setItem(KEYS.genreChangeCount, String(next));
+  return next;
+}
+
+export async function getIsPremium(): Promise<boolean> {
+  const raw = await AsyncStorage.getItem(KEYS.isPremium);
+  return raw === 'true';
+}
+
+export async function setIsPremium(value: boolean): Promise<void> {
+  await AsyncStorage.setItem(KEYS.isPremium, value ? 'true' : 'false');
+}
+
+/** `scopeKey` debe incluir el período (día o mes) para que el contador se
+ * reinicie solo al cambiar de período, ej. "album:rock:2026-08-13". */
+export async function getRerollCount(scopeKey: string): Promise<number> {
+  const raw = await AsyncStorage.getItem(KEYS.rerollPrefix + scopeKey);
+  return raw ? parseInt(raw, 10) : 0;
+}
+
+export async function incrementRerollCount(scopeKey: string): Promise<number> {
+  const next = (await getRerollCount(scopeKey)) + 1;
+  await AsyncStorage.setItem(KEYS.rerollPrefix + scopeKey, String(next));
   return next;
 }

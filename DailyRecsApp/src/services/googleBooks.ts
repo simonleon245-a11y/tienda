@@ -42,9 +42,9 @@ async function fetchBookPool(subject: string): Promise<GoogleBookVolume[]> {
   return items;
 }
 
-export async function getMonthlyBook(genreId: string): Promise<BookPick> {
+export async function getMonthlyBook(genreId: string, variant = 0): Promise<BookPick> {
   const pool = await fetchBookPool(genreId);
-  const index = pickIndex(monthlySeed(genreId), pool.length);
+  const index = pickIndex(monthlySeed(genreId, new Date(), variant), pool.length);
   const book = pool[index];
   const info = book.volumeInfo;
 

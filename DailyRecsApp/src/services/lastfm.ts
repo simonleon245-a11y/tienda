@@ -95,9 +95,9 @@ async function fetchTopAlbumsPool(tag: string): Promise<LastfmAlbum[]> {
   return pool;
 }
 
-export async function getDailyAlbum(genreId: string): Promise<AlbumPick> {
+export async function getDailyAlbum(genreId: string, variant = 0): Promise<AlbumPick> {
   const pool = await fetchTopAlbumsPool(genreId);
-  const index = pickIndex(dailySeed(genreId), pool.length);
+  const index = pickIndex(dailySeed(genreId, new Date(), variant), pool.length);
   const album = pool[index];
   const artistName = artistNameOf(album) || 'Desconocido';
 

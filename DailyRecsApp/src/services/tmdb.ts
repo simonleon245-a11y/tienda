@@ -116,9 +116,9 @@ async function fetchWatchProviders(
   return result;
 }
 
-export async function getDailyMovie(genreId: string): Promise<MoviePick> {
+export async function getDailyMovie(genreId: string, variant = 0): Promise<MoviePick> {
   const pool = await fetchMoviePool(genreId);
-  const index = pickIndex(dailySeed(genreId), pool.length);
+  const index = pickIndex(dailySeed(genreId, new Date(), variant), pool.length);
   const movie = pool[index];
   const { providers, link } = await fetchWatchProviders(movie.id);
 

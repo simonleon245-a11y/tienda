@@ -65,6 +65,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ADMOB_BANNER_IOS: process.env.ADMOB_BANNER_IOS || '',
     ADMOB_INTERSTITIAL_ANDROID: process.env.ADMOB_INTERSTITIAL_ANDROID || '',
     ADMOB_INTERSTITIAL_IOS: process.env.ADMOB_INTERSTITIAL_IOS || '',
+    PREMIUM_CHECKOUT_URL: process.env.PREMIUM_CHECKOUT_URL || '',
     eas: {
       projectId: process.env.EAS_PROJECT_ID || '',
     },
