@@ -2,7 +2,9 @@ import { ENV } from '@/utils/env';
 import { dailySeed, pickIndex, todayKey } from '@/utils/dailySeed';
 import { getCached, setCached } from './storage';
 import { MoviePick, WatchProvider } from '@/types';
-import { genreLabel, MOVIE_GENRES } from '@/constants/genres';
+import { Language, translations } from '@/i18n/translations';
+
+const TMDB_LOCALE: Record<Language, string> = { es: 'es-ES', en: 'en-US' };
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
@@ -32,33 +34,38 @@ interface TmdbWatchProvidersForRegion {
   buy?: TmdbWatchProviderEntry[];
 }
 
-async function fetchDiscoverPage(genreId: string, page: number): Promise<TmdbMovie[]> {
+async function fetchDiscoverPage(
+  genreId: string,
+  page: number,
+  language: Language
+): Promise<TmdbMovie[]> {
   const url = `${BASE_URL}/discover/movie?api_key=${ENV.TMDB_API_KEY}&with_genres=${encodeURIComponent(
     genreId
-  )}&sort_by=popularity.desc&page=${page}&language=es-ES&include_adult=false`;
+  )}&sort_by=popularity.desc&page=${page}&language=${TMDB_LOCALE[language]}&include_adult=false`;
   const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`TMDb respondió ${res.status}`);
+    throw new Error(translations[language].tmdbError(res.status));
   }
   const json = await res.json();
   return json?.results ?? [];
 }
 
-async function fetchMoviePool(genreId: string): Promise<TmdbMovie[]> {
-  const cacheKey = `tmdb-pool:${genreId}:${todayKey()}`;
+async function fetchMoviePool(genreId: string, language: Language): Promise<TmdbMovie[]> {
+  const cacheKey = `tmdb-pool:${genreId}:${language}:${todayKey()}`;
   const cached = await getCached<TmdbMovie[]>(cacheKey);
   if (cached) return cached;
 
+  const t = translations[language];
   if (!ENV.TMDB_API_KEY) {
-    throw new Error('Falta TMDB_API_KEY. Configúrala en tu archivo .env (ver .env.example).');
+    throw new Error(t.missingTmdbKey);
   }
 
   const pages = await Promise.all(
-    Array.from({ length: PAGES_TO_FETCH }, (_, i) => fetchDiscoverPage(genreId, i + 1))
+    Array.from({ length: PAGES_TO_FETCH }, (_, i) => fetchDiscoverPage(genreId, i + 1, language))
   );
   const pool = pages.flat();
   if (pool.length === 0) {
-    throw new Error(`No se encontraron películas para este género.`);
+    throw new Error(t.noMoviesFound);
   }
 
   await setCached(cacheKey, pool);
@@ -116,8 +123,12 @@ async function fetchWatchProviders(
   return result;
 }
 
-export async function getDailyMovie(genreId: string, variant = 0): Promise<MoviePick> {
-  const pool = await fetchMoviePool(genreId);
+export async function getDailyMovie(
+  genreId: string,
+  variant = 0,
+  language: Language = 'es'
+): Promise<MoviePick> {
+  const pool = await fetchMoviePool(genreId, language);
   const index = pickIndex(dailySeed(genreId, new Date(), variant), pool.length);
   const movie = pool[index];
   const { providers, link } = await fetchWatchProviders(movie.id);
@@ -128,7 +139,6 @@ export async function getDailyMovie(genreId: string, variant = 0): Promise<Movie
     overview: movie.overview,
     posterUrl: movie.poster_path ? `${IMAGE_BASE}${movie.poster_path}` : null,
     releaseYear: movie.release_date ? movie.release_date.slice(0, 4) : '—',
-    genre: genreLabel(MOVIE_GENRES, genreId),
     rating: movie.vote_average,
     watchProviders: providers,
     watchProvidersUrl: link,

@@ -1,30 +1,25 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { theme } from '@/theme';
-
-const BENEFITS = [
-  'Cero anuncios (ni banner ni intersticial)',
-  '"Ver otra opción" ilimitado en álbum, película y libro',
-  'Historial de recomendaciones pasadas (próximamente)',
-  'Acceso anticipado a nuevos géneros y funciones',
-];
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface Props {
   onSubscribe: () => void;
 }
 
 export default function PremiumUpsellCard({ onSubscribe }: Props) {
+  const { t } = useLanguage();
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>Recos Premium</Text>
-      <Text style={styles.price}>$3 USD / mes</Text>
-      {BENEFITS.map((benefit) => (
+      <Text style={styles.title}>{t.premiumCardTitle}</Text>
+      <Text style={styles.price}>{t.premiumPrice}</Text>
+      {t.premiumBenefits.map((benefit) => (
         <Text key={benefit} style={styles.benefit}>
           ✓ {benefit}
         </Text>
       ))}
       <Pressable style={styles.button} onPress={onSubscribe}>
-        <Text style={styles.buttonText}>Suscribirme</Text>
+        <Text style={styles.buttonText}>{t.subscribeButton}</Text>
       </Pressable>
     </View>
   );

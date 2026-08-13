@@ -1,6 +1,7 @@
 import { Linking } from 'react-native';
 import { ENV } from '@/utils/env';
 import { getIsPremium, setIsPremium } from './storage';
+import { Language, translations } from '@/i18n/translations';
 
 /**
  * Suscripción premium ($3/mes: sin anuncios + "ver otra opción" ilimitado).
@@ -24,11 +25,9 @@ export async function setPremiumStatus(value: boolean): Promise<void> {
   await setIsPremium(value);
 }
 
-export async function openUpgradeFlow(): Promise<void> {
+export async function openUpgradeFlow(language: Language = 'es'): Promise<void> {
   if (!ENV.PREMIUM_CHECKOUT_URL) {
-    throw new Error(
-      'La suscripción todavía no está configurada (falta PREMIUM_CHECKOUT_URL en .env).'
-    );
+    throw new Error(translations[language].subscriptionNotConfigured);
   }
   await Linking.openURL(ENV.PREMIUM_CHECKOUT_URL);
 }

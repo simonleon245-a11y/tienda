@@ -1,5 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
+import { Language, translations } from '@/i18n/translations';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -27,23 +28,24 @@ export async function requestNotificationPermissions(): Promise<boolean> {
  * álbum/película, mensual de libro). Es idempotente: se puede llamar en
  * cada arranque de la app sin duplicar notificaciones.
  */
-export async function scheduleRecommendationNotifications(): Promise<void> {
+export async function scheduleRecommendationNotifications(language: Language = 'es'): Promise<void> {
   const granted = await requestNotificationPermissions();
   if (!granted) return;
 
+  const t = translations[language];
   await Notifications.cancelAllScheduledNotificationsAsync();
 
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('daily-recos', {
-      name: 'Recomendaciones diarias',
+      name: t.notificationChannelName,
       importance: Notifications.AndroidImportance.DEFAULT,
     });
   }
 
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: 'Tu álbum y película del día ya están listos 🎵🎬',
-      body: 'Abre la app para descubrir las recomendaciones de hoy.',
+      title: t.dailyNotificationTitle,
+      body: t.dailyNotificationBody,
     },
     trigger: {
       hour: DAILY_HOUR,
@@ -54,8 +56,8 @@ export async function scheduleRecommendationNotifications(): Promise<void> {
 
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: 'Nuevo libro del mes disponible 📚',
-      body: 'Ya tienes una nueva recomendación de lectura para este mes.',
+      title: t.monthlyNotificationTitle,
+      body: t.monthlyNotificationBody,
     },
     trigger: {
       day: MONTHLY_DAY,

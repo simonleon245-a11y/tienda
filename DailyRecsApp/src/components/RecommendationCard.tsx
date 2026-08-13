@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import { theme } from '@/theme';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface Props {
   categoryLabel: string;
@@ -27,6 +28,7 @@ export default function RecommendationCard({
   onReroll,
   children,
 }: Props) {
+  const { t } = useLanguage();
   return (
     <View style={styles.card}>
       <View style={styles.headerRow}>
@@ -47,7 +49,7 @@ export default function RecommendationCard({
               style={[styles.retryButton, { backgroundColor: accentColor }]}
               onPress={onRetry}
             >
-              <Text style={styles.retryButtonText}>Reintentar</Text>
+              <Text style={styles.retryButtonText}>{t.retry}</Text>
             </Pressable>
           </View>
         )}
@@ -60,12 +62,12 @@ export default function RecommendationCard({
         </View>
         <View style={styles.footerButtons}>
           <Pressable style={styles.changeButton} onPress={onReroll} disabled={loading}>
-            <Text style={[styles.changeButtonText, { color: accentColor }]}>
-              🔀 Ver otra opción
-            </Text>
+            <Text style={[styles.changeButtonText, { color: accentColor }]}>{t.reroll}</Text>
           </Pressable>
           <Pressable style={styles.changeButton} onPress={onChangeGenre}>
-            <Text style={[styles.changeButtonText, { color: accentColor }]}>Cambiar género</Text>
+            <Text style={[styles.changeButtonText, { color: accentColor }]}>
+              {t.changeGenre}
+            </Text>
           </Pressable>
         </View>
       </View>

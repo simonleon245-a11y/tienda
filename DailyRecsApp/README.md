@@ -48,6 +48,15 @@ la sección "Distribución sin tiendas" más abajo.
   premium, invitan a suscribirte. El color elegido se guarda en el
   teléfono y recolorea botones, links y el indicador de carga en toda la
   app. Editable en `src/constants/colors.ts`.
+- **Idioma**: botón "🌐 Idioma" junto al de color, con Español e Inglés por
+  ahora. Traduce toda la interfaz (textos, géneros, colores, mensajes de
+  error, notificaciones) y también el contenido: al cambiar de idioma, la
+  app vuelve a pedir las películas y libros directamente en ese idioma a
+  TMDb y Google Books (los álbumes de Last.fm no cambian, porque nombres de
+  artista/álbum no se traducen). La elección se guarda en el teléfono.
+  Añadir otro idioma es agregar una entrada más en
+  `src/i18n/translations.ts` (y sus traducciones de género/color en
+  `src/constants/genres.ts` y `src/constants/colors.ts`).
 
 ## 1. Requisitos
 
@@ -220,9 +229,12 @@ DailyRecsApp/
   App.tsx                    Punto de entrada
   app.config.ts               Configuración de Expo (nombre, iconos, plugins)
   src/
+    i18n/
+      translations.ts          Textos de la interfaz en español e inglés
+      LanguageContext.tsx      Contexto de React: idioma actual + t() + setLanguage()
     constants/
-      genres.ts               Géneros de música, películas y libros
-      colors.ts                Paleta de colores básicos y premium
+      genres.ts               Géneros de música, películas y libros (bilingües)
+      colors.ts                Paleta de colores básicos y premium (bilingüe)
     types/                    Tipos TypeScript compartidos
     utils/
       dailySeed.ts             Lógica de "recomendación del día/mes" determinista
@@ -230,15 +242,15 @@ DailyRecsApp/
       alert.ts                 Alert.alert multiplataforma (incluye web)
     services/
       lastfm.ts                Álbumes por género (Last.fm)
-      tmdb.ts                  Películas + dónde verlas por género (TMDb)
-      googleBooks.ts           Libros por género (Google Books)
-      storage.ts               Preferencias, color, caché local y contadores de reroll
-      notifications.ts         Notificaciones locales diarias/mensuales
+      tmdb.ts                  Películas + dónde verlas por género (TMDb, según idioma)
+      googleBooks.ts           Libros por género (Google Books, según idioma)
+      storage.ts               Preferencias, color, idioma, caché local y contadores de reroll
+      notifications.ts         Notificaciones locales diarias/mensuales (según idioma)
       ads.ts / ads.web.ts      Banner + intersticial (AdMob; no-op en web)
       premium.ts               Suscripción premium (scaffold, ver sección 7)
     components/               Tarjetas, selector de género, selector de color,
-                                banner de anuncio, links de música, dónde ver,
-                                tarjeta premium
+                                selector de idioma, banner de anuncio, links de
+                                música, dónde ver, tarjeta premium
     screens/HomeScreen.tsx    Pantalla principal
 ```
 

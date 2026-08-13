@@ -3,6 +3,7 @@ import { dailySeed, pickIndex, todayKey } from '@/utils/dailySeed';
 import { getCached, setCached } from './storage';
 import { AlbumPick } from '@/types';
 import { buildMusicLinks } from '@/utils/musicLinks';
+import { Language, translations } from '@/i18n/translations';
 
 const BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
 
@@ -41,13 +42,17 @@ function artistNameOf(album: LastfmAlbum): string {
   return typeof album.artist === 'string' ? album.artist : album.artist?.name ?? '';
 }
 
-async function fetchTopAlbumsPage(tag: string, page: number): Promise<LastfmAlbum[]> {
+async function fetchTopAlbumsPage(
+  tag: string,
+  page: number,
+  language: Language
+): Promise<LastfmAlbum[]> {
   const url = `${BASE_URL}?method=tag.gettopalbums&tag=${encodeURIComponent(
     tag
   )}&api_key=${ENV.LASTFM_API_KEY}&format=json&limit=${PAGE_SIZE}&page=${page}`;
   const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`Last.fm respondió ${res.status}`);
+    throw new Error(translations[language].lastfmError(res.status));
   }
   const json = await res.json();
   return json?.topalbums?.album ?? [];
@@ -67,23 +72,22 @@ function dedupeByArtist(albums: LastfmAlbum[]): LastfmAlbum[] {
   return result;
 }
 
-async function fetchTopAlbumsPool(tag: string): Promise<LastfmAlbum[]> {
+async function fetchTopAlbumsPool(tag: string, language: Language): Promise<LastfmAlbum[]> {
   const cacheKey = `lastfm-pool:${tag}:${todayKey()}`;
   const cached = await getCached<LastfmAlbum[]>(cacheKey);
   if (cached) return cached;
 
+  const t = translations[language];
   if (!ENV.LASTFM_API_KEY) {
-    throw new Error(
-      'Falta LASTFM_API_KEY. Configúrala en tu archivo .env (ver .env.example).'
-    );
+    throw new Error(t.missingLastfmKey);
   }
 
   const pages = await Promise.all(
-    Array.from({ length: TOTAL_PAGES }, (_, i) => fetchTopAlbumsPage(tag, i + 1))
+    Array.from({ length: TOTAL_PAGES }, (_, i) => fetchTopAlbumsPage(tag, i + 1, language))
   );
   const rawPool = pages.flat();
   if (rawPool.length === 0) {
-    throw new Error(`No se encontraron álbumes para el género "${tag}".`);
+    throw new Error(t.noAlbumsFound(tag));
   }
 
   const underground = dedupeByArtist(rawPool.slice(SKIP_PAGES * PAGE_SIZE));
@@ -95,18 +99,21 @@ async function fetchTopAlbumsPool(tag: string): Promise<LastfmAlbum[]> {
   return pool;
 }
 
-export async function getDailyAlbum(genreId: string, variant = 0): Promise<AlbumPick> {
-  const pool = await fetchTopAlbumsPool(genreId);
+export async function getDailyAlbum(
+  genreId: string,
+  variant = 0,
+  language: Language = 'es'
+): Promise<AlbumPick> {
+  const pool = await fetchTopAlbumsPool(genreId, language);
   const index = pickIndex(dailySeed(genreId, new Date(), variant), pool.length);
   const album = pool[index];
-  const artistName = artistNameOf(album) || 'Desconocido';
+  const artistName = artistNameOf(album) || translations[language].unknownArtist;
 
   return {
     id: album.mbid || `${album.name}-${artistName}`,
     title: album.name,
     artist: artistName,
     coverUrl: bestImage(album.image),
-    genre: genreId,
     lastfmUrl: album.url,
     ...buildMusicLinks(artistName, album.name),
   };

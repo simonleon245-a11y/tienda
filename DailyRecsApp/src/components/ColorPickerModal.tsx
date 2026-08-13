@@ -2,11 +2,14 @@ import React from 'react';
 import { Modal, View, Text, Pressable, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { theme } from '@/theme';
 import { AccentColor, FREE_ACCENT_COLORS, PREMIUM_ACCENT_COLORS } from '@/constants/colors';
+import { useLanguage } from '@/i18n/LanguageContext';
+import { Language } from '@/i18n/translations';
 
 interface Props {
   visible: boolean;
   selectedHex: string;
   isPremium: boolean;
+  accentColor: string;
   onSelect: (hex: string) => void;
   onLockedPress: () => void;
   onClose: () => void;
@@ -14,11 +17,13 @@ interface Props {
 
 function Swatch({
   color,
+  language,
   selected,
   locked,
   onPress,
 }: {
   color: AccentColor;
+  language: Language;
   selected: boolean;
   locked: boolean;
   onPress: () => void;
@@ -35,7 +40,7 @@ function Swatch({
       >
         {locked && <Text style={styles.lockIcon}>🔒</Text>}
       </View>
-      <Text style={styles.swatchLabel}>{color.label}</Text>
+      <Text style={styles.swatchLabel}>{color.label[language]}</Text>
     </Pressable>
   );
 }
@@ -44,27 +49,30 @@ export default function ColorPickerModal({
   visible,
   selectedHex,
   isPremium,
+  accentColor,
   onSelect,
   onLockedPress,
   onClose,
 }: Props) {
+  const { t, language } = useLanguage();
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View style={styles.overlay}>
         <SafeAreaView style={styles.sheet}>
           <View style={styles.header}>
-            <Text style={styles.title}>Color de la app</Text>
+            <Text style={styles.title}>{t.colorModalTitle}</Text>
             <Pressable onPress={onClose} hitSlop={12}>
-              <Text style={styles.closeText}>Cerrar</Text>
+              <Text style={[styles.closeText, { color: accentColor }]}>{t.close}</Text>
             </Pressable>
           </View>
           <ScrollView contentContainerStyle={styles.scrollContent}>
-            <Text style={styles.sectionTitle}>Básicos</Text>
+            <Text style={styles.sectionTitle}>{t.basicColors}</Text>
             <View style={styles.grid}>
               {FREE_ACCENT_COLORS.map((color) => (
                 <Swatch
                   key={color.id}
                   color={color}
+                  language={language}
                   selected={color.hex === selectedHex}
                   locked={false}
                   onPress={() => onSelect(color.hex)}
@@ -72,7 +80,7 @@ export default function ColorPickerModal({
               ))}
             </View>
 
-            <Text style={styles.sectionTitle}>Premium ✨</Text>
+            <Text style={styles.sectionTitle}>{t.premiumColors}</Text>
             <View style={styles.grid}>
               {PREMIUM_ACCENT_COLORS.map((color) => {
                 const locked = !isPremium;
@@ -80,6 +88,7 @@ export default function ColorPickerModal({
                   <Swatch
                     key={color.id}
                     color={color}
+                    language={language}
                     selected={color.hex === selectedHex}
                     locked={locked}
                     onPress={() => (locked ? onLockedPress() : onSelect(color.hex))}
@@ -120,7 +129,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   closeText: {
-    color: theme.colors.primary,
     fontWeight: '600',
   },
   scrollContent: {

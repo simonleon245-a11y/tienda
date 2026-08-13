@@ -2,21 +2,18 @@ import React from 'react';
 import { View, Text, Image, Pressable, StyleSheet, Linking } from 'react-native';
 import { theme } from '@/theme';
 import { WatchProvider } from '@/types';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface Props {
   providers: WatchProvider[];
   link: string | null;
 }
 
-const TYPE_LABEL: Record<WatchProvider['type'], string> = {
-  flatrate: 'Streaming',
-  rent: 'Alquiler',
-  buy: 'Compra',
-};
-
 export default function WatchProviders({ providers, link }: Props) {
+  const { t } = useLanguage();
+
   if (providers.length === 0) {
-    return <Text style={styles.emptyText}>No encontramos dónde verla en tu región todavía.</Text>;
+    return <Text style={styles.emptyText}>{t.noProvidersFound}</Text>;
   }
 
   const content = (
@@ -31,7 +28,7 @@ export default function WatchProviders({ providers, link }: Props) {
           <Text style={styles.name} numberOfLines={1}>
             {provider.name}
           </Text>
-          <Text style={styles.type}>{TYPE_LABEL[provider.type]}</Text>
+          <Text style={styles.type}>{t.watchProviderType[provider.type]}</Text>
         </View>
       ))}
     </View>

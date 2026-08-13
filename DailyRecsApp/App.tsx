@@ -4,18 +4,27 @@ import HomeScreen from '@/screens/HomeScreen';
 import { initializeAds } from '@/services/ads';
 import { scheduleRecommendationNotifications } from '@/services/notifications';
 import { checkPremiumStatus } from '@/services/premium';
+import { LanguageProvider, useLanguage } from '@/i18n/LanguageContext';
 
-export default function App() {
+function AppContent() {
+  const { language } = useLanguage();
+
   useEffect(() => {
     checkPremiumStatus().then((isPremium) => {
       if (!isPremium) initializeAds().catch(() => {});
     });
-    scheduleRecommendationNotifications().catch(() => {});
-  }, []);
+    scheduleRecommendationNotifications(language).catch(() => {});
+  }, [language]);
 
+  return <HomeScreen />;
+}
+
+export default function App() {
   return (
     <SafeAreaProvider>
-      <HomeScreen />
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
     </SafeAreaProvider>
   );
 }

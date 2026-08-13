@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GenrePreferences } from '@/types';
 import { DEFAULT_ACCENT_COLOR } from '@/constants/colors';
+import { Language } from '@/i18n/translations';
 
 const KEYS = {
   genrePrefs: 'recos:genrePrefs',
@@ -9,7 +10,10 @@ const KEYS = {
   isPremium: 'recos:isPremium',
   rerollPrefix: 'recos:reroll:',
   accentColor: 'recos:accentColor',
+  language: 'recos:language',
 };
+
+const DEFAULT_LANGUAGE: Language = 'es';
 
 const DEFAULT_PREFS: GenrePreferences = {
   album: 'rock',
@@ -89,4 +93,13 @@ export async function getAccentColor(): Promise<string> {
 
 export async function setAccentColor(hex: string): Promise<void> {
   await AsyncStorage.setItem(KEYS.accentColor, hex);
+}
+
+export async function getLanguage(): Promise<Language> {
+  const raw = await AsyncStorage.getItem(KEYS.language);
+  return raw === 'en' ? 'en' : DEFAULT_LANGUAGE;
+}
+
+export async function setLanguage(language: Language): Promise<void> {
+  await AsyncStorage.setItem(KEYS.language, language);
 }

@@ -1,8 +1,10 @@
+import { Language } from '@/i18n/translations';
+
 export type Category = 'album' | 'movie' | 'book';
 
 export interface Genre {
   id: string;
-  label: string;
+  label: Record<Language, string>;
 }
 
 export interface AlbumPick {
@@ -10,7 +12,6 @@ export interface AlbumPick {
   title: string;
   artist: string;
   coverUrl: string | null;
-  genre: string;
   lastfmUrl: string;
   spotifyUrl: string;
   youtubeMusicUrl: string;
@@ -32,7 +33,6 @@ export interface MoviePick {
   overview: string;
   posterUrl: string | null;
   releaseYear: string;
-  genre: string;
   rating: number;
   watchProviders: WatchProvider[];
   watchProvidersUrl: string | null;
@@ -43,7 +43,6 @@ export interface BookPick {
   title: string;
   authors: string[];
   coverUrl: string | null;
-  genre: string;
   description: string;
   infoUrl: string;
 }

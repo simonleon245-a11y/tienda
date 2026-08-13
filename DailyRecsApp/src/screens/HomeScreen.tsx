@@ -9,8 +9,10 @@ import MusicLinks from '@/components/MusicLinks';
 import WatchProviders from '@/components/WatchProviders';
 import PremiumUpsellCard from '@/components/PremiumUpsellCard';
 import ColorPickerModal from '@/components/ColorPickerModal';
+import LanguagePickerModal from '@/components/LanguagePickerModal';
 import { MUSIC_GENRES, MOVIE_GENRES, BOOK_GENRES, genreLabel } from '@/constants/genres';
 import { DEFAULT_ACCENT_COLOR, isPremiumColor } from '@/constants/colors';
+import { useLanguage } from '@/i18n/LanguageContext';
 import {
   getGenrePreferences,
   setGenrePreference,
@@ -44,6 +46,7 @@ function daysUntilNextMonth(): number {
 }
 
 export default function HomeScreen() {
+  const { t, language } = useLanguage();
   const [prefs, setPrefs] = useState<GenrePreferences | null>(null);
   const [album, setAlbum] = useState<AsyncSlice<AlbumPick>>({ data: null, loading: true, error: null });
   const [movie, setMovie] = useState<AsyncSlice<MoviePick>>({ data: null, loading: true, error: null });
@@ -53,27 +56,37 @@ export default function HomeScreen() {
   const [variants, setVariants] = useState<Variants>({ album: 0, movie: 0, book: 0 });
   const [accentColor, setAccentColorState] = useState(DEFAULT_ACCENT_COLOR);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
+  const [languagePickerVisible, setLanguagePickerVisible] = useState(false);
 
-  const loadAlbum = useCallback((genreId: string, variant = 0) => {
-    setAlbum({ data: null, loading: true, error: null });
-    getDailyAlbum(genreId, variant)
-      .then((data) => setAlbum({ data, loading: false, error: null }))
-      .catch((err) => setAlbum({ data: null, loading: false, error: err.message }));
-  }, []);
+  const loadAlbum = useCallback(
+    (genreId: string, variant = 0) => {
+      setAlbum({ data: null, loading: true, error: null });
+      getDailyAlbum(genreId, variant, language)
+        .then((data) => setAlbum({ data, loading: false, error: null }))
+        .catch((err) => setAlbum({ data: null, loading: false, error: err.message }));
+    },
+    [language]
+  );
 
-  const loadMovie = useCallback((genreId: string, variant = 0) => {
-    setMovie({ data: null, loading: true, error: null });
-    getDailyMovie(genreId, variant)
-      .then((data) => setMovie({ data, loading: false, error: null }))
-      .catch((err) => setMovie({ data: null, loading: false, error: err.message }));
-  }, []);
+  const loadMovie = useCallback(
+    (genreId: string, variant = 0) => {
+      setMovie({ data: null, loading: true, error: null });
+      getDailyMovie(genreId, variant, language)
+        .then((data) => setMovie({ data, loading: false, error: null }))
+        .catch((err) => setMovie({ data: null, loading: false, error: err.message }));
+    },
+    [language]
+  );
 
-  const loadBook = useCallback((genreId: string, variant = 0) => {
-    setBook({ data: null, loading: true, error: null });
-    getMonthlyBook(genreId, variant)
-      .then((data) => setBook({ data, loading: false, error: null }))
-      .catch((err) => setBook({ data: null, loading: false, error: err.message }));
-  }, []);
+  const loadBook = useCallback(
+    (genreId: string, variant = 0) => {
+      setBook({ data: null, loading: true, error: null });
+      getMonthlyBook(genreId, variant, language)
+        .then((data) => setBook({ data, loading: false, error: null }))
+        .catch((err) => setBook({ data: null, loading: false, error: err.message }));
+    },
+    [language]
+  );
 
   useEffect(() => {
     getGenrePreferences().then((loaded) => {
@@ -98,8 +111,8 @@ export default function HomeScreen() {
   };
 
   const handleUpgradePress = () => {
-    openUpgradeFlow().catch((err) =>
-      showAlert('Suscripción no disponible todavía', err.message)
+    openUpgradeFlow(language).catch((err) =>
+      showAlert(t.subscriptionUnavailableTitle, err.message)
     );
   };
 
@@ -112,14 +125,10 @@ export default function HomeScreen() {
     if (!isPremium) {
       const usedRerolls = await getRerollCount(scopeKey);
       if (usedRerolls >= FREE_REROLLS_PER_PERIOD) {
-        showAlert(
-          'Ya usaste tu "ver otra opción" gratis',
-          'Con Recos Premium tienes recomendaciones ilimitadas y sin anuncios por $3/mes.',
-          [
-            { text: 'Ahora no', style: 'cancel' },
-            { text: 'Ver Premium', onPress: handleUpgradePress },
-          ]
-        );
+        showAlert(t.rerollCapTitle, t.rerollCapMessage, [
+          { text: t.cancelAction, style: 'cancel' },
+          { text: t.viewPremiumAction, onPress: handleUpgradePress },
+        ]);
         return;
       }
       await incrementRerollCount(scopeKey);
@@ -140,14 +149,10 @@ export default function HomeScreen() {
   };
 
   const handleLockedColorPress = () => {
-    showAlert(
-      'Color exclusivo de Recos Premium',
-      'Con Recos Premium desbloqueas esta paleta, sin anuncios y "ver otra opción" ilimitado, por $3/mes.',
-      [
-        { text: 'Ahora no', style: 'cancel' },
-        { text: 'Ver Premium', onPress: handleUpgradePress },
-      ]
-    );
+    showAlert(t.lockedColorTitle, t.lockedColorMessage, [
+      { text: t.cancelAction, style: 'cancel' },
+      { text: t.viewPremiumAction, onPress: handleUpgradePress },
+    ]);
   };
 
   if (!prefs) {
@@ -164,21 +169,25 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.headingRow}>
           <View style={styles.headingTextWrap}>
-            <Text style={styles.heading}>Tus recomendaciones</Text>
-            <Text style={styles.subheading}>
-              Elige un género en cada categoría y descubre algo nuevo.
-            </Text>
+            <Text style={styles.heading}>{t.appTitle}</Text>
+            <Text style={styles.subheading}>{t.appSubtitle}</Text>
           </View>
-          <Pressable style={styles.colorButton} onPress={() => setColorPickerVisible(true)}>
-            <View style={[styles.colorSwatch, { backgroundColor: accentColor }]} />
-            <Text style={styles.colorButtonText}>Color</Text>
-          </Pressable>
+          <View style={styles.headerButtons}>
+            <Pressable style={styles.colorButton} onPress={() => setColorPickerVisible(true)}>
+              <View style={[styles.colorSwatch, { backgroundColor: accentColor }]} />
+              <Text style={styles.colorButtonText}>{t.colorButtonLabel}</Text>
+            </Pressable>
+            <Pressable style={styles.colorButton} onPress={() => setLanguagePickerVisible(true)}>
+              <Text style={styles.languageFlag}>{language === 'en' ? '🇬🇧' : '🇪🇸'}</Text>
+              <Text style={styles.colorButtonText}>{t.languageButtonLabel}</Text>
+            </Pressable>
+          </View>
         </View>
 
         <RecommendationCard
-          categoryLabel="Álbum del día"
-          frequencyLabel="Nuevo cada día · poco mainstream"
-          genreLabel={genreLabel(MUSIC_GENRES, prefs.album)}
+          categoryLabel={t.albumTitle}
+          frequencyLabel={t.albumFrequency}
+          genreLabel={genreLabel(MUSIC_GENRES, prefs.album, language)}
           loading={album.loading}
           error={album.error}
           accentColor={accentColor}
@@ -213,9 +222,9 @@ export default function HomeScreen() {
         </RecommendationCard>
 
         <RecommendationCard
-          categoryLabel="Película del día"
-          frequencyLabel="Nueva cada día"
-          genreLabel={genreLabel(MOVIE_GENRES, prefs.movie)}
+          categoryLabel={t.movieTitle}
+          frequencyLabel={t.movieFrequency}
+          genreLabel={genreLabel(MOVIE_GENRES, prefs.movie, language)}
           loading={movie.loading}
           error={movie.error}
           accentColor={accentColor}
@@ -236,7 +245,7 @@ export default function HomeScreen() {
                     {movie.data.title} ({movie.data.releaseYear})
                   </Text>
                   <Text style={styles.itemSubtitle} numberOfLines={4}>
-                    {movie.data.overview || 'Sin sinopsis disponible.'}
+                    {movie.data.overview || t.noSynopsis}
                   </Text>
                   <Text style={[styles.ratingText, { color: accentColor }]}>
                     ⭐ {movie.data.rating.toFixed(1)}
@@ -252,9 +261,9 @@ export default function HomeScreen() {
         </RecommendationCard>
 
         <RecommendationCard
-          categoryLabel="Libro del mes"
-          frequencyLabel={`Nuevo en ${daysUntilNextMonth()} días`}
-          genreLabel={genreLabel(BOOK_GENRES, prefs.book)}
+          categoryLabel={t.bookTitle}
+          frequencyLabel={t.bookFrequency(daysUntilNextMonth())}
+          genreLabel={genreLabel(BOOK_GENRES, prefs.book, language)}
           loading={book.loading}
           error={book.error}
           accentColor={accentColor}
@@ -291,7 +300,7 @@ export default function HomeScreen() {
 
       <GenrePickerModal
         visible={activePicker === 'album'}
-        title="Género musical"
+        title={t.musicGenreModalTitle}
         genres={MUSIC_GENRES}
         selectedId={prefs.album}
         accentColor={accentColor}
@@ -300,7 +309,7 @@ export default function HomeScreen() {
       />
       <GenrePickerModal
         visible={activePicker === 'movie'}
-        title="Género de película"
+        title={t.movieGenreModalTitle}
         genres={MOVIE_GENRES}
         selectedId={prefs.movie}
         accentColor={accentColor}
@@ -309,7 +318,7 @@ export default function HomeScreen() {
       />
       <GenrePickerModal
         visible={activePicker === 'book'}
-        title="Género de libro"
+        title={t.bookGenreModalTitle}
         genres={BOOK_GENRES}
         selectedId={prefs.book}
         accentColor={accentColor}
@@ -320,9 +329,15 @@ export default function HomeScreen() {
         visible={colorPickerVisible}
         selectedHex={accentColor}
         isPremium={isPremium}
+        accentColor={accentColor}
         onSelect={handleSelectColor}
         onLockedPress={handleLockedColorPress}
         onClose={() => setColorPickerVisible(false)}
+      />
+      <LanguagePickerModal
+        visible={languagePickerVisible}
+        accentColor={accentColor}
+        onClose={() => setLanguagePickerVisible(false)}
       />
     </SafeAreaView>
   );
@@ -357,6 +372,10 @@ const styles = StyleSheet.create({
     color: theme.colors.subtext,
     fontSize: 14,
   },
+  headerButtons: {
+    flexDirection: 'row',
+    gap: theme.spacing(1),
+  },
   colorButton: {
     alignItems: 'center',
     backgroundColor: theme.colors.chip,
@@ -369,6 +388,9 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
+  },
+  languageFlag: {
+    fontSize: 18,
   },
   colorButtonText: {
     color: theme.colors.subtext,
