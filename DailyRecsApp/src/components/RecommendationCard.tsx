@@ -8,6 +8,7 @@ interface Props {
   genreLabel: string;
   loading: boolean;
   error: string | null;
+  accentColor: string;
   onChangeGenre: () => void;
   onRetry: () => void;
   onReroll: () => void;
@@ -20,6 +21,7 @@ export default function RecommendationCard({
   genreLabel,
   loading,
   error,
+  accentColor,
   onChangeGenre,
   onRetry,
   onReroll,
@@ -35,13 +37,16 @@ export default function RecommendationCard({
       <View style={styles.body}>
         {loading && (
           <View style={styles.centered}>
-            <ActivityIndicator color={theme.colors.primary} />
+            <ActivityIndicator color={accentColor} />
           </View>
         )}
         {!loading && error && (
           <View style={styles.centered}>
             <Text style={styles.errorText}>{error}</Text>
-            <Pressable style={styles.retryButton} onPress={onRetry}>
+            <Pressable
+              style={[styles.retryButton, { backgroundColor: accentColor }]}
+              onPress={onRetry}
+            >
               <Text style={styles.retryButtonText}>Reintentar</Text>
             </Pressable>
           </View>
@@ -55,10 +60,12 @@ export default function RecommendationCard({
         </View>
         <View style={styles.footerButtons}>
           <Pressable style={styles.changeButton} onPress={onReroll} disabled={loading}>
-            <Text style={styles.changeButtonText}>🔀 Ver otra opción</Text>
+            <Text style={[styles.changeButtonText, { color: accentColor }]}>
+              🔀 Ver otra opción
+            </Text>
           </Pressable>
           <Pressable style={styles.changeButton} onPress={onChangeGenre}>
-            <Text style={styles.changeButtonText}>Cambiar género</Text>
+            <Text style={[styles.changeButtonText, { color: accentColor }]}>Cambiar género</Text>
           </Pressable>
         </View>
       </View>
@@ -105,7 +112,6 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing(1),
   },
   retryButton: {
-    backgroundColor: theme.colors.primary,
     paddingHorizontal: theme.spacing(2),
     paddingVertical: theme.spacing(1),
     borderRadius: theme.radius.chip,
@@ -141,7 +147,6 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing(0.5),
   },
   changeButtonText: {
-    color: theme.colors.primary,
     fontSize: 13,
     fontWeight: '700',
   },

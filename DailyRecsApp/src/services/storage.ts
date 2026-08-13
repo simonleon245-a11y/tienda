@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GenrePreferences } from '@/types';
+import { DEFAULT_ACCENT_COLOR } from '@/constants/colors';
 
 const KEYS = {
   genrePrefs: 'recos:genrePrefs',
@@ -7,6 +8,7 @@ const KEYS = {
   genreChangeCount: 'recos:genreChangeCount',
   isPremium: 'recos:isPremium',
   rerollPrefix: 'recos:reroll:',
+  accentColor: 'recos:accentColor',
 };
 
 const DEFAULT_PREFS: GenrePreferences = {
@@ -78,4 +80,13 @@ export async function incrementRerollCount(scopeKey: string): Promise<number> {
   const next = (await getRerollCount(scopeKey)) + 1;
   await AsyncStorage.setItem(KEYS.rerollPrefix + scopeKey, String(next));
   return next;
+}
+
+export async function getAccentColor(): Promise<string> {
+  const raw = await AsyncStorage.getItem(KEYS.accentColor);
+  return raw || DEFAULT_ACCENT_COLOR;
+}
+
+export async function setAccentColor(hex: string): Promise<void> {
+  await AsyncStorage.setItem(KEYS.accentColor, hex);
 }

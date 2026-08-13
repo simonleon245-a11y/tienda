@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, StatusBar } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, StatusBar, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '@/theme';
 import RecommendationCard from '@/components/RecommendationCard';
@@ -8,12 +8,16 @@ import BannerAd from '@/components/BannerAd';
 import MusicLinks from '@/components/MusicLinks';
 import WatchProviders from '@/components/WatchProviders';
 import PremiumUpsellCard from '@/components/PremiumUpsellCard';
+import ColorPickerModal from '@/components/ColorPickerModal';
 import { MUSIC_GENRES, MOVIE_GENRES, BOOK_GENRES, genreLabel } from '@/constants/genres';
+import { DEFAULT_ACCENT_COLOR, isPremiumColor } from '@/constants/colors';
 import {
   getGenrePreferences,
   setGenrePreference,
   getRerollCount,
   incrementRerollCount,
+  getAccentColor,
+  setAccentColor,
 } from '@/services/storage';
 import { getDailyAlbum } from '@/services/lastfm';
 import { getDailyMovie } from '@/services/tmdb';
@@ -47,6 +51,8 @@ export default function HomeScreen() {
   const [activePicker, setActivePicker] = useState<Category | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [variants, setVariants] = useState<Variants>({ album: 0, movie: 0, book: 0 });
+  const [accentColor, setAccentColorState] = useState(DEFAULT_ACCENT_COLOR);
+  const [colorPickerVisible, setColorPickerVisible] = useState(false);
 
   const loadAlbum = useCallback((genreId: string, variant = 0) => {
     setAlbum({ data: null, loading: true, error: null });
@@ -77,6 +83,7 @@ export default function HomeScreen() {
       loadBook(loaded.book);
     });
     checkPremiumStatus().then(setIsPremium);
+    getAccentColor().then(setAccentColorState);
   }, [loadAlbum, loadMovie, loadBook]);
 
   const handleSelectGenre = async (category: Category, genreId: string) => {
@@ -125,6 +132,24 @@ export default function HomeScreen() {
     if (category === 'book') loadBook(genreId, nextVariant);
   };
 
+  const handleSelectColor = async (hex: string) => {
+    if (isPremiumColor(hex) && !isPremium) return; // por si acaso; la UI ya lo bloquea
+    setColorPickerVisible(false);
+    setAccentColorState(hex);
+    await setAccentColor(hex);
+  };
+
+  const handleLockedColorPress = () => {
+    showAlert(
+      'Color exclusivo de Recos Premium',
+      'Con Recos Premium desbloqueas esta paleta, sin anuncios y "ver otra opción" ilimitado, por $3/mes.',
+      [
+        { text: 'Ahora no', style: 'cancel' },
+        { text: 'Ver Premium', onPress: handleUpgradePress },
+      ]
+    );
+  };
+
   if (!prefs) {
     return (
       <SafeAreaView style={styles.safe}>
@@ -137,8 +162,18 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safe}>
       <StatusBar barStyle="light-content" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.heading}>Tus recomendaciones</Text>
-        <Text style={styles.subheading}>Elige un género en cada categoría y descubre algo nuevo.</Text>
+        <View style={styles.headingRow}>
+          <View style={styles.headingTextWrap}>
+            <Text style={styles.heading}>Tus recomendaciones</Text>
+            <Text style={styles.subheading}>
+              Elige un género en cada categoría y descubre algo nuevo.
+            </Text>
+          </View>
+          <Pressable style={styles.colorButton} onPress={() => setColorPickerVisible(true)}>
+            <View style={[styles.colorSwatch, { backgroundColor: accentColor }]} />
+            <Text style={styles.colorButtonText}>Color</Text>
+          </Pressable>
+        </View>
 
         <RecommendationCard
           categoryLabel="Álbum del día"
@@ -146,6 +181,7 @@ export default function HomeScreen() {
           genreLabel={genreLabel(MUSIC_GENRES, prefs.album)}
           loading={album.loading}
           error={album.error}
+          accentColor={accentColor}
           onChangeGenre={() => setActivePicker('album')}
           onRetry={() => loadAlbum(prefs.album, variants.album)}
           onReroll={() => handleReroll('album')}
@@ -182,6 +218,7 @@ export default function HomeScreen() {
           genreLabel={genreLabel(MOVIE_GENRES, prefs.movie)}
           loading={movie.loading}
           error={movie.error}
+          accentColor={accentColor}
           onChangeGenre={() => setActivePicker('movie')}
           onRetry={() => loadMovie(prefs.movie, variants.movie)}
           onReroll={() => handleReroll('movie')}
@@ -201,7 +238,9 @@ export default function HomeScreen() {
                   <Text style={styles.itemSubtitle} numberOfLines={4}>
                     {movie.data.overview || 'Sin sinopsis disponible.'}
                   </Text>
-                  <Text style={styles.ratingText}>⭐ {movie.data.rating.toFixed(1)}</Text>
+                  <Text style={[styles.ratingText, { color: accentColor }]}>
+                    ⭐ {movie.data.rating.toFixed(1)}
+                  </Text>
                 </View>
               </View>
               <WatchProviders
@@ -218,6 +257,7 @@ export default function HomeScreen() {
           genreLabel={genreLabel(BOOK_GENRES, prefs.book)}
           loading={book.loading}
           error={book.error}
+          accentColor={accentColor}
           onChangeGenre={() => setActivePicker('book')}
           onRetry={() => loadBook(prefs.book, variants.book)}
           onReroll={() => handleReroll('book')}
@@ -254,6 +294,7 @@ export default function HomeScreen() {
         title="Género musical"
         genres={MUSIC_GENRES}
         selectedId={prefs.album}
+        accentColor={accentColor}
         onSelect={(id) => handleSelectGenre('album', id)}
         onClose={() => setActivePicker(null)}
       />
@@ -262,6 +303,7 @@ export default function HomeScreen() {
         title="Género de película"
         genres={MOVIE_GENRES}
         selectedId={prefs.movie}
+        accentColor={accentColor}
         onSelect={(id) => handleSelectGenre('movie', id)}
         onClose={() => setActivePicker(null)}
       />
@@ -270,8 +312,17 @@ export default function HomeScreen() {
         title="Género de libro"
         genres={BOOK_GENRES}
         selectedId={prefs.book}
+        accentColor={accentColor}
         onSelect={(id) => handleSelectGenre('book', id)}
         onClose={() => setActivePicker(null)}
+      />
+      <ColorPickerModal
+        visible={colorPickerVisible}
+        selectedHex={accentColor}
+        isPremium={isPremium}
+        onSelect={handleSelectColor}
+        onLockedPress={handleLockedColorPress}
+        onClose={() => setColorPickerVisible(false)}
       />
     </SafeAreaView>
   );
@@ -286,6 +337,16 @@ const styles = StyleSheet.create({
     padding: theme.spacing(2),
     paddingBottom: theme.spacing(1),
   },
+  headingRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: theme.spacing(2.5),
+  },
+  headingTextWrap: {
+    flex: 1,
+    paddingRight: theme.spacing(1),
+  },
   heading: {
     color: theme.colors.text,
     fontSize: 26,
@@ -295,7 +356,24 @@ const styles = StyleSheet.create({
   subheading: {
     color: theme.colors.subtext,
     fontSize: 14,
-    marginBottom: theme.spacing(2.5),
+  },
+  colorButton: {
+    alignItems: 'center',
+    backgroundColor: theme.colors.chip,
+    borderRadius: theme.radius.chip,
+    paddingHorizontal: theme.spacing(1.25),
+    paddingVertical: theme.spacing(0.75),
+    gap: 4,
+  },
+  colorSwatch: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+  },
+  colorButtonText: {
+    color: theme.colors.subtext,
+    fontSize: 11,
+    fontWeight: '600',
   },
   itemRow: {
     flexDirection: 'row',
@@ -329,7 +407,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   ratingText: {
-    color: theme.colors.primary,
     fontSize: 12,
     fontWeight: '700',
     marginTop: 2,

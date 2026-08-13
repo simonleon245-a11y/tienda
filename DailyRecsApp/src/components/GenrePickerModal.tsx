@@ -8,6 +8,7 @@ interface Props {
   title: string;
   genres: Genre[];
   selectedId: string;
+  accentColor: string;
   onSelect: (id: string) => void;
   onClose: () => void;
 }
@@ -17,6 +18,7 @@ export default function GenrePickerModal({
   title,
   genres,
   selectedId,
+  accentColor,
   onSelect,
   onClose,
 }: Props) {
@@ -27,7 +29,7 @@ export default function GenrePickerModal({
           <View style={styles.header}>
             <Text style={styles.title}>{title}</Text>
             <Pressable onPress={onClose} hitSlop={12}>
-              <Text style={styles.closeText}>Cerrar</Text>
+              <Text style={[styles.closeText, { color: accentColor }]}>Cerrar</Text>
             </Pressable>
           </View>
           <FlatList
@@ -40,7 +42,7 @@ export default function GenrePickerModal({
               const selected = item.id === selectedId;
               return (
                 <Pressable
-                  style={[styles.option, selected && styles.optionSelected]}
+                  style={[styles.option, selected && { backgroundColor: accentColor }]}
                   onPress={() => onSelect(item.id)}
                 >
                   <Text style={[styles.optionText, selected && styles.optionTextSelected]}>
@@ -82,7 +84,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   closeText: {
-    color: theme.colors.primary,
     fontWeight: '600',
   },
   list: {
@@ -98,9 +99,6 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing(1.5),
     alignItems: 'center',
     marginBottom: theme.spacing(1),
-  },
-  optionSelected: {
-    backgroundColor: theme.colors.primary,
   },
   optionText: {
     color: theme.colors.subtext,

@@ -41,6 +41,13 @@ la sección "Distribución sin tiendas" más abajo.
   (los usuarios gratis tienen 1 reroll gratis por día/mes en cada
   categoría). Hoy el botón "Suscribirme" es un scaffold local — ver la
   sección "Suscripción premium" más abajo para conectarlo a pagos reales.
+- **Color de la app**: botón "🎨 Color" arriba a la derecha. Cinco colores
+  básicos disponibles para todos, y ocho colores exclusivos (Oro,
+  Esmeralda, Rubí, Zafiro, Amatista, Neón, Bronce, Carmesí) solo para
+  suscriptores premium — se ven con candado y, si los tocas sin ser
+  premium, invitan a suscribirte. El color elegido se guarda en el
+  teléfono y recolorea botones, links y el indicador de carga en toda la
+  app. Editable en `src/constants/colors.ts`.
 
 ## 1. Requisitos
 
@@ -193,6 +200,8 @@ Beneficios incluidos hoy en el plan premium (y por qué):
   por día se queda corto.
 - **Acceso anticipado a nuevas funciones/géneros**: cuesta poco dar y
   genera sensación de exclusividad.
+- **Colores exclusivos**: 8 colores premium para personalizar la app,
+  además de los 5 básicos gratis — ya implementado (`src/constants/colors.ts`).
 
 Ideas para sumar más adelante (no implementadas todavía, quedan fáciles de
 agregar sobre esta base):
@@ -211,22 +220,25 @@ DailyRecsApp/
   App.tsx                    Punto de entrada
   app.config.ts               Configuración de Expo (nombre, iconos, plugins)
   src/
-    constants/genres.ts       Géneros de música, películas y libros
+    constants/
+      genres.ts               Géneros de música, películas y libros
+      colors.ts                Paleta de colores básicos y premium
     types/                    Tipos TypeScript compartidos
-    utils/dailySeed.ts        Lógica de "recomendación del día/mes" determinista
+    utils/
+      dailySeed.ts             Lógica de "recomendación del día/mes" determinista
+      musicLinks.ts            Links de búsqueda a Spotify/YT Music/Amazon Music
+      alert.ts                 Alert.alert multiplataforma (incluye web)
     services/
       lastfm.ts                Álbumes por género (Last.fm)
       tmdb.ts                  Películas + dónde verlas por género (TMDb)
       googleBooks.ts           Libros por género (Google Books)
-      storage.ts               Preferencias, caché local y contadores de reroll
+      storage.ts               Preferencias, color, caché local y contadores de reroll
       notifications.ts         Notificaciones locales diarias/mensuales
-      ads.ts                   Banner + intersticial (AdMob)
+      ads.ts / ads.web.ts      Banner + intersticial (AdMob; no-op en web)
       premium.ts               Suscripción premium (scaffold, ver sección 7)
-    utils/
-      dailySeed.ts             Lógica de "recomendación del día/mes" determinista
-      musicLinks.ts            Links de búsqueda a Spotify/YT Music/Amazon Music
-    components/               Tarjetas, selector de género, banner de anuncio,
-                                links de música, dónde ver, tarjeta premium
+    components/               Tarjetas, selector de género, selector de color,
+                                banner de anuncio, links de música, dónde ver,
+                                tarjeta premium
     screens/HomeScreen.tsx    Pantalla principal
 ```
 
