@@ -1,0 +1,22 @@
+node_modules/
+.expo/
+dist/
+web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+.env
+.env.local
+
+# macOS
+.DS_Store
+
+# Native build output (created by `expo prebuild`)
+/ios/
+/android/
+
+# TypeScript
+*.tsbuildinfo
