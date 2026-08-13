@@ -10,6 +10,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: 'Recos Diarias',
   slug: 'recos-diarias',
+  owner: 'burudeon',
   scheme: 'recosdiarias',
   version: '1.0.0',
   orientation: 'portrait',
@@ -67,7 +68,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ADMOB_INTERSTITIAL_IOS: process.env.ADMOB_INTERSTITIAL_IOS || '',
     PREMIUM_CHECKOUT_URL: process.env.PREMIUM_CHECKOUT_URL || '',
     eas: {
-      projectId: process.env.EAS_PROJECT_ID || '',
+      // Fijo (no depende del .env) porque el CLI de EAS no puede
+      // escribir este valor solo en un app.config.ts dinámico.
+      projectId: process.env.EAS_PROJECT_ID || '5254fde2-1975-406c-b90a-f9655b17f909',
     },
   },
 });
