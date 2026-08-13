@@ -12,6 +12,18 @@ export interface AlbumPick {
   coverUrl: string | null;
   genre: string;
   lastfmUrl: string;
+  spotifyUrl: string;
+  youtubeMusicUrl: string;
+  amazonMusicUrl: string;
+}
+
+export type WatchProviderType = 'flatrate' | 'rent' | 'buy';
+
+export interface WatchProvider {
+  id: number;
+  name: string;
+  logoUrl: string | null;
+  type: WatchProviderType;
 }
 
 export interface MoviePick {
@@ -22,6 +34,8 @@ export interface MoviePick {
   releaseYear: string;
   genre: string;
   rating: number;
+  watchProviders: WatchProvider[];
+  watchProvidersUrl: string | null;
 }
 
 export interface BookPick {

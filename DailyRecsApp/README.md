@@ -16,7 +16,15 @@ Hecha con **React Native + Expo** (TypeScript), un solo código para las dos tie
   género (o sea, con oyentes reales, no ruido aleatorio). Cambia
   automáticamente cada día a medianoche. Ajustable en
   `src/services/lastfm.ts` (constantes `SKIP_PAGES`/`TOTAL_PAGES`).
-- **Película del día**: igual, pero con TMDb (The Movie Database).
+  Cada álbum trae 3 botones para abrirlo directo en **Spotify**,
+  **YouTube Music** y **Amazon Music** (llevan a la búsqueda de "artista +
+  álbum" en cada servicio — no requieren claves ni login adicionales).
+- **Película del día**: igual, pero con TMDb (The Movie Database). También
+  muestra en qué plataformas se puede ver (streaming, alquiler o compra),
+  usando los datos de JustWatch que TMDb ya incluye gratis con la misma API
+  key. Por defecto busca disponibilidad en EE.UU.; cambia `TMDB_WATCH_REGION`
+  en tu `.env` a tu país (`MX`, `ES`, `CO`, `AR`, ...) para ver las
+  plataformas correctas de tu región.
 - **Libro del mes**: igual, pero se recalcula una vez al mes (vía Google Books).
 - Los géneros se guardan en el propio teléfono (no hay backend ni cuentas de
   usuario). Puedes cambiar el género de cada categoría en cualquier momento

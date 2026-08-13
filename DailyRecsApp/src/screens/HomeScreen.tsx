@@ -5,6 +5,8 @@ import { theme } from '@/theme';
 import RecommendationCard from '@/components/RecommendationCard';
 import GenrePickerModal from '@/components/GenrePickerModal';
 import BannerAd from '@/components/BannerAd';
+import MusicLinks from '@/components/MusicLinks';
+import WatchProviders from '@/components/WatchProviders';
 import { MUSIC_GENRES, MOVIE_GENRES, BOOK_GENRES, genreLabel } from '@/constants/genres';
 import { getGenrePreferences, setGenrePreference } from '@/services/storage';
 import { getDailyAlbum } from '@/services/lastfm';
@@ -98,21 +100,28 @@ export default function HomeScreen() {
           onRetry={() => loadAlbum(prefs.album)}
         >
           {album.data && (
-            <View style={styles.itemRow}>
-              {album.data.coverUrl ? (
-                <Image source={{ uri: album.data.coverUrl }} style={styles.coverSquare} />
-              ) : (
-                <View style={[styles.coverSquare, styles.coverPlaceholder]} />
-              )}
-              <View style={styles.itemText}>
-                <Text style={styles.itemTitle} numberOfLines={2}>
-                  {album.data.title}
-                </Text>
-                <Text style={styles.itemSubtitle} numberOfLines={1}>
-                  {album.data.artist}
-                </Text>
+            <>
+              <View style={styles.itemRow}>
+                {album.data.coverUrl ? (
+                  <Image source={{ uri: album.data.coverUrl }} style={styles.coverSquare} />
+                ) : (
+                  <View style={[styles.coverSquare, styles.coverPlaceholder]} />
+                )}
+                <View style={styles.itemText}>
+                  <Text style={styles.itemTitle} numberOfLines={2}>
+                    {album.data.title}
+                  </Text>
+                  <Text style={styles.itemSubtitle} numberOfLines={1}>
+                    {album.data.artist}
+                  </Text>
+                </View>
               </View>
-            </View>
+              <MusicLinks
+                spotifyUrl={album.data.spotifyUrl}
+                youtubeMusicUrl={album.data.youtubeMusicUrl}
+                amazonMusicUrl={album.data.amazonMusicUrl}
+              />
+            </>
           )}
         </RecommendationCard>
 
@@ -126,22 +135,28 @@ export default function HomeScreen() {
           onRetry={() => loadMovie(prefs.movie)}
         >
           {movie.data && (
-            <View style={styles.itemRow}>
-              {movie.data.posterUrl ? (
-                <Image source={{ uri: movie.data.posterUrl }} style={styles.coverPortrait} />
-              ) : (
-                <View style={[styles.coverPortrait, styles.coverPlaceholder]} />
-              )}
-              <View style={styles.itemText}>
-                <Text style={styles.itemTitle} numberOfLines={2}>
-                  {movie.data.title} ({movie.data.releaseYear})
-                </Text>
-                <Text style={styles.itemSubtitle} numberOfLines={4}>
-                  {movie.data.overview || 'Sin sinopsis disponible.'}
-                </Text>
-                <Text style={styles.ratingText}>⭐ {movie.data.rating.toFixed(1)}</Text>
+            <>
+              <View style={styles.itemRow}>
+                {movie.data.posterUrl ? (
+                  <Image source={{ uri: movie.data.posterUrl }} style={styles.coverPortrait} />
+                ) : (
+                  <View style={[styles.coverPortrait, styles.coverPlaceholder]} />
+                )}
+                <View style={styles.itemText}>
+                  <Text style={styles.itemTitle} numberOfLines={2}>
+                    {movie.data.title} ({movie.data.releaseYear})
+                  </Text>
+                  <Text style={styles.itemSubtitle} numberOfLines={4}>
+                    {movie.data.overview || 'Sin sinopsis disponible.'}
+                  </Text>
+                  <Text style={styles.ratingText}>⭐ {movie.data.rating.toFixed(1)}</Text>
+                </View>
               </View>
-            </View>
+              <WatchProviders
+                providers={movie.data.watchProviders}
+                link={movie.data.watchProvidersUrl}
+              />
+            </>
           )}
         </RecommendationCard>
 

@@ -2,6 +2,7 @@ import { ENV } from '@/utils/env';
 import { dailySeed, pickIndex, todayKey } from '@/utils/dailySeed';
 import { getCached, setCached } from './storage';
 import { AlbumPick } from '@/types';
+import { buildMusicLinks } from '@/utils/musicLinks';
 
 const BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
 
@@ -107,5 +108,6 @@ export async function getDailyAlbum(genreId: string): Promise<AlbumPick> {
     coverUrl: bestImage(album.image),
     genre: genreId,
     lastfmUrl: album.url,
+    ...buildMusicLinks(artistName, album.name),
   };
 }

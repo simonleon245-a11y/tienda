@@ -5,6 +5,7 @@ const extra = (Constants.expoConfig?.extra ?? {}) as Record<string, string>;
 export const ENV = {
   LASTFM_API_KEY: extra.LASTFM_API_KEY ?? '',
   TMDB_API_KEY: extra.TMDB_API_KEY ?? '',
+  TMDB_WATCH_REGION: extra.TMDB_WATCH_REGION || 'US',
   GOOGLE_BOOKS_API_KEY: extra.GOOGLE_BOOKS_API_KEY ?? '',
   ADMOB_BANNER_ANDROID: extra.ADMOB_BANNER_ANDROID ?? '',
   ADMOB_BANNER_IOS: extra.ADMOB_BANNER_IOS ?? '',

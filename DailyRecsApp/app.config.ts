@@ -59,6 +59,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   extra: {
     LASTFM_API_KEY: process.env.LASTFM_API_KEY || '',
     TMDB_API_KEY: process.env.TMDB_API_KEY || '',
+    TMDB_WATCH_REGION: process.env.TMDB_WATCH_REGION || 'US',
     GOOGLE_BOOKS_API_KEY: process.env.GOOGLE_BOOKS_API_KEY || '',
     ADMOB_BANNER_ANDROID: process.env.ADMOB_BANNER_ANDROID || '',
     ADMOB_BANNER_IOS: process.env.ADMOB_BANNER_IOS || '',
