@@ -7,7 +7,8 @@ import { Language, translations } from '@/i18n/translations';
  * Suscripción premium ($3/mes: sin anuncios + "ver otra opción" ilimitado).
  *
  * Esto es un scaffold local: hoy solo guarda una bandera en el teléfono.
- * Cuando exista la web/backend con Stripe, hay que reemplazar
+ * Cuando exista la web/backend con la pasarela de pago (Wompi recomendado
+ * para Colombia, ver README sección 7), hay que reemplazar
  * `checkPremiumStatus` para que valide contra ese servidor (por ejemplo,
  * pidiendo el email de compra) en vez de leer solo la bandera local, y
  * `PREMIUM_CHECKOUT_URL` debe apuntar a la página de pago real.

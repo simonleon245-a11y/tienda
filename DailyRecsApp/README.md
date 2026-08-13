@@ -178,8 +178,18 @@ de mezclar código nativo con web, ya corregidas en el repo:
 ## 7. Suscripción premium ($3/mes, sin tiendas)
 
 Como la app no está en las tiendas, tampoco usamos sus sistemas de compra
-(Apple/Google IAP) — lo más simple es cobrar con **Stripe** directamente
-desde tu página web (evita también su comisión del 15-30%).
+(Apple/Google IAP) — lo más simple es cobrar directamente desde tu página
+web (evita también su comisión del 15-30%).
+
+**Pasarela recomendada: Wompi** (de Bancolombia), no Stripe — Stripe no
+está disponible para cuentas comerciales en Colombia sin montar una
+empresa en EE. UU., mientras que Wompi es 100% colombiano, tiene onboarding
+rápido, cobra ~2.5% (1.49% con PSE) y su API soporta cargos recurrentes
+con tokenización (guarda la tarjeta o Nequi del usuario y cobra
+automáticamente cada mes, sin que tenga que volver a pagar a mano).
+ePayco (respaldado por Davivienda y PayPal) es una alternativa similar.
+Nada en el código de la app depende de cuál elijas — `PREMIUM_CHECKOUT_URL`
+es un link genérico.
 
 Hoy el código ya está listo del lado de la app (`src/services/premium.ts`):
 - Si el usuario es premium, no ve anuncios y tiene "ver otra opción"
@@ -190,14 +200,14 @@ Hoy el código ya está listo del lado de la app (`src/services/premium.ts`):
   disponible.
 
 Lo que falta, y que arma junto con tu página web:
-1. Un **Stripe Checkout** (link de pago de $3/mes) — se crea en pocos
-   minutos desde el dashboard de Stripe sin escribir código.
+1. Una cuenta comercial en Wompi (comercios.wompi.co) y un enlace/producto
+   de cobro recurrente de $3/mes — se crea desde su dashboard.
 2. Un pequeño backend (una función serverless en la misma web, por
-   ejemplo con Vercel) con dos tareas: recibir el webhook de Stripe
-   cuando alguien paga, y responder "¿este usuario es premium?" cuando la
-   app se lo pregunte. Como la app no tiene login, lo más simple es pedir
-   el email con el que se suscribió (igual que "restaurar compra" en
-   otras apps) para verificarlo contra Stripe.
+   ejemplo con Vercel) con dos tareas: recibir el webhook de Wompi cuando
+   alguien paga, y responder "¿este usuario es premium?" cuando la app se
+   lo pregunte. Como la app no tiene login, lo más simple es pedir el
+   email con el que se suscribió (igual que "restaurar compra" en otras
+   apps) para verificarlo contra Wompi.
 3. Conectar `PREMIUM_CHECKOUT_URL` a ese link de pago, y reemplazar
    `checkPremiumStatus()` en `src/services/premium.ts` para que consulte
    ese backend en vez de solo la bandera guardada en el teléfono.
