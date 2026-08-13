@@ -2,8 +2,11 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { BannerAd as GoogleBannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import { getBannerAdUnitId } from '@/services/ads';
+import { isExpoGo } from '@/utils/environment';
 
 export default function BannerAd() {
+  if (isExpoGo) return null; // el SDK nativo de AdMob no existe dentro de Expo Go
+
   return (
     <View style={styles.container}>
       <GoogleBannerAd
