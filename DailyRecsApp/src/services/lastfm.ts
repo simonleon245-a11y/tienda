@@ -55,6 +55,11 @@ async function fetchTopAlbumsPage(
     throw new Error(translations[language].lastfmError(res.status));
   }
   const json = await res.json();
+  // Last.fm responde 200 OK incluso cuando la clave es inválida o hay otro
+  // error de la API — el error viene en el cuerpo, no en el status HTTP.
+  if (json?.error) {
+    throw new Error(translations[language].lastfmApiError(json.message ?? String(json.error)));
+  }
   return json?.topalbums?.album ?? [];
 }
 

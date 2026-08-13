@@ -40,6 +40,7 @@ export interface UIStrings {
   missingLastfmKey: string;
   missingTmdbKey: string;
   lastfmError: (status: number) => string;
+  lastfmApiError: (message: string) => string;
   tmdbError: (status: number) => string;
   googleBooksError: (status: number) => string;
   noAlbumsFound: (genre: string) => string;
@@ -104,6 +105,7 @@ export const translations: Record<Language, UIStrings> = {
     missingLastfmKey: 'Falta LASTFM_API_KEY. Configúrala en tu archivo .env (ver .env.example).',
     missingTmdbKey: 'Falta TMDB_API_KEY. Configúrala en tu archivo .env (ver .env.example).',
     lastfmError: (status) => `Last.fm respondió ${status}`,
+    lastfmApiError: (message) => `Last.fm rechazó la clave: ${message}`,
     tmdbError: (status) => `TMDb respondió ${status}`,
     googleBooksError: (status) => `Google Books respondió ${status}`,
     noAlbumsFound: (genre) => `No se encontraron álbumes para el género "${genre}".`,
@@ -165,6 +167,7 @@ export const translations: Record<Language, UIStrings> = {
     missingLastfmKey: 'Missing LASTFM_API_KEY. Set it in your .env file (see .env.example).',
     missingTmdbKey: 'Missing TMDB_API_KEY. Set it in your .env file (see .env.example).',
     lastfmError: (status) => `Last.fm responded ${status}`,
+    lastfmApiError: (message) => `Last.fm rejected the key: ${message}`,
     tmdbError: (status) => `TMDb responded ${status}`,
     googleBooksError: (status) => `Google Books responded ${status}`,
     noAlbumsFound: (genre) => `No albums found for the "${genre}" genre.`,
