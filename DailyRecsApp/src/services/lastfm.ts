@@ -60,7 +60,9 @@ async function fetchTopAlbumsPage(
   if (json?.error) {
     throw new Error(translations[language].lastfmApiError(json.message ?? String(json.error)));
   }
-  return json?.topalbums?.album ?? [];
+  // La respuesta real de Last.fm trae la lista bajo "albums" (no
+  // "topalbums" como sugiere el nombre del método tag.gettopalbums).
+  return json?.albums?.album ?? [];
 }
 
 /** Quita duplicados por artista para que el pool final no esté dominado
