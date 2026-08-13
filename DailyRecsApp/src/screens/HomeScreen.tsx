@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, StatusBar, Alert } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '@/theme';
 import RecommendationCard from '@/components/RecommendationCard';
@@ -21,6 +21,7 @@ import { getMonthlyBook } from '@/services/googleBooks';
 import { maybeShowInterstitial } from '@/services/ads';
 import { checkPremiumStatus, openUpgradeFlow, FREE_REROLLS_PER_PERIOD } from '@/services/premium';
 import { todayKey, monthKey } from '@/utils/dailySeed';
+import { showAlert } from '@/utils/alert';
 import { AlbumPick, BookPick, Category, GenrePreferences, MoviePick } from '@/types';
 
 type Variants = Record<Category, number>;
@@ -91,7 +92,7 @@ export default function HomeScreen() {
 
   const handleUpgradePress = () => {
     openUpgradeFlow().catch((err) =>
-      Alert.alert('Suscripción no disponible todavía', err.message)
+      showAlert('Suscripción no disponible todavía', err.message)
     );
   };
 
@@ -104,7 +105,7 @@ export default function HomeScreen() {
     if (!isPremium) {
       const usedRerolls = await getRerollCount(scopeKey);
       if (usedRerolls >= FREE_REROLLS_PER_PERIOD) {
-        Alert.alert(
+        showAlert(
           'Ya usaste tu "ver otra opción" gratis',
           'Con Recos Premium tienes recomendaciones ilimitadas y sin anuncios por $3/mes.',
           [

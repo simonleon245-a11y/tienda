@@ -144,6 +144,21 @@ tengas y conecto esto ahí):
    `npx eas build --platform android --profile preview` (queda un `.apk`
    descargable, sin pasar por Google Play).
 
+Ya probé que `npx expo start --web` carga la app completa en el navegador
+sin errores (pantalla, tarjetas, selector de género, tarjeta premium, todo
+funcionando). Para que compile en web hubo que resolver dos cosas propias
+de mezclar código nativo con web, ya corregidas en el repo:
+- `src/services/ads.web.ts` y `src/components/BannerAd.web.tsx`: versiones
+  "vacías" (no-op) de los archivos de AdMob que Metro usa automáticamente
+  al compilar para web en vez de las versiones nativas (Metro/Expo elige
+  el archivo `.web.ts`/`.web.tsx` sobre el normal en builds web) — así el
+  SDK nativo de anuncios nunca se intenta empaquetar para el navegador.
+- `src/utils/alert.ts`: `Alert.alert` de React Native no muestra nada en
+  web; este helper usa `Alert.alert` en Android/iOS y
+  `window.confirm`/`window.alert` en web, para que los avisos (límite de
+  reroll gratis, suscripción no configurada) se vean en las tres
+  plataformas.
+
 ## 7. Suscripción premium ($3/mes, sin tiendas)
 
 Como la app no está en las tiendas, tampoco usamos sus sistemas de compra
