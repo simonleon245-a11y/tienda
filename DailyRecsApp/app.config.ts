@@ -68,6 +68,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ADMOB_INTERSTITIAL_IOS: process.env.ADMOB_INTERSTITIAL_IOS || '',
     ADSENSE_CLIENT_ID: process.env.ADSENSE_CLIENT_ID || '',
     ADSENSE_SLOT_ID: process.env.ADSENSE_SLOT_ID || '',
+    FORMSPREE_ENDPOINT: process.env.FORMSPREE_ENDPOINT || '',
     PREMIUM_CHECKOUT_URL: process.env.PREMIUM_CHECKOUT_URL || '',
     eas: {
       // Fijo (no depende del .env) porque el CLI de EAS no puede

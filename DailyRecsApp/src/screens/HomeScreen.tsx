@@ -10,6 +10,7 @@ import WatchProviders from '@/components/WatchProviders';
 import PremiumUpsellCard from '@/components/PremiumUpsellCard';
 import ColorPickerModal from '@/components/ColorPickerModal';
 import LanguagePickerModal from '@/components/LanguagePickerModal';
+import FeedbackModal from '@/components/FeedbackModal';
 import { MUSIC_GENRES, MOVIE_GENRES, BOOK_GENRES, genreLabel } from '@/constants/genres';
 import { DEFAULT_ACCENT_COLOR, isPremiumColor } from '@/constants/colors';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -57,6 +58,7 @@ export default function HomeScreen() {
   const [accentColor, setAccentColorState] = useState(DEFAULT_ACCENT_COLOR);
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
   const [languagePickerVisible, setLanguagePickerVisible] = useState(false);
+  const [feedbackVisible, setFeedbackVisible] = useState(false);
 
   const loadAlbum = useCallback(
     (genreId: string, variant = 0) => {
@@ -180,6 +182,10 @@ export default function HomeScreen() {
             <Pressable style={styles.colorButton} onPress={() => setLanguagePickerVisible(true)}>
               <Text style={styles.languageFlag}>{language === 'en' ? '🇬🇧' : '🇪🇸'}</Text>
               <Text style={styles.colorButtonText}>{t.languageButtonLabel}</Text>
+            </Pressable>
+            <Pressable style={styles.colorButton} onPress={() => setFeedbackVisible(true)}>
+              <Text style={styles.languageFlag}>💬</Text>
+              <Text style={styles.colorButtonText}>{t.feedbackButtonLabel}</Text>
             </Pressable>
           </View>
         </View>
@@ -338,6 +344,11 @@ export default function HomeScreen() {
         visible={languagePickerVisible}
         accentColor={accentColor}
         onClose={() => setLanguagePickerVisible(false)}
+      />
+      <FeedbackModal
+        visible={feedbackVisible}
+        accentColor={accentColor}
+        onClose={() => setFeedbackVisible(false)}
       />
     </SafeAreaView>
   );

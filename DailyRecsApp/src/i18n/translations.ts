@@ -54,6 +54,15 @@ export interface UIStrings {
   dailyNotificationBody: string;
   monthlyNotificationTitle: string;
   monthlyNotificationBody: string;
+  feedbackButtonLabel: string;
+  feedbackModalTitle: string;
+  feedbackPlaceholder: string;
+  feedbackSubmit: string;
+  feedbackSending: string;
+  feedbackSuccess: string;
+  feedbackError: string;
+  feedbackNotConfigured: string;
+  feedbackEmptyError: string;
 }
 
 export const translations: Record<Language, UIStrings> = {
@@ -119,6 +128,15 @@ export const translations: Record<Language, UIStrings> = {
     dailyNotificationBody: 'Abre la app para descubrir las recomendaciones de hoy.',
     monthlyNotificationTitle: 'Nuevo libro del mes disponible 📚',
     monthlyNotificationBody: 'Ya tienes una nueva recomendación de lectura para este mes.',
+    feedbackButtonLabel: 'Comentarios',
+    feedbackModalTitle: 'Envíanos tu comentario',
+    feedbackPlaceholder: 'Cuéntanos qué te gustaría mejorar, un error que viste, o una idea...',
+    feedbackSubmit: 'Enviar',
+    feedbackSending: 'Enviando...',
+    feedbackSuccess: '¡Gracias! Tu comentario fue enviado.',
+    feedbackError: 'No se pudo enviar. Intenta de nuevo en un momento.',
+    feedbackNotConfigured: 'El formulario de comentarios todavía no está configurado.',
+    feedbackEmptyError: 'Escribe algo antes de enviar.',
   },
   en: {
     appTitle: 'Your recommendations',
@@ -181,5 +199,14 @@ export const translations: Record<Language, UIStrings> = {
     dailyNotificationBody: 'Open the app to see today\'s recommendations.',
     monthlyNotificationTitle: 'New book of the month available 📚',
     monthlyNotificationBody: "You've got a new reading recommendation for this month.",
+    feedbackButtonLabel: 'Feedback',
+    feedbackModalTitle: 'Send us your feedback',
+    feedbackPlaceholder: "Tell us what you'd like improved, a bug you saw, or an idea...",
+    feedbackSubmit: 'Send',
+    feedbackSending: 'Sending...',
+    feedbackSuccess: 'Thanks! Your feedback was sent.',
+    feedbackError: "Couldn't send it. Please try again in a moment.",
+    feedbackNotConfigured: "The feedback form isn't set up yet.",
+    feedbackEmptyError: 'Write something before sending.',
   },
 };
