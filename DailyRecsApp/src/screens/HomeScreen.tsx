@@ -11,6 +11,7 @@ import PremiumUpsellCard from '@/components/PremiumUpsellCard';
 import ColorPickerModal from '@/components/ColorPickerModal';
 import LanguagePickerModal from '@/components/LanguagePickerModal';
 import FeedbackModal from '@/components/FeedbackModal';
+import BandSubmissionModal from '@/components/BandSubmissionModal';
 import { MUSIC_GENRES, MOVIE_GENRES, BOOK_GENRES, genreLabel } from '@/constants/genres';
 import { DEFAULT_ACCENT_COLOR, isPremiumColor } from '@/constants/colors';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -65,6 +66,7 @@ export default function HomeScreen() {
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
   const [languagePickerVisible, setLanguagePickerVisible] = useState(false);
   const [feedbackVisible, setFeedbackVisible] = useState(false);
+  const [bandSubmissionVisible, setBandSubmissionVisible] = useState(false);
 
   const loadAlbum = useCallback(
     (genreId: string, variant = 0) => {
@@ -322,6 +324,9 @@ export default function HomeScreen() {
         <Pressable onPress={handleTipPress} style={styles.tipButton}>
           <Text style={styles.tipButtonText}>{t.tipButton}</Text>
         </Pressable>
+        <Pressable onPress={() => setBandSubmissionVisible(true)} style={styles.tipButton}>
+          <Text style={styles.tipButtonText}>{t.bandSubmissionButton}</Text>
+        </Pressable>
       </ScrollView>
 
       {!isPremium && <BannerAd />}
@@ -371,6 +376,11 @@ export default function HomeScreen() {
         visible={feedbackVisible}
         accentColor={accentColor}
         onClose={() => setFeedbackVisible(false)}
+      />
+      <BandSubmissionModal
+        visible={bandSubmissionVisible}
+        accentColor={accentColor}
+        onClose={() => setBandSubmissionVisible(false)}
       />
     </SafeAreaView>
   );

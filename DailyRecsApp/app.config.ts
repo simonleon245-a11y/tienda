@@ -69,6 +69,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ADSENSE_CLIENT_ID: process.env.ADSENSE_CLIENT_ID || '',
     ADSENSE_SLOT_ID: process.env.ADSENSE_SLOT_ID || '',
     FORMSPREE_ENDPOINT: process.env.FORMSPREE_ENDPOINT || '',
+    BAND_SUBMISSION_ENDPOINT: process.env.BAND_SUBMISSION_ENDPOINT || '',
     PREMIUM_CHECKOUT_URL: process.env.PREMIUM_CHECKOUT_URL || '',
     PREMIUM_LIFETIME_CHECKOUT_URL: process.env.PREMIUM_LIFETIME_CHECKOUT_URL || '',
     TIP_CHECKOUT_URL: process.env.TIP_CHECKOUT_URL || '',

@@ -67,6 +67,19 @@ export interface UIStrings {
   lifetimeNotConfigured: string;
   tipButton: string;
   tipNotConfigured: string;
+  bandSubmissionButton: string;
+  bandSubmissionModalTitle: string;
+  bandSubmissionIntro: string;
+  bandNameLabel: string;
+  albumNameLabel: string;
+  bandGenreLabel: string;
+  bandLinkLabel: string;
+  bandDescriptionLabel: string;
+  bandContactEmailLabel: string;
+  bandSubmissionSuccess: string;
+  bandSubmissionNotConfigured: string;
+  bandSubmissionRequiredError: string;
+  bandSubmissionError: string;
 }
 
 export const translations: Record<Language, UIStrings> = {
@@ -146,6 +159,20 @@ export const translations: Record<Language, UIStrings> = {
       'La compra de por vida todavía no está configurada (falta PREMIUM_LIFETIME_CHECKOUT_URL en .env).',
     tipButton: '☕ Invítanos un café',
     tipNotConfigured: 'Las propinas todavía no están configuradas (falta TIP_CHECKOUT_URL en .env).',
+    bandSubmissionButton: '🎸 ¿Eres una banda emergente? Envíanos tu álbum',
+    bandSubmissionModalTitle: 'Envíanos tu álbum',
+    bandSubmissionIntro:
+      'Si crees que tu álbum encaja en Recos Diarias, cuéntanos y lo revisamos con calma. No es automático: nosotros elegimos manualmente qué se destaca.',
+    bandNameLabel: 'Nombre de la banda/artista',
+    albumNameLabel: 'Nombre del álbum',
+    bandGenreLabel: 'Género',
+    bandLinkLabel: 'Link (Spotify, Bandcamp, YouTube...)',
+    bandDescriptionLabel: 'Descripción corta (opcional)',
+    bandContactEmailLabel: 'Correo de contacto (opcional)',
+    bandSubmissionSuccess: '¡Gracias! Recibimos tu álbum, lo vamos a revisar.',
+    bandSubmissionNotConfigured: 'El envío de álbumes todavía no está configurado.',
+    bandSubmissionRequiredError: 'Completa banda, álbum y link antes de enviar.',
+    bandSubmissionError: 'No se pudo enviar. Intenta de nuevo en un momento.',
   },
   en: {
     appTitle: 'Your recommendations',
@@ -222,5 +249,19 @@ export const translations: Record<Language, UIStrings> = {
       "Lifetime purchase isn't set up yet (missing PREMIUM_LIFETIME_CHECKOUT_URL in .env).",
     tipButton: '☕ Buy us a coffee',
     tipNotConfigured: "Tips aren't set up yet (missing TIP_CHECKOUT_URL in .env).",
+    bandSubmissionButton: "🎸 Emerging artist? Submit your album",
+    bandSubmissionModalTitle: 'Submit your album',
+    bandSubmissionIntro:
+      "If you think your album fits Recos Diarias, tell us about it and we'll take a look. It's not automatic: we manually pick what gets featured.",
+    bandNameLabel: 'Band/artist name',
+    albumNameLabel: 'Album name',
+    bandGenreLabel: 'Genre',
+    bandLinkLabel: 'Link (Spotify, Bandcamp, YouTube...)',
+    bandDescriptionLabel: 'Short description (optional)',
+    bandContactEmailLabel: 'Contact email (optional)',
+    bandSubmissionSuccess: "Thanks! We got your album, we'll take a look.",
+    bandSubmissionNotConfigured: "Album submissions aren't set up yet.",
+    bandSubmissionRequiredError: 'Fill in the band, album and link before sending.',
+    bandSubmissionError: "Couldn't send it. Please try again in a moment.",
   },
 };
