@@ -63,6 +63,10 @@ export interface UIStrings {
   feedbackError: string;
   feedbackNotConfigured: string;
   feedbackEmptyError: string;
+  lifetimeButton: string;
+  lifetimeNotConfigured: string;
+  tipButton: string;
+  tipNotConfigured: string;
 }
 
 export const translations: Record<Language, UIStrings> = {
@@ -137,6 +141,11 @@ export const translations: Record<Language, UIStrings> = {
     feedbackError: 'No se pudo enviar. Intenta de nuevo en un momento.',
     feedbackNotConfigured: 'El formulario de comentarios todavía no está configurado.',
     feedbackEmptyError: 'Escribe algo antes de enviar.',
+    lifetimeButton: 'O consíguela de por vida por $30 →',
+    lifetimeNotConfigured:
+      'La compra de por vida todavía no está configurada (falta PREMIUM_LIFETIME_CHECKOUT_URL en .env).',
+    tipButton: '☕ Invítanos un café',
+    tipNotConfigured: 'Las propinas todavía no están configuradas (falta TIP_CHECKOUT_URL en .env).',
   },
   en: {
     appTitle: 'Your recommendations',
@@ -208,5 +217,10 @@ export const translations: Record<Language, UIStrings> = {
     feedbackError: "Couldn't send it. Please try again in a moment.",
     feedbackNotConfigured: "The feedback form isn't set up yet.",
     feedbackEmptyError: 'Write something before sending.',
+    lifetimeButton: 'Or get lifetime access for $30 →',
+    lifetimeNotConfigured:
+      "Lifetime purchase isn't set up yet (missing PREMIUM_LIFETIME_CHECKOUT_URL in .env).",
+    tipButton: '☕ Buy us a coffee',
+    tipNotConfigured: "Tips aren't set up yet (missing TIP_CHECKOUT_URL in .env).",
   },
 };

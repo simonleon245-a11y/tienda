@@ -70,6 +70,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ADSENSE_SLOT_ID: process.env.ADSENSE_SLOT_ID || '',
     FORMSPREE_ENDPOINT: process.env.FORMSPREE_ENDPOINT || '',
     PREMIUM_CHECKOUT_URL: process.env.PREMIUM_CHECKOUT_URL || '',
+    PREMIUM_LIFETIME_CHECKOUT_URL: process.env.PREMIUM_LIFETIME_CHECKOUT_URL || '',
+    TIP_CHECKOUT_URL: process.env.TIP_CHECKOUT_URL || '',
     eas: {
       // Fijo (no depende del .env) porque el CLI de EAS no puede
       // escribir este valor solo en un app.config.ts dinámico.

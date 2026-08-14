@@ -5,9 +5,10 @@ import { useLanguage } from '@/i18n/LanguageContext';
 
 interface Props {
   onSubscribe: () => void;
+  onLifetime: () => void;
 }
 
-export default function PremiumUpsellCard({ onSubscribe }: Props) {
+export default function PremiumUpsellCard({ onSubscribe, onLifetime }: Props) {
   const { t } = useLanguage();
   return (
     <View style={styles.card}>
@@ -20,6 +21,9 @@ export default function PremiumUpsellCard({ onSubscribe }: Props) {
       ))}
       <Pressable style={styles.button} onPress={onSubscribe}>
         <Text style={styles.buttonText}>{t.subscribeButton}</Text>
+      </Pressable>
+      <Pressable onPress={onLifetime}>
+        <Text style={styles.lifetimeLink}>{t.lifetimeButton}</Text>
       </Pressable>
     </View>
   );
@@ -60,5 +64,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: theme.colors.primaryText,
     fontWeight: '700',
+  },
+  lifetimeLink: {
+    color: theme.colors.subtext,
+    fontSize: 12,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: theme.spacing(1),
   },
 });

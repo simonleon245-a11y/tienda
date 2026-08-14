@@ -26,7 +26,13 @@ import { getDailyAlbum } from '@/services/lastfm';
 import { getDailyMovie } from '@/services/tmdb';
 import { getMonthlyBook } from '@/services/googleBooks';
 import { maybeShowInterstitial } from '@/services/ads';
-import { checkPremiumStatus, openUpgradeFlow, FREE_REROLLS_PER_PERIOD } from '@/services/premium';
+import {
+  checkPremiumStatus,
+  openUpgradeFlow,
+  openLifetimeUpgradeFlow,
+  FREE_REROLLS_PER_PERIOD,
+} from '@/services/premium';
+import { openTipFlow } from '@/services/tip';
 import { todayKey, monthKey } from '@/utils/dailySeed';
 import { showAlert } from '@/utils/alert';
 import { AlbumPick, BookPick, Category, GenrePreferences, MoviePick } from '@/types';
@@ -116,6 +122,16 @@ export default function HomeScreen() {
     openUpgradeFlow(language).catch((err) =>
       showAlert(t.subscriptionUnavailableTitle, err.message)
     );
+  };
+
+  const handleLifetimePress = () => {
+    openLifetimeUpgradeFlow(language).catch((err) =>
+      showAlert(t.subscriptionUnavailableTitle, err.message)
+    );
+  };
+
+  const handleTipPress = () => {
+    openTipFlow(language).catch((err) => showAlert(t.subscriptionUnavailableTitle, err.message));
   };
 
   const handleReroll = async (category: Category) => {
@@ -299,7 +315,13 @@ export default function HomeScreen() {
           )}
         </RecommendationCard>
 
-        {!isPremium && <PremiumUpsellCard onSubscribe={handleUpgradePress} />}
+        {!isPremium && (
+          <PremiumUpsellCard onSubscribe={handleUpgradePress} onLifetime={handleLifetimePress} />
+        )}
+
+        <Pressable onPress={handleTipPress} style={styles.tipButton}>
+          <Text style={styles.tipButtonText}>{t.tipButton}</Text>
+        </Pressable>
       </ScrollView>
 
       {!isPremium && <BannerAd />}
@@ -406,6 +428,15 @@ const styles = StyleSheet.create({
   colorButtonText: {
     color: theme.colors.subtext,
     fontSize: 11,
+    fontWeight: '600',
+  },
+  tipButton: {
+    alignItems: 'center',
+    paddingVertical: theme.spacing(1.5),
+  },
+  tipButtonText: {
+    color: theme.colors.subtext,
+    fontSize: 13,
     fontWeight: '600',
   },
   itemRow: {
