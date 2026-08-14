@@ -15,6 +15,7 @@ interface GoogleBookVolume {
     description?: string;
     imageLinks?: { thumbnail?: string; smallThumbnail?: string };
     infoLink?: string;
+    language?: string;
   };
 }
 
@@ -34,7 +35,14 @@ async function fetchBookPool(subject: string, language: Language): Promise<Googl
     throw new Error(t.googleBooksError(res.status));
   }
   const json = await res.json();
-  const items: GoogleBookVolume[] = json?.items ?? [];
+  const rawItems: GoogleBookVolume[] = json?.items ?? [];
+
+  // Google Books no siempre respeta "langRestrict" al 100% (algunos libros
+  // quedan mal etiquetados). Filtramos también del lado del cliente, y solo
+  // si eso deja la lista vacía usamos la lista sin filtrar como respaldo.
+  const filtered = rawItems.filter((item) => item.volumeInfo.language === language);
+  const items = filtered.length > 0 ? filtered : rawItems;
+
   if (items.length === 0) {
     throw new Error(t.noBooksFound);
   }
