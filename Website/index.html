@@ -91,7 +91,7 @@
 
   .hero-note { margin-top: 18px; color: var(--subtext); font-size: 13px; }
   .hero-art { display: flex; justify-content: center; margin-top: 40px; }
-  .hero-art svg { max-width: 100%; height: auto; }
+  .hero-art img { max-width: 100%; height: auto; border-radius: 24px; }
 
   /* Features */
   .features {
@@ -223,59 +223,8 @@
     </div>
     <p class="hero-note">Funciona en el navegador de tu Android o iPhone — no necesitas Google Play ni App Store.</p>
 
-    <div class="hero-art" aria-hidden="true">
-      <svg viewBox="0 0 400 400" width="280" height="280">
-        <defs>
-          <clipPath id="lensClip"><circle cx="200" cy="200" r="138"/></clipPath>
-          <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#2E1065"/>
-            <stop offset="100%" stop-color="#5B21B6"/>
-          </linearGradient>
-        </defs>
-
-        <g fill="#D4AF37" opacity="0.9">
-          <circle cx="50" cy="105" r="12"/>
-          <rect x="60" y="50" width="6" height="58"/>
-          <path d="M66 50 C 95 57, 95 77, 66 82 Z"/>
-        </g>
-        <g fill="#8B5CF6" opacity="0.9">
-          <circle cx="350" cy="285" r="10"/>
-          <rect x="358" y="235" width="5" height="52"/>
-          <path d="M363 235 C 387 241, 387 259, 363 263 Z"/>
-        </g>
-
-        <rect x="110" y="315" width="180" height="66" rx="22" fill="#1C1533" stroke="#D4AF37" stroke-width="4"/>
-        <rect x="168" y="22" width="64" height="30" rx="10" fill="#1C1533" stroke="#D4AF37" stroke-width="4"/>
-        <rect x="296" y="76" width="30" height="18" rx="6" fill="#D4AF37"/>
-
-        <circle cx="200" cy="200" r="150" fill="none" stroke="#D4AF37" stroke-width="12"/>
-        <circle cx="200" cy="200" r="128" fill="none" stroke="#F1D77A" stroke-width="3" opacity="0.5"/>
-
-        <g clip-path="url(#lensClip)">
-          <rect x="62" y="62" width="276" height="150" fill="url(#sky)"/>
-          <circle cx="255" cy="108" r="26" fill="#F1D77A"/>
-          <rect x="62" y="212" width="276" height="55" fill="#3B82C4"/>
-          <rect x="62" y="267" width="276" height="73" fill="#E8C57A"/>
-          <path d="M92 267 C 90 220, 100 190, 100 190" stroke="#145A32" stroke-width="8" fill="none" stroke-linecap="round"/>
-          <g fill="#145A32">
-            <ellipse cx="80" cy="182" rx="24" ry="10" transform="rotate(-20 80 182)"/>
-            <ellipse cx="120" cy="182" rx="24" ry="10" transform="rotate(20 120 182)"/>
-            <ellipse cx="100" cy="171" rx="11" ry="22"/>
-          </g>
-          <g transform="rotate(-8 232 270)" fill="#8B5A2B">
-            <rect x="196" y="225" width="88" height="16" rx="8"/>
-            <rect x="192" y="238" width="80" height="62" rx="10"/>
-            <rect x="196" y="296" width="10" height="16" rx="3"/>
-            <rect x="262" y="296" width="10" height="16" rx="3"/>
-          </g>
-          <g fill="#1C1533">
-            <circle cx="226" cy="238" r="15"/>
-            <path d="M198 300 Q198 258 226 256 Q254 258 254 300 Z"/>
-          </g>
-          <path d="M213 263 L226 256 L226 276 L213 281 Z" fill="#D4AF37"/>
-          <path d="M226 256 L239 263 L239 281 L226 276 Z" fill="#F1D77A"/>
-        </g>
-      </svg>
+    <div class="hero-art">
+      <img src="assets/hero-illustration.png" alt="Ilustración de una persona leyendo un libro en la playa, enmarcada en el lente de una cámara, con notas musicales alrededor" width="280" height="280" />
     </div>
   </div>
 </section>
