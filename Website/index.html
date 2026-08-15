@@ -90,6 +90,8 @@
   .btn-ghost:hover { border-color: var(--primary); }
 
   .hero-note { margin-top: 18px; color: var(--subtext); font-size: 13px; }
+  .hero-art { display: flex; justify-content: center; margin-top: 40px; }
+  .hero-art svg { max-width: 100%; height: auto; }
 
   /* Features */
   .features {
@@ -220,6 +222,56 @@
       <a href="#instalar" class="btn btn-ghost">Cómo instalarla</a>
     </div>
     <p class="hero-note">Funciona en el navegador de tu Android o iPhone — no necesitas Google Play ni App Store.</p>
+
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 400 400" width="280" height="280">
+        <defs>
+          <clipPath id="lensClip"><circle cx="200" cy="200" r="138"/></clipPath>
+          <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2E1065"/>
+            <stop offset="100%" stop-color="#5B21B6"/>
+          </linearGradient>
+        </defs>
+        <g fill="#D4AF37" opacity="0.9">
+          <circle cx="55" cy="110" r="12"/>
+          <rect x="65" y="55" width="6" height="58"/>
+          <path d="M71 55 C 100 62, 100 82, 71 87 Z"/>
+        </g>
+        <g fill="#8B5CF6" opacity="0.9">
+          <circle cx="345" cy="290" r="10"/>
+          <rect x="353" y="240" width="5" height="52"/>
+          <path d="M358 240 C 382 246, 382 264, 358 268 Z"/>
+        </g>
+        <g fill="#8B5CF6" opacity="0.7" transform="rotate(-18 60 290)">
+          <circle cx="60" cy="290" r="9"/>
+          <rect x="67" y="248" width="5" height="44"/>
+        </g>
+        <circle cx="200" cy="200" r="150" fill="none" stroke="#D4AF37" stroke-width="10"/>
+        <g stroke="#D4AF37" stroke-width="4" opacity="0.7">
+          <line x1="200" y1="34" x2="200" y2="50"/>
+          <line x1="200" y1="350" x2="200" y2="366"/>
+          <line x1="34" y1="200" x2="50" y2="200"/>
+          <line x1="350" y1="200" x2="366" y2="200"/>
+        </g>
+        <rect x="300" y="70" width="34" height="20" rx="6" fill="#D4AF37"/>
+        <g clip-path="url(#lensClip)">
+          <rect x="62" y="62" width="276" height="150" fill="url(#sky)"/>
+          <circle cx="255" cy="110" r="26" fill="#F1D77A"/>
+          <rect x="62" y="212" width="276" height="55" fill="#3B82C4"/>
+          <rect x="62" y="267" width="276" height="73" fill="#E8C57A"/>
+          <path d="M90 267 C 88 220, 100 190, 100 190" stroke="#145A32" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <g fill="#145A32">
+            <ellipse cx="78" cy="182" rx="26" ry="11" transform="rotate(-20 78 182)"/>
+            <ellipse cx="122" cy="182" rx="26" ry="11" transform="rotate(20 122 182)"/>
+            <ellipse cx="100" cy="170" rx="12" ry="24"/>
+          </g>
+          <rect x="205" y="235" width="70" height="14" rx="6" fill="#1C1533" transform="rotate(-8 205 235)"/>
+          <rect x="200" y="248" width="66" height="55" rx="8" fill="#1C1533" transform="rotate(-8 200 248)"/>
+          <circle cx="222" cy="243" r="15" fill="#F5F3FF"/>
+          <path d="M205 292 L235 284 L233 300 L207 305 Z" fill="#D4AF37"/>
+        </g>
+      </svg>
+    </div>
   </div>
 </section>
 

@@ -14,6 +14,7 @@ import FeedbackModal from '@/components/FeedbackModal';
 import BandSubmissionModal from '@/components/BandSubmissionModal';
 import { MUSIC_GENRES, MOVIE_GENRES, BOOK_GENRES, genreLabel } from '@/constants/genres';
 import { DEFAULT_ACCENT_COLOR, isPremiumColor } from '@/constants/colors';
+import { colorForItem } from '@/utils/itemColor';
 import { useLanguage } from '@/i18n/LanguageContext';
 import {
   getGenrePreferences,
@@ -215,6 +216,7 @@ export default function HomeScreen() {
           loading={album.loading}
           error={album.error}
           accentColor={accentColor}
+          itemTintColor={album.data ? colorForItem(album.data.id) : undefined}
           onChangeGenre={() => setActivePicker('album')}
           onRetry={() => loadAlbum(prefs.album, variants.album)}
           onReroll={() => handleReroll('album')}
@@ -252,6 +254,7 @@ export default function HomeScreen() {
           loading={movie.loading}
           error={movie.error}
           accentColor={accentColor}
+          itemTintColor={movie.data ? colorForItem(String(movie.data.id)) : undefined}
           onChangeGenre={() => setActivePicker('movie')}
           onRetry={() => loadMovie(prefs.movie, variants.movie)}
           onReroll={() => handleReroll('movie')}
@@ -291,6 +294,7 @@ export default function HomeScreen() {
           loading={book.loading}
           error={book.error}
           accentColor={accentColor}
+          itemTintColor={book.data ? colorForItem(book.data.id) : undefined}
           onChangeGenre={() => setActivePicker('book')}
           onRetry={() => loadBook(prefs.book, variants.book)}
           onReroll={() => handleReroll('book')}
@@ -408,7 +412,7 @@ const styles = StyleSheet.create({
   heading: {
     color: theme.colors.text,
     fontSize: 26,
-    fontWeight: '800',
+    fontFamily: theme.fonts.headingExtraBold,
     marginBottom: theme.spacing(0.5),
   },
   subheading: {
@@ -474,7 +478,7 @@ const styles = StyleSheet.create({
   itemTitle: {
     color: theme.colors.text,
     fontSize: 15,
-    fontWeight: '700',
+    fontFamily: theme.fonts.heading,
   },
   itemSubtitle: {
     color: theme.colors.subtext,

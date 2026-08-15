@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, Pressable, Animated } from 'react-native';
 import { theme } from '@/theme';
 import { useLanguage } from '@/i18n/LanguageContext';
 
@@ -10,6 +10,7 @@ interface Props {
   loading: boolean;
   error: string | null;
   accentColor: string;
+  itemTintColor?: string;
   onChangeGenre: () => void;
   onRetry: () => void;
   onReroll: () => void;
@@ -23,14 +24,30 @@ export default function RecommendationCard({
   loading,
   error,
   accentColor,
+  itemTintColor,
   onChangeGenre,
   onRetry,
   onReroll,
   children,
 }: Props) {
   const { t } = useLanguage();
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const wasLoading = useRef(loading);
+
+  useEffect(() => {
+    if (wasLoading.current && !loading) {
+      fadeAnim.setValue(0);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 320,
+        useNativeDriver: true,
+      }).start();
+    }
+    wasLoading.current = loading;
+  }, [loading, fadeAnim]);
+
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, itemTintColor ? { borderTopColor: itemTintColor, borderTopWidth: 3 } : null]}>
       <View style={styles.headerRow}>
         <Text style={styles.categoryLabel}>{categoryLabel}</Text>
         <Text style={styles.frequencyLabel}>{frequencyLabel}</Text>
@@ -53,7 +70,9 @@ export default function RecommendationCard({
             </Pressable>
           </View>
         )}
-        {!loading && !error && children}
+        {!loading && !error && (
+          <Animated.View style={{ opacity: fadeAnim }}>{children}</Animated.View>
+        )}
       </View>
 
       <View style={styles.footer}>
@@ -93,7 +112,7 @@ const styles = StyleSheet.create({
   categoryLabel: {
     color: theme.colors.text,
     fontSize: 16,
-    fontWeight: '700',
+    fontFamily: theme.fonts.heading,
   },
   frequencyLabel: {
     color: theme.colors.subtext,

@@ -15,4 +15,9 @@ export const theme = {
     card: 16,
     chip: 999,
   },
+  fonts: {
+    heading: 'Poppins_700Bold',
+    headingExtraBold: 'Poppins_800ExtraBold',
+    semiBold: 'Poppins_600SemiBold',
+  },
 };
