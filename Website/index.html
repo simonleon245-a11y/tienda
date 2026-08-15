@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Recos Diarias — un álbum, una película y un libro cada día</title>
-<meta name="description" content="Recos Diarias te recomienda un álbum y una película nuevos cada día, y un libro cada mes, según los géneros que elijas. Instálala gratis desde el navegador." />
+<title data-es="Recos Diarias — un álbum, una película y un libro cada día" data-en="Recos Diarias — a new album, movie, and book every day">Recos Diarias — un álbum, una película y un libro cada día</title>
+<meta name="description" id="meta-description" data-es="Recos Diarias te recomienda un álbum y una película nuevos cada día, y un libro cada mes, según los géneros que elijas. Instálala gratis desde el navegador." data-en="Recos Diarias recommends a new album and movie every day, and a new book every month, based on the genres you pick. Install it free from your browser." content="Recos Diarias te recomienda un álbum y una película nuevos cada día, y un libro cada mes, según los géneros que elijas. Instálala gratis desde el navegador." />
 <link rel="icon" href="assets/favicon.png" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9527002715948451"
      crossorigin="anonymous"></script>
@@ -48,12 +48,24 @@
     padding: 20px 24px;
     max-width: 1080px;
     margin: 0 auto;
+    gap: 16px;
   }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; }
   .brand img { width: 32px; height: 32px; border-radius: 8px; }
-  nav.links { display: flex; gap: 24px; font-size: 14px; }
+  nav.links { display: flex; align-items: center; gap: 24px; font-size: 14px; }
   nav.links a { color: var(--subtext); text-decoration: none; }
   nav.links a:hover { color: var(--text); }
+  #lang-toggle {
+    background: var(--chip);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #lang-toggle:hover { border-color: var(--primary); }
 
   /* Hero */
   .hero {
@@ -157,10 +169,10 @@
     padding: 32px;
     display: flex;
     flex-direction: column;
+    position: relative;
   }
-  .price-card.premium { border-color: var(--primary); position: relative; }
-  .price-card.premium::before {
-    content: "RECOMENDADO";
+  .price-card.premium { border-color: var(--primary); }
+  .price-card-badge {
     position: absolute;
     top: -12px;
     left: 50%;
@@ -191,7 +203,7 @@
   }
 
   @media (max-width: 640px) {
-    nav.links { display: none; }
+    nav.links a { display: none; }
   }
 </style>
 </head>
@@ -203,25 +215,26 @@
     Recos Diarias
   </div>
   <nav class="links">
-    <a href="#features">Qué es</a>
-    <a href="#instalar">Cómo instalarla</a>
+    <a href="#features" data-es="Qué es" data-en="What it is">Qué es</a>
+    <a href="#instalar" data-es="Cómo instalarla" data-en="How to install">Cómo instalarla</a>
     <a href="#premium">Premium</a>
+    <button id="lang-toggle" type="button">🇬🇧 English</button>
   </nav>
 </header>
 
 <section class="hero">
   <div class="wrap">
-    <h1>Un álbum, una película<br />y un libro <span>cada día</span></h1>
-    <p class="sub">
+    <h1 data-es='Un álbum, una película<br />y un libro <span>cada día</span>' data-en='A new album, a movie<br />and a book <span>every day</span>'>Un álbum, una película<br />y un libro <span>cada día</span></h1>
+    <p class="sub" data-es="Elige tus géneros favoritos y descubre música, cine y lectura nueva — un álbum y una película cada día, un libro cada mes. Sin cuentas, sin complicaciones." data-en="Pick your favorite genres and discover new music, movies, and books — a new album and movie every day, a new book every month. No accounts, no hassle.">
       Elige tus géneros favoritos y descubre música, cine y lectura nueva —
       un álbum y una película cada día, un libro cada mes. Sin cuentas, sin
       complicaciones.
     </p>
     <div class="cta-row">
-      <a href="https://recos-diarias-app.vercel.app" class="btn btn-primary app-link">Abrir la app</a>
-      <a href="#instalar" class="btn btn-ghost">Cómo instalarla</a>
+      <a href="https://recos-diarias-app.vercel.app" class="btn btn-primary app-link" data-es="Abrir la app" data-en="Open the app">Abrir la app</a>
+      <a href="#instalar" class="btn btn-ghost" data-es="Cómo instalarla" data-en="How to install">Cómo instalarla</a>
     </div>
-    <p class="hero-note">Funciona en el navegador de tu Android o iPhone — no necesitas Google Play ni App Store.</p>
+    <p class="hero-note" data-es="Funciona en el navegador de tu Android o iPhone — no necesitas Google Play ni App Store." data-en="Works right in your Android or iPhone browser — no Google Play or App Store needed.">Funciona en el navegador de tu Android o iPhone — no necesitas Google Play ni App Store.</p>
 
     <div class="hero-art">
       <img src="assets/hero-illustration.png" alt="Ilustración de una persona leyendo un libro en la playa, enmarcada en el lente de una cámara, con notas musicales alrededor" width="280" height="280" />
@@ -232,24 +245,24 @@
 <section class="features" id="features">
   <div class="wrap">
     <div class="section-heading">
-      <h2>¿Qué es Recos Diarias?</h2>
-      <p>Tres recomendaciones, cada una a su ritmo, elegidas por género.</p>
+      <h2 data-es="¿Qué es Recos Diarias?" data-en="What is Recos Diarias?">¿Qué es Recos Diarias?</h2>
+      <p data-es="Tres recomendaciones, cada una a su ritmo, elegidas por género." data-en="Three recommendations, each on its own rhythm, picked by genre.">Tres recomendaciones, cada una a su ritmo, elegidas por género.</p>
     </div>
     <div class="features-grid">
       <div class="feature-card">
         <span class="emoji">🎵</span>
-        <h3>Álbum del día</h3>
-        <p>Un álbum nuevo cada día del género que elijas, priorizando artistas menos mainstream. Con enlaces directos a Spotify, YouTube Music y Amazon Music.</p>
+        <h3 data-es="Álbum del día" data-en="Album of the day">Álbum del día</h3>
+        <p data-es="Un álbum nuevo cada día del género que elijas, priorizando artistas menos mainstream. Con enlaces directos a Spotify, YouTube Music y Amazon Music." data-en="A new album every day in the genre you pick, favoring less mainstream artists. With direct links to Spotify, YouTube Music, and Amazon Music.">Un álbum nuevo cada día del género que elijas, priorizando artistas menos mainstream. Con enlaces directos a Spotify, YouTube Music y Amazon Music.</p>
       </div>
       <div class="feature-card">
         <span class="emoji">🎬</span>
-        <h3>Película del día</h3>
-        <p>Una película nueva cada día, con sinopsis, calificación y en qué plataformas de streaming la puedes ver ya mismo.</p>
+        <h3 data-es="Película del día" data-en="Movie of the day">Película del día</h3>
+        <p data-es="Una película nueva cada día, con sinopsis, calificación y en qué plataformas de streaming la puedes ver ya mismo." data-en="A new movie every day, with synopsis, rating, and where you can stream it right now.">Una película nueva cada día, con sinopsis, calificación y en qué plataformas de streaming la puedes ver ya mismo.</p>
       </div>
       <div class="feature-card">
         <span class="emoji">📚</span>
-        <h3>Libro del mes</h3>
-        <p>Una recomendación de lectura nueva cada mes, con autor y descripción, del género que prefieras.</p>
+        <h3 data-es="Libro del mes" data-en="Book of the month">Libro del mes</h3>
+        <p data-es="Una recomendación de lectura nueva cada mes, con autor y descripción, del género que prefieras." data-en="A new reading recommendation every month, with author and description, in the genre you prefer.">Una recomendación de lectura nueva cada mes, con autor y descripción, del género que prefieras.</p>
       </div>
     </div>
   </div>
@@ -258,26 +271,26 @@
 <section class="install" id="instalar">
   <div class="wrap">
     <div class="section-heading">
-      <h2>Cómo instalarla</h2>
-      <p>Es una app web: se instala directo desde el navegador, sin tiendas de aplicaciones.</p>
+      <h2 data-es="Cómo instalarla" data-en="How to install it">Cómo instalarla</h2>
+      <p data-es="Es una app web: se instala directo desde el navegador, sin tiendas de aplicaciones." data-en="It's a web app: install it straight from your browser, no app stores needed.">Es una app web: se instala directo desde el navegador, sin tiendas de aplicaciones.</p>
     </div>
     <div class="install-grid">
       <div class="install-card">
         <h3>📱 Android</h3>
         <ol>
-          <li>Abre <b>este sitio</b> con Chrome</li>
-          <li>Toca el botón <b>"Abrir la app"</b> arriba</li>
-          <li>Toca el menú de tres puntos (⋮) arriba a la derecha</li>
-          <li>Elige <b>"Instalar app"</b> o <b>"Agregar a pantalla de inicio"</b></li>
+          <li data-es='Abre <b>este sitio</b> con Chrome' data-en='Open <b>this site</b> with Chrome'>Abre <b>este sitio</b> con Chrome</li>
+          <li data-es='Toca el botón <b>"Abrir la app"</b> arriba' data-en='Tap the <b>"Open the app"</b> button above'>Toca el botón <b>"Abrir la app"</b> arriba</li>
+          <li data-es="Toca el menú de tres puntos (⋮) arriba a la derecha" data-en="Tap the three-dot menu (⋮) at the top right">Toca el menú de tres puntos (⋮) arriba a la derecha</li>
+          <li data-es='Elige <b>"Instalar app"</b> o <b>"Agregar a pantalla de inicio"</b>' data-en='Choose <b>"Install app"</b> or <b>"Add to Home screen"</b>'>Elige <b>"Instalar app"</b> o <b>"Agregar a pantalla de inicio"</b></li>
         </ol>
       </div>
       <div class="install-card">
         <h3>🍎 iPhone</h3>
         <ol>
-          <li>Abre <b>este sitio</b> con Safari (no funciona en Chrome en iPhone)</li>
-          <li>Toca el botón <b>"Abrir la app"</b> arriba</li>
-          <li>Toca el ícono de <b>compartir</b> (el cuadrado con flecha hacia arriba)</li>
-          <li>Elige <b>"Agregar a pantalla de inicio"</b></li>
+          <li data-es='Abre <b>este sitio</b> con Safari (no funciona en Chrome en iPhone)' data-en="Open <b>this site</b> with Safari (won't work in Chrome on iPhone)">Abre <b>este sitio</b> con Safari (no funciona en Chrome en iPhone)</li>
+          <li data-es='Toca el botón <b>"Abrir la app"</b> arriba' data-en='Tap the <b>"Open the app"</b> button above'>Toca el botón <b>"Abrir la app"</b> arriba</li>
+          <li data-es='Toca el ícono de <b>compartir</b> (el cuadrado con flecha hacia arriba)' data-en='Tap the <b>share</b> icon (the square with an arrow pointing up)'>Toca el ícono de <b>compartir</b> (el cuadrado con flecha hacia arriba)</li>
+          <li data-es='Elige <b>"Agregar a pantalla de inicio"</b>' data-en='Choose <b>"Add to Home Screen"</b>'>Elige <b>"Agregar a pantalla de inicio"</b></li>
         </ol>
       </div>
     </div>
@@ -287,39 +300,40 @@
 <section class="pricing" id="premium">
   <div class="wrap">
     <div class="section-heading">
-      <h2>Gratis, con opción Premium</h2>
-      <p>Usa la app gratis siempre. Si quieres más, hay un plan Premium.</p>
+      <h2 data-es="Gratis, con opción Premium" data-en="Free, with a Premium option">Gratis, con opción Premium</h2>
+      <p data-es="Usa la app gratis siempre. Si quieres más, hay un plan Premium." data-en="Use the app free, always. If you want more, there's a Premium plan.">Usa la app gratis siempre. Si quieres más, hay un plan Premium.</p>
     </div>
     <div class="pricing-cards">
       <div class="price-card">
-        <h3>Gratis</h3>
+        <h3 data-es="Gratis" data-en="Free">Gratis</h3>
         <div class="price">$0</div>
         <ul>
-          <li>Álbum, película y libro ilimitados por género</li>
-          <li>1 "ver otra opción" gratis al día por categoría</li>
-          <li>5 colores básicos para personalizar la app</li>
-          <li>Con anuncios</li>
+          <li data-es="Álbum, película y libro ilimitados por género" data-en="Unlimited album, movie, and book picks by genre">Álbum, película y libro ilimitados por género</li>
+          <li data-es='1 "ver otra opción" gratis al día por categoría' data-en='One free "see another option" per day, per category'>1 "ver otra opción" gratis al día por categoría</li>
+          <li data-es="5 colores básicos para personalizar la app" data-en="5 basic colors to personalize the app">5 colores básicos para personalizar la app</li>
+          <li data-es="Con anuncios" data-en="With ads">Con anuncios</li>
         </ul>
-        <a href="https://recos-diarias-app.vercel.app" class="btn btn-ghost app-link" style="text-align:center;">Empezar gratis</a>
+        <a href="https://recos-diarias-app.vercel.app" class="btn btn-ghost app-link" style="text-align:center;" data-es="Empezar gratis" data-en="Start free">Empezar gratis</a>
       </div>
       <div class="price-card premium">
+        <span class="price-card-badge" data-es="RECOMENDADO" data-en="RECOMMENDED">RECOMENDADO</span>
         <h3>Recos Premium</h3>
-        <div class="price">$3 <small>USD / mes</small></div>
+        <div class="price">$3 <small data-es="USD / mes" data-en="USD / month">USD / mes</small></div>
         <ul>
-          <li>Cero anuncios</li>
-          <li>"Ver otra opción" ilimitado en álbum, película y libro</li>
-          <li>8 colores exclusivos para personalizar la app</li>
-          <li>Acceso anticipado a nuevas funciones</li>
+          <li data-es="Cero anuncios" data-en="Zero ads">Cero anuncios</li>
+          <li data-es='"Ver otra opción" ilimitado en álbum, película y libro' data-en='Unlimited "see another option" for albums, movies, and books'>"Ver otra opción" ilimitado en álbum, película y libro</li>
+          <li data-es="8 colores exclusivos para personalizar la app" data-en="8 exclusive colors to personalize the app">8 colores exclusivos para personalizar la app</li>
+          <li data-es="Acceso anticipado a nuevas funciones" data-en="Early access to new features">Acceso anticipado a nuevas funciones</li>
         </ul>
-        <a href="#" id="subscribe-btn" class="btn btn-primary" style="text-align:center;">Suscribirme</a>
+        <a href="#" id="subscribe-btn" class="btn btn-primary" style="text-align:center;" data-es="Suscribirme" data-en="Subscribe">Suscribirme</a>
       </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <p>Recos Diarias — hecha para descubrir algo nuevo cada día.</p>
-  <p><a href="privacy.html">Política de privacidad</a></p>
+  <p data-es="Recos Diarias — hecha para descubrir algo nuevo cada día." data-en="Recos Diarias — made to discover something new every day.">Recos Diarias — hecha para descubrir algo nuevo cada día.</p>
+  <p><a href="privacy.html" data-es="Política de privacidad" data-en="Privacy Policy">Política de privacidad</a></p>
 </footer>
 
 <script>
@@ -328,10 +342,36 @@
   // suscripción todavía no está disponible.
   const PREMIUM_CHECKOUT_URL = "https://checkout.wompi.co/l/TCTHVu";
 
+  const SUBSCRIBE_UNAVAILABLE = {
+    es: "La suscripción todavía no está disponible. ¡Vuelve pronto!",
+    en: "Subscriptions aren't available yet. Check back soon!",
+  };
+
+  let currentLang = localStorage.getItem("lang") || "es";
+
+  function applyLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-" + lang + "]").forEach((el) => {
+      el.innerHTML = el.getAttribute("data-" + lang);
+    });
+    const meta = document.getElementById("meta-description");
+    meta.setAttribute("content", meta.getAttribute("data-" + lang));
+    document.getElementById("lang-toggle").textContent =
+      lang === "es" ? "🇬🇧 English" : "🇪🇸 Español";
+    localStorage.setItem("lang", lang);
+  }
+
+  document.getElementById("lang-toggle").addEventListener("click", function () {
+    applyLang(currentLang === "es" ? "en" : "es");
+  });
+
+  applyLang(currentLang);
+
   document.getElementById("subscribe-btn").addEventListener("click", function (e) {
     if (!PREMIUM_CHECKOUT_URL) {
       e.preventDefault();
-      alert("La suscripción todavía no está disponible. ¡Vuelve pronto!");
+      alert(SUBSCRIBE_UNAVAILABLE[currentLang]);
     } else {
       window.location.href = PREMIUM_CHECKOUT_URL;
     }
