@@ -19,7 +19,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   splash: {
     image: './assets/splash-icon.png',
     resizeMode: 'contain',
-    backgroundColor: '#5B21B6',
+    backgroundColor: '#7A1F52',
   },
   assetBundlePatterns: ['**/*'],
   ios: {
@@ -34,7 +34,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     package: 'com.recosdiarias.app',
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
-      backgroundColor: '#5B21B6',
+      backgroundColor: '#7A1F52',
     },
     permissions: ['com.google.android.gms.permission.AD_ID'],
   },
@@ -47,7 +47,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-notifications',
       {
         icon: './assets/icon.png',
-        color: '#5B21B6',
+        color: '#7A1F52',
       },
     ],
     [
