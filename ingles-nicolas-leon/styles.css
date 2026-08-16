@@ -417,6 +417,26 @@ p { margin: 0 0 16px; color: var(--muted); }
   text-align: center;
   box-shadow: var(--shadow);
 }
+.price-card__badge {
+  display: inline-block;
+  background: rgba(255, 215, 107, 0.15);
+  border: 1px solid rgba(255, 215, 107, 0.4);
+  color: #ffd76b;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+  letter-spacing: 0.02em;
+}
+.price-card__discount {
+  font-size: 0.92rem;
+  color: #e5ecfb;
+  margin: -8px 0 26px;
+}
+.price-card__discount strong { color: #ffd76b; font-family: var(--font-heading); }
+.price-card__strike { text-decoration: line-through; color: rgba(255, 255, 255, 0.5); margin-left: 6px; }
 .price-card__amount {
   font-family: var(--font-heading);
   font-size: 2.6rem;
@@ -462,6 +482,42 @@ p { margin: 0 0 16px; color: var(--muted); }
   align-items: center;
   justify-content: center;
 }
+
+/* ---------- FAQ ---------- */
+.faq {
+  display: grid;
+  gap: 14px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.faq details {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+}
+.faq summary {
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--text);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: "+";
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--blue);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq p { margin: 12px 0 0; font-size: 0.94rem; }
 
 /* ---------- Contact ---------- */
 .contact {
