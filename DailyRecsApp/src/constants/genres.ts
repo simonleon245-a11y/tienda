@@ -33,6 +33,7 @@ export const MOVIE_GENRES: Genre[] = [
   { id: '14', label: { es: 'Fantasía', en: 'Fantasy' } },
   { id: '36', label: { es: 'Historia', en: 'History' } },
   { id: '27', label: { es: 'Terror', en: 'Horror' } },
+  { id: '27:283085', label: { es: 'Terror (body horror)', en: 'Horror (body horror)' } },
   { id: '9648', label: { es: 'Misterio', en: 'Mystery' } },
   { id: '10749', label: { es: 'Romance', en: 'Romance' } },
   { id: '878', label: { es: 'Ciencia ficción', en: 'Science Fiction' } },

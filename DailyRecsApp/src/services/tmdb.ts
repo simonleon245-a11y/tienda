@@ -34,14 +34,26 @@ interface TmdbWatchProvidersForRegion {
   buy?: TmdbWatchProviderEntry[];
 }
 
+/** Algunos géneros son en realidad "subgéneros": un id de género normal
+ * de TMDb + un id de palabra clave (keyword), separados por ":" — por
+ * ejemplo '27:283085' es Terror + la keyword "body horror". TMDb no
+ * tiene subgéneros como tal, así que esto se resuelve combinando
+ * with_genres y with_keywords en la misma búsqueda. */
+function parseGenreId(genreId: string): { genre: string; keyword?: string } {
+  const [genre, keyword] = genreId.split(':');
+  return keyword ? { genre, keyword } : { genre };
+}
+
 async function fetchDiscoverPage(
   genreId: string,
   page: number,
   language: Language
 ): Promise<TmdbMovie[]> {
+  const { genre, keyword } = parseGenreId(genreId);
+  const keywordParam = keyword ? `&with_keywords=${encodeURIComponent(keyword)}` : '';
   const url = `${BASE_URL}/discover/movie?api_key=${ENV.TMDB_API_KEY}&with_genres=${encodeURIComponent(
-    genreId
-  )}&sort_by=popularity.desc&page=${page}&language=${TMDB_LOCALE[language]}&include_adult=false`;
+    genre
+  )}${keywordParam}&sort_by=popularity.desc&page=${page}&language=${TMDB_LOCALE[language]}&include_adult=false`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(translations[language].tmdbError(res.status));
