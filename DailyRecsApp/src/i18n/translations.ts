@@ -92,6 +92,16 @@ export interface UIStrings {
   openAction: string;
   buyOnAmazon: string;
   amazonDisclosure: string;
+  donorShoutoutButtonLabel: string;
+  donorShoutoutModalTitle: string;
+  donorShoutoutIntro: string;
+  donorShoutoutNameLabel: string;
+  donorShoutoutNoteLabel: string;
+  donorShoutoutSuccess: string;
+  donorShoutoutNotConfigured: string;
+  donorShoutoutRequiredError: string;
+  donorShoutoutError: string;
+  donorShoutoutViewPage: string;
 }
 
 export const translations: Record<Language, UIStrings> = {
@@ -197,6 +207,17 @@ export const translations: Record<Language, UIStrings> = {
     openAction: 'Abrir',
     buyOnAmazon: 'Comprar en Amazon',
     amazonDisclosure: 'Como Afiliado de Amazon, Recos Diarias gana por compras que califican.',
+    donorShoutoutButtonLabel: '¿Ya nos invitaste un café? Sal en la página de agradecimientos →',
+    donorShoutoutModalTitle: 'Página de agradecimientos',
+    donorShoutoutIntro:
+      'Esto no es Premium ni desbloquea nada — es solo un gracias público y opcional para quienes nos han invitado un café. Déjanos tu nombre o alias y te agregamos a la página (la revisamos manualmente, así que puede tardar unos días).',
+    donorShoutoutNameLabel: 'Tu nombre o alias',
+    donorShoutoutNoteLabel: 'Mensaje (opcional)',
+    donorShoutoutSuccess: '¡Gracias! Te vamos a agregar a la página de agradecimientos pronto.',
+    donorShoutoutNotConfigured: 'Esto todavía no está configurado.',
+    donorShoutoutRequiredError: 'Escribe tu nombre o alias antes de enviar.',
+    donorShoutoutError: 'No se pudo enviar. Intenta de nuevo en un momento.',
+    donorShoutoutViewPage: 'Ver la página de agradecimientos',
   },
   en: {
     appTitle: 'Your recommendations',
@@ -299,5 +320,16 @@ export const translations: Record<Language, UIStrings> = {
     openAction: 'Open',
     buyOnAmazon: 'Buy on Amazon',
     amazonDisclosure: 'As an Amazon Associate, Recos Diarias earns from qualifying purchases.',
+    donorShoutoutButtonLabel: 'Already bought us a coffee? Get featured on the thank-you page →',
+    donorShoutoutModalTitle: 'Thank-you page',
+    donorShoutoutIntro:
+      "This isn't Premium and doesn't unlock anything — it's just an optional public thank-you for anyone who's bought us a coffee. Leave your name or alias and we'll add you to the page (reviewed manually, so it may take a few days).",
+    donorShoutoutNameLabel: 'Your name or alias',
+    donorShoutoutNoteLabel: 'Message (optional)',
+    donorShoutoutSuccess: "Thanks! We'll add you to the thank-you page soon.",
+    donorShoutoutNotConfigured: "This isn't set up yet.",
+    donorShoutoutRequiredError: 'Write your name or alias before sending.',
+    donorShoutoutError: "Couldn't send it. Please try again in a moment.",
+    donorShoutoutViewPage: 'See the thank-you page',
   },
 };

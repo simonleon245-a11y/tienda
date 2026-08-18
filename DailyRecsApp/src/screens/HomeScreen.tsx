@@ -13,6 +13,7 @@ import ColorPickerModal from '@/components/ColorPickerModal';
 import LanguagePickerModal from '@/components/LanguagePickerModal';
 import FeedbackModal from '@/components/FeedbackModal';
 import BandSubmissionModal from '@/components/BandSubmissionModal';
+import DonorShoutoutModal from '@/components/DonorShoutoutModal';
 import SavedItemsModal from '@/components/SavedItemsModal';
 import { MUSIC_GENRES, MOVIE_GENRES, BOOK_GENRES, genreLabel } from '@/constants/genres';
 import { DEFAULT_ACCENT_COLOR, isPremiumColor } from '@/constants/colors';
@@ -77,6 +78,7 @@ export default function HomeScreen() {
   const [languagePickerVisible, setLanguagePickerVisible] = useState(false);
   const [feedbackVisible, setFeedbackVisible] = useState(false);
   const [bandSubmissionVisible, setBandSubmissionVisible] = useState(false);
+  const [donorShoutoutVisible, setDonorShoutoutVisible] = useState(false);
   const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
   const [savedItemsVisible, setSavedItemsVisible] = useState(false);
 
@@ -417,6 +419,9 @@ export default function HomeScreen() {
         <Pressable onPress={handleTipPress} style={styles.tipButton}>
           <Text style={styles.tipButtonText}>{t.tipButton}</Text>
         </Pressable>
+        <Pressable onPress={() => setDonorShoutoutVisible(true)} style={styles.tipButton}>
+          <Text style={styles.tipButtonText}>{t.donorShoutoutButtonLabel}</Text>
+        </Pressable>
         <Pressable onPress={() => setBandSubmissionVisible(true)} style={styles.tipButton}>
           <Text style={styles.tipButtonText}>{t.bandSubmissionButton}</Text>
         </Pressable>
@@ -475,6 +480,11 @@ export default function HomeScreen() {
         visible={bandSubmissionVisible}
         accentColor={accentColor}
         onClose={() => setBandSubmissionVisible(false)}
+      />
+      <DonorShoutoutModal
+        visible={donorShoutoutVisible}
+        accentColor={accentColor}
+        onClose={() => setDonorShoutoutVisible(false)}
       />
       <SavedItemsModal
         visible={savedItemsVisible}
