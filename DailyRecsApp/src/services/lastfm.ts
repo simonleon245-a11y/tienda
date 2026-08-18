@@ -14,7 +14,7 @@ const BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
 // relevantes para el género (aparecen en el chart), pero no los hits obvios.
 const PAGE_SIZE = 50;
 const TOTAL_PAGES = 6; // pool bruto de hasta 300 álbumes
-const SKIP_PAGES = 1; // descarta el primer centenar más popular (rank 1-50)
+const SKIP_PAGES = 2; // descarta los primeros 100 puestos (los más obvios/mainstream del tag)
 
 interface LastfmImage {
   '#text': string;

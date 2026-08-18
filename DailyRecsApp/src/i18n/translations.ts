@@ -127,7 +127,7 @@ export const translations: Record<Language, UIStrings> = {
     lockedColorMessage:
       'Con Recos Premium desbloqueas esta paleta, sin anuncios y "ver otra opción" ilimitado, por $3/mes.',
     noProvidersFound: 'No encontramos dónde verla en tu región todavía.',
-    watchProviderType: { flatrate: 'Streaming', rent: 'Alquiler', buy: 'Compra' },
+    watchProviderType: { flatrate: 'Incluido', rent: 'Alquiler', buy: 'Compra' },
     missingLastfmKey: 'Falta LASTFM_API_KEY. Configúrala en tu archivo .env (ver .env.example).',
     missingTmdbKey: 'Falta TMDB_API_KEY. Configúrala en tu archivo .env (ver .env.example).',
     lastfmError: (status) => `Last.fm respondió ${status}`,
@@ -217,7 +217,7 @@ export const translations: Record<Language, UIStrings> = {
     lockedColorMessage:
       'Recos Premium unlocks this palette, no ads and unlimited "see another option", for $3/month.',
     noProvidersFound: "We couldn't find where to watch this in your region yet.",
-    watchProviderType: { flatrate: 'Streaming', rent: 'Rent', buy: 'Buy' },
+    watchProviderType: { flatrate: 'Included', rent: 'Rent', buy: 'Buy' },
     missingLastfmKey: 'Missing LASTFM_API_KEY. Set it in your .env file (see .env.example).',
     missingTmdbKey: 'Missing TMDB_API_KEY. Set it in your .env file (see .env.example).',
     lastfmError: (status) => `Last.fm responded ${status}`,

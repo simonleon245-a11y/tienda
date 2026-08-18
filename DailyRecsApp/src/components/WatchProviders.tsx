@@ -18,19 +18,27 @@ export default function WatchProviders({ providers, link }: Props) {
 
   const content = (
     <View style={styles.row}>
-      {providers.map((provider) => (
-        <View key={`${provider.type}-${provider.id}`} style={styles.item}>
-          {provider.logoUrl ? (
-            <Image source={{ uri: provider.logoUrl }} style={styles.logo} />
-          ) : (
-            <View style={[styles.logo, styles.logoPlaceholder]} />
-          )}
-          <Text style={styles.name} numberOfLines={1}>
-            {provider.name}
-          </Text>
-          <Text style={styles.type}>{t.watchProviderType[provider.type]}</Text>
-        </View>
-      ))}
+      {providers.map((provider) => {
+        const included = provider.type === 'flatrate';
+        return (
+          <View key={`${provider.type}-${provider.id}`} style={styles.item}>
+            {provider.logoUrl ? (
+              <Image
+                source={{ uri: provider.logoUrl }}
+                style={[styles.logo, included && styles.logoIncluded]}
+              />
+            ) : (
+              <View style={[styles.logo, styles.logoPlaceholder, included && styles.logoIncluded]} />
+            )}
+            <Text style={styles.name} numberOfLines={1}>
+              {provider.name}
+            </Text>
+            <Text style={[styles.type, included && styles.typeIncluded]}>
+              {t.watchProviderType[provider.type]}
+            </Text>
+          </View>
+        );
+      })}
     </View>
   );
 
@@ -55,6 +63,10 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 10,
   },
+  logoIncluded: {
+    borderWidth: 2,
+    borderColor: '#10B981',
+  },
   logoPlaceholder: {
     backgroundColor: theme.colors.chip,
   },
@@ -67,6 +79,10 @@ const styles = StyleSheet.create({
   type: {
     color: theme.colors.subtext,
     fontSize: 9,
+  },
+  typeIncluded: {
+    color: '#10B981',
+    fontWeight: '700',
   },
   emptyText: {
     color: theme.colors.subtext,
