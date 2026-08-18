@@ -12,9 +12,11 @@ import ColorPickerModal from '@/components/ColorPickerModal';
 import LanguagePickerModal from '@/components/LanguagePickerModal';
 import FeedbackModal from '@/components/FeedbackModal';
 import BandSubmissionModal from '@/components/BandSubmissionModal';
+import SavedItemsModal from '@/components/SavedItemsModal';
 import { MUSIC_GENRES, MOVIE_GENRES, BOOK_GENRES, genreLabel } from '@/constants/genres';
 import { DEFAULT_ACCENT_COLOR, isPremiumColor } from '@/constants/colors';
 import { colorForItem } from '@/utils/itemColor';
+import { shareText } from '@/utils/share';
 import { useLanguage } from '@/i18n/LanguageContext';
 import {
   getGenrePreferences,
@@ -23,6 +25,9 @@ import {
   incrementRerollCount,
   getAccentColor,
   setAccentColor,
+  getSavedItems,
+  saveItem,
+  removeSavedItem,
 } from '@/services/storage';
 import { getDailyAlbum } from '@/services/lastfm';
 import { getDailyMovie } from '@/services/tmdb';
@@ -37,7 +42,9 @@ import {
 import { openTipFlow } from '@/services/tip';
 import { todayKey, monthKey } from '@/utils/dailySeed';
 import { showAlert } from '@/utils/alert';
-import { AlbumPick, BookPick, Category, GenrePreferences, MoviePick } from '@/types';
+import { AlbumPick, BookPick, Category, GenrePreferences, MoviePick, SavedItem } from '@/types';
+
+const SHARE_URL = 'https://recosdiarias.com';
 
 type Variants = Record<Category, number>;
 
@@ -68,6 +75,8 @@ export default function HomeScreen() {
   const [languagePickerVisible, setLanguagePickerVisible] = useState(false);
   const [feedbackVisible, setFeedbackVisible] = useState(false);
   const [bandSubmissionVisible, setBandSubmissionVisible] = useState(false);
+  const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
+  const [savedItemsVisible, setSavedItemsVisible] = useState(false);
 
   const loadAlbum = useCallback(
     (genreId: string, variant = 0) => {
@@ -108,7 +117,28 @@ export default function HomeScreen() {
     });
     checkPremiumStatus().then(setIsPremium);
     getAccentColor().then(setAccentColorState);
+    getSavedItems().then(setSavedItems);
   }, [loadAlbum, loadMovie, loadBook]);
+
+  const isItemSaved = (category: Category, id: string) =>
+    savedItems.some((item) => item.category === category && item.id === id);
+
+  const handleToggleSave = async (item: SavedItem) => {
+    if (isItemSaved(item.category, item.id)) {
+      setSavedItems(await removeSavedItem(item.category, item.id));
+    } else {
+      setSavedItems(await saveItem(item));
+    }
+  };
+
+  const handleRemoveSaved = async (category: string, id: string) => {
+    setSavedItems(await removeSavedItem(category, id));
+  };
+
+  const handleShare = async (title: string) => {
+    const result = await shareText(t.shareMessage(title), SHARE_URL);
+    if (result === 'copied') showAlert('', t.shareCopiedMessage);
+  };
 
   const handleSelectGenre = async (category: Category, genreId: string) => {
     setActivePicker(null);
@@ -188,11 +218,9 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safe}>
       <StatusBar barStyle="light-content" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.headingRow}>
-          <View style={styles.headingTextWrap}>
-            <Text style={styles.heading}>{t.appTitle}</Text>
-            <Text style={styles.subheading}>{t.appSubtitle}</Text>
-          </View>
+        <View style={styles.headingSection}>
+          <Text style={styles.heading}>{t.appTitle}</Text>
+          <Text style={styles.subheading}>{t.appSubtitle}</Text>
           <View style={styles.headerButtons}>
             <Pressable style={styles.colorButton} onPress={() => setColorPickerVisible(true)}>
               <View style={[styles.colorSwatch, { backgroundColor: accentColor }]} />
@@ -201,6 +229,13 @@ export default function HomeScreen() {
             <Pressable style={styles.colorButton} onPress={() => setLanguagePickerVisible(true)}>
               <Text style={styles.languageFlag}>{language === 'en' ? '🇬🇧' : '🇪🇸'}</Text>
               <Text style={styles.colorButtonText}>{t.languageButtonLabel}</Text>
+            </Pressable>
+            <Pressable style={styles.colorButton} onPress={() => setSavedItemsVisible(true)}>
+              <Text style={styles.languageFlag}>🔖</Text>
+              <Text style={styles.colorButtonText}>
+                {t.savedItemsButtonLabel}
+                {savedItems.length > 0 ? ` (${savedItems.length})` : ''}
+              </Text>
             </Pressable>
             <Pressable style={styles.colorButton} onPress={() => setFeedbackVisible(true)}>
               <Text style={styles.languageFlag}>💬</Text>
@@ -217,6 +252,22 @@ export default function HomeScreen() {
           error={album.error}
           accentColor={accentColor}
           itemTintColor={album.data ? colorForItem(album.data.id) : undefined}
+          isSaved={album.data ? isItemSaved('album', album.data.id) : false}
+          onSave={
+            album.data
+              ? () =>
+                  handleToggleSave({
+                    category: 'album',
+                    id: album.data!.id,
+                    savedAt: Date.now(),
+                    title: album.data!.title,
+                    subtitle: album.data!.artist,
+                    coverUrl: album.data!.coverUrl,
+                    openUrl: album.data!.lastfmUrl,
+                  })
+              : undefined
+          }
+          onShare={album.data ? () => handleShare(album.data!.title) : undefined}
           onChangeGenre={() => setActivePicker('album')}
           onRetry={() => loadAlbum(prefs.album, variants.album)}
           onReroll={() => handleReroll('album')}
@@ -255,6 +306,22 @@ export default function HomeScreen() {
           error={movie.error}
           accentColor={accentColor}
           itemTintColor={movie.data ? colorForItem(String(movie.data.id)) : undefined}
+          isSaved={movie.data ? isItemSaved('movie', String(movie.data.id)) : false}
+          onSave={
+            movie.data
+              ? () =>
+                  handleToggleSave({
+                    category: 'movie',
+                    id: String(movie.data!.id),
+                    savedAt: Date.now(),
+                    title: movie.data!.title,
+                    subtitle: movie.data!.releaseYear,
+                    coverUrl: movie.data!.posterUrl,
+                    openUrl: `https://www.themoviedb.org/movie/${movie.data!.id}`,
+                  })
+              : undefined
+          }
+          onShare={movie.data ? () => handleShare(movie.data!.title) : undefined}
           onChangeGenre={() => setActivePicker('movie')}
           onRetry={() => loadMovie(prefs.movie, variants.movie)}
           onReroll={() => handleReroll('movie')}
@@ -295,6 +362,22 @@ export default function HomeScreen() {
           error={book.error}
           accentColor={accentColor}
           itemTintColor={book.data ? colorForItem(book.data.id) : undefined}
+          isSaved={book.data ? isItemSaved('book', book.data.id) : false}
+          onSave={
+            book.data
+              ? () =>
+                  handleToggleSave({
+                    category: 'book',
+                    id: book.data!.id,
+                    savedAt: Date.now(),
+                    title: book.data!.title,
+                    subtitle: book.data!.authors.join(', '),
+                    coverUrl: book.data!.coverUrl,
+                    openUrl: book.data!.infoUrl,
+                  })
+              : undefined
+          }
+          onShare={book.data ? () => handleShare(book.data!.title) : undefined}
           onChangeGenre={() => setActivePicker('book')}
           onRetry={() => loadBook(prefs.book, variants.book)}
           onReroll={() => handleReroll('book')}
@@ -386,6 +469,13 @@ export default function HomeScreen() {
         accentColor={accentColor}
         onClose={() => setBandSubmissionVisible(false)}
       />
+      <SavedItemsModal
+        visible={savedItemsVisible}
+        items={savedItems}
+        accentColor={accentColor}
+        onRemove={handleRemoveSaved}
+        onClose={() => setSavedItemsVisible(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -399,15 +489,8 @@ const styles = StyleSheet.create({
     padding: theme.spacing(2),
     paddingBottom: theme.spacing(1),
   },
-  headingRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+  headingSection: {
     marginBottom: theme.spacing(2.5),
-  },
-  headingTextWrap: {
-    flex: 1,
-    paddingRight: theme.spacing(1),
   },
   heading: {
     color: theme.colors.text,
@@ -421,7 +504,9 @@ const styles = StyleSheet.create({
   },
   headerButtons: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: theme.spacing(1),
+    marginTop: theme.spacing(1.5),
   },
   colorButton: {
     alignItems: 'center',

@@ -80,6 +80,16 @@ export interface UIStrings {
   bandSubmissionNotConfigured: string;
   bandSubmissionRequiredError: string;
   bandSubmissionError: string;
+  saveAction: string;
+  savedAction: string;
+  shareAction: string;
+  shareMessage: (title: string) => string;
+  shareCopiedMessage: string;
+  savedItemsButtonLabel: string;
+  savedItemsModalTitle: string;
+  savedItemsEmpty: string;
+  removeSavedAction: string;
+  openAction: string;
 }
 
 export const translations: Record<Language, UIStrings> = {
@@ -173,6 +183,16 @@ export const translations: Record<Language, UIStrings> = {
     bandSubmissionNotConfigured: 'El envío de álbumes todavía no está configurado.',
     bandSubmissionRequiredError: 'Completa banda, álbum y link antes de enviar.',
     bandSubmissionError: 'No se pudo enviar. Intenta de nuevo en un momento.',
+    saveAction: '🔖 Guardar',
+    savedAction: '🔖 Guardado',
+    shareAction: '↗ Compartir',
+    shareMessage: (title) => `Hoy Recos Diarias me recomendó "${title}" — descúbrelo tú también en`,
+    shareCopiedMessage: '¡Copiado! Pégalo donde quieras compartirlo.',
+    savedItemsButtonLabel: 'Guardados',
+    savedItemsModalTitle: 'Tus guardados',
+    savedItemsEmpty: 'Todavía no has guardado nada. Toca "Guardar" en cualquier recomendación.',
+    removeSavedAction: 'Quitar',
+    openAction: 'Abrir',
   },
   en: {
     appTitle: 'Your recommendations',
@@ -263,5 +283,15 @@ export const translations: Record<Language, UIStrings> = {
     bandSubmissionNotConfigured: "Album submissions aren't set up yet.",
     bandSubmissionRequiredError: 'Fill in the band, album and link before sending.',
     bandSubmissionError: "Couldn't send it. Please try again in a moment.",
+    saveAction: '🔖 Save',
+    savedAction: '🔖 Saved',
+    shareAction: '↗ Share',
+    shareMessage: (title) => `Today Recos Diarias recommended me "${title}" — check it out too at`,
+    shareCopiedMessage: 'Copied! Paste it anywhere to share.',
+    savedItemsButtonLabel: 'Saved',
+    savedItemsModalTitle: 'Your saved picks',
+    savedItemsEmpty: 'Nothing saved yet. Tap "Save" on any recommendation.',
+    removeSavedAction: 'Remove',
+    openAction: 'Open',
   },
 };

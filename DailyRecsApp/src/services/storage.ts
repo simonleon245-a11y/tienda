@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GenrePreferences } from '@/types';
+import { GenrePreferences, SavedItem } from '@/types';
 import { DEFAULT_ACCENT_COLOR } from '@/constants/colors';
 import { Language } from '@/i18n/translations';
 
@@ -11,7 +11,10 @@ const KEYS = {
   rerollPrefix: 'recos:reroll:',
   accentColor: 'recos:accentColor',
   language: 'recos:language',
+  savedItems: 'recos:savedItems',
 };
+
+const MAX_SAVED_ITEMS = 100;
 
 const DEFAULT_LANGUAGE: Language = 'es';
 
@@ -93,6 +96,44 @@ export async function getAccentColor(): Promise<string> {
 
 export async function setAccentColor(hex: string): Promise<void> {
   await AsyncStorage.setItem(KEYS.accentColor, hex);
+}
+
+export async function getSavedItems(): Promise<SavedItem[]> {
+  try {
+    const raw = await AsyncStorage.getItem(KEYS.savedItems);
+    if (!raw) return [];
+    return JSON.parse(raw) as SavedItem[];
+  } catch {
+    return [];
+  }
+}
+
+function savedItemKey(category: string, id: string): string {
+  return `${category}:${id}`;
+}
+
+export async function isItemSaved(category: string, id: string): Promise<boolean> {
+  const items = await getSavedItems();
+  const key = savedItemKey(category, id);
+  return items.some((item) => savedItemKey(item.category, item.id) === key);
+}
+
+export async function saveItem(item: SavedItem): Promise<SavedItem[]> {
+  const items = await getSavedItems();
+  const key = savedItemKey(item.category, item.id);
+  const withoutExisting = items.filter((existing) => savedItemKey(existing.category, existing.id) !== key);
+  // Los más nuevos primero; recorta la lista para no crecer sin límite.
+  const next = [item, ...withoutExisting].slice(0, MAX_SAVED_ITEMS);
+  await AsyncStorage.setItem(KEYS.savedItems, JSON.stringify(next));
+  return next;
+}
+
+export async function removeSavedItem(category: string, id: string): Promise<SavedItem[]> {
+  const items = await getSavedItems();
+  const key = savedItemKey(category, id);
+  const next = items.filter((existing) => savedItemKey(existing.category, existing.id) !== key);
+  await AsyncStorage.setItem(KEYS.savedItems, JSON.stringify(next));
+  return next;
 }
 
 export async function getLanguage(): Promise<Language> {

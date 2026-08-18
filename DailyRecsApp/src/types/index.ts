@@ -52,3 +52,13 @@ export interface GenrePreferences {
   movie: string;
   book: string;
 }
+
+export interface SavedItem {
+  category: Category;
+  id: string;
+  savedAt: number;
+  title: string;
+  subtitle: string;
+  coverUrl: string | null;
+  openUrl: string;
+}

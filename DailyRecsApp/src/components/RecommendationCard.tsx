@@ -11,6 +11,9 @@ interface Props {
   error: string | null;
   accentColor: string;
   itemTintColor?: string;
+  isSaved?: boolean;
+  onSave?: () => void;
+  onShare?: () => void;
   onChangeGenre: () => void;
   onRetry: () => void;
   onReroll: () => void;
@@ -25,6 +28,9 @@ export default function RecommendationCard({
   error,
   accentColor,
   itemTintColor,
+  isSaved,
+  onSave,
+  onShare,
   onChangeGenre,
   onRetry,
   onReroll,
@@ -52,6 +58,23 @@ export default function RecommendationCard({
         <Text style={styles.categoryLabel}>{categoryLabel}</Text>
         <Text style={styles.frequencyLabel}>{frequencyLabel}</Text>
       </View>
+
+      {!loading && !error && (onSave || onShare) && (
+        <View style={styles.actionRow}>
+          {onSave && (
+            <Pressable onPress={onSave} hitSlop={8}>
+              <Text style={[styles.actionText, { color: accentColor }]}>
+                {isSaved ? t.savedAction : t.saveAction}
+              </Text>
+            </Pressable>
+          )}
+          {onShare && (
+            <Pressable onPress={onShare} hitSlop={8}>
+              <Text style={[styles.actionText, { color: accentColor }]}>{t.shareAction}</Text>
+            </Pressable>
+          )}
+        </View>
+      )}
 
       <View style={styles.body}>
         {loading && (
@@ -117,6 +140,16 @@ const styles = StyleSheet.create({
   frequencyLabel: {
     color: theme.colors.subtext,
     fontSize: 12,
+  },
+  actionRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(2),
+    marginBottom: theme.spacing(1),
+  },
+  actionText: {
+    fontSize: 12,
+    fontWeight: '700',
   },
   body: {
     minHeight: 100,
