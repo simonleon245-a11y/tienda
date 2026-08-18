@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { ENV } from '@/utils/env';
 import { dailySeed, pickIndex, todayKey } from '@/utils/dailySeed';
 import { getCached, setCached } from './storage';
@@ -84,6 +85,26 @@ async function fetchMoviePool(genreId: string, language: Language): Promise<Tmdb
   return pool;
 }
 
+// Región de proveedores de streaming, adivinada desde el navegador (ej.
+// "es-CO" -> "CO", "en-MX" -> "MX") para no mostrarle a todo el mundo la
+// disponibilidad de un solo país fijo (TMDB_WATCH_REGION). No es una IP
+// geolocalizada real (eso requeriría un servicio externo con su propio
+// límite de cuota, algo que ya nos ha dado problemas con otras APIs), pero
+// el subtag de región del idioma del navegador es gratis, no depende de
+// terceros y acierta en la gran mayoría de los casos. En nativo no hay
+// forma confiable de leerlo sin una librería nueva, así que ahí se sigue
+// usando el país fijo configurado en .env.
+function detectBrowserRegion(): string | null {
+  if (Platform.OS !== 'web' || typeof navigator === 'undefined') return null;
+  const candidates = navigator.languages?.length ? navigator.languages : [navigator.language];
+  for (const candidate of candidates) {
+    if (typeof candidate !== 'string') continue;
+    const region = candidate.split('-')[1]?.toUpperCase();
+    if (region && /^[A-Z]{2}$/.test(region)) return region;
+  }
+  return null;
+}
+
 /** Dónde ver la película: TMDb agrega esta info a partir de JustWatch,
  * gratis con la misma API key. Solo se pide para la película ya elegida
  * del día (no para todo el pool), para no multiplicar las llamadas. */
@@ -101,8 +122,13 @@ async function fetchWatchProviders(
   }
   const json = await res.json();
   const byRegion: Record<string, TmdbWatchProvidersForRegion> = json?.results ?? {};
+  const detectedRegion = detectBrowserRegion();
   const region =
-    byRegion[ENV.TMDB_WATCH_REGION] ?? byRegion.US ?? Object.values(byRegion)[0] ?? null;
+    (detectedRegion && byRegion[detectedRegion]) ||
+    byRegion[ENV.TMDB_WATCH_REGION] ||
+    byRegion.US ||
+    Object.values(byRegion)[0] ||
+    null;
 
   if (!region) {
     const empty = { providers: [], link: null };
