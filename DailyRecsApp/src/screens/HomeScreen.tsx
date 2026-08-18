@@ -420,6 +420,7 @@ export default function HomeScreen() {
         <Pressable onPress={() => setBandSubmissionVisible(true)} style={styles.tipButton}>
           <Text style={styles.tipButtonText}>{t.bandSubmissionButton}</Text>
         </Pressable>
+        <Text style={styles.amazonDisclosure}>{t.amazonDisclosure}</Text>
       </ScrollView>
 
       {!isPremium && <BannerAd />}
@@ -543,6 +544,13 @@ const styles = StyleSheet.create({
     color: theme.colors.subtext,
     fontSize: 13,
     fontWeight: '600',
+  },
+  amazonDisclosure: {
+    color: theme.colors.subtext,
+    fontSize: 11,
+    textAlign: 'center',
+    marginTop: theme.spacing(2),
+    paddingHorizontal: theme.spacing(2),
   },
   itemRow: {
     flexDirection: 'row',

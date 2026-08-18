@@ -91,6 +91,7 @@ export interface UIStrings {
   removeSavedAction: string;
   openAction: string;
   buyOnAmazon: string;
+  amazonDisclosure: string;
 }
 
 export const translations: Record<Language, UIStrings> = {
@@ -195,6 +196,7 @@ export const translations: Record<Language, UIStrings> = {
     removeSavedAction: 'Quitar',
     openAction: 'Abrir',
     buyOnAmazon: 'Comprar en Amazon',
+    amazonDisclosure: 'Como Afiliado de Amazon, Recos Diarias gana por compras que califican.',
   },
   en: {
     appTitle: 'Your recommendations',
@@ -296,5 +298,6 @@ export const translations: Record<Language, UIStrings> = {
     removeSavedAction: 'Remove',
     openAction: 'Open',
     buyOnAmazon: 'Buy on Amazon',
+    amazonDisclosure: 'As an Amazon Associate, Recos Diarias earns from qualifying purchases.',
   },
 };
