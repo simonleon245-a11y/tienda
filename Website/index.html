@@ -347,7 +347,20 @@
     en: "Subscriptions aren't available yet. Check back soon!",
   };
 
-  let currentLang = localStorage.getItem("lang") || "es";
+  function detectBrowserLang() {
+    const candidates = navigator.languages && navigator.languages.length
+      ? navigator.languages
+      : [navigator.language];
+    for (const candidate of candidates) {
+      if (typeof candidate !== "string") continue;
+      const lower = candidate.toLowerCase();
+      if (lower.startsWith("en")) return "en";
+      if (lower.startsWith("es")) return "es";
+    }
+    return "es";
+  }
+
+  let currentLang = localStorage.getItem("lang") || detectBrowserLang();
 
   function applyLang(lang) {
     currentLang = lang;

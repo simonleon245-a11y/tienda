@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GenrePreferences, SavedItem } from '@/types';
 import { DEFAULT_ACCENT_COLOR } from '@/constants/colors';
@@ -136,9 +137,27 @@ export async function removeSavedItem(category: string, id: string): Promise<Sav
   return next;
 }
 
+// Solo se usa la primera vez que alguien abre la app (sin preferencia
+// guardada todavía). En web lee el idioma del navegador para no mostrarle
+// español por defecto a un visitante de habla inglesa; en nativo no hay
+// forma fiable de leer el idioma del dispositivo sin agregar una librería
+// nueva, así que se mantiene el español como opción por defecto.
+function detectBrowserLanguage(): Language {
+  if (Platform.OS !== 'web' || typeof navigator === 'undefined') return DEFAULT_LANGUAGE;
+  const candidates = navigator.languages?.length ? navigator.languages : [navigator.language];
+  for (const candidate of candidates) {
+    if (typeof candidate !== 'string') continue;
+    const lower = candidate.toLowerCase();
+    if (lower.startsWith('en')) return 'en';
+    if (lower.startsWith('es')) return 'es';
+  }
+  return DEFAULT_LANGUAGE;
+}
+
 export async function getLanguage(): Promise<Language> {
   const raw = await AsyncStorage.getItem(KEYS.language);
-  return raw === 'en' ? 'en' : DEFAULT_LANGUAGE;
+  if (raw === 'en' || raw === 'es') return raw;
+  return detectBrowserLanguage();
 }
 
 export async function setLanguage(language: Language): Promise<void> {
