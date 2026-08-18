@@ -33,13 +33,14 @@ export async function openUpgradeFlow(language: Language = 'es'): Promise<void> 
   await Linking.openURL(ENV.PREMIUM_CHECKOUT_URL);
 }
 
-/** Alternativa de pago único a la suscripción mensual: acceso premium
- * "de por vida". Igual que la suscripción, hoy no hay verificación
- * automática del pago — desbloquear premium tras la compra sigue siendo
- * manual hasta que exista un backend que valide contra Wompi. */
-export async function openLifetimeUpgradeFlow(language: Language = 'es'): Promise<void> {
-  if (!ENV.PREMIUM_LIFETIME_CHECKOUT_URL) {
-    throw new Error(translations[language].lifetimeNotConfigured);
+/** Alternativa con descuento a la suscripción mensual: plan anual con pago
+ * único por adelantado (no es "de por vida" — se renueva cada año). Igual
+ * que la suscripción mensual, hoy no hay verificación automática del pago —
+ * desbloquear premium tras la compra sigue siendo manual hasta que exista
+ * un backend que valide contra Wompi. */
+export async function openAnnualUpgradeFlow(language: Language = 'es'): Promise<void> {
+  if (!ENV.PREMIUM_ANNUAL_CHECKOUT_URL) {
+    throw new Error(translations[language].annualNotConfigured);
   }
-  await Linking.openURL(ENV.PREMIUM_LIFETIME_CHECKOUT_URL);
+  await Linking.openURL(ENV.PREMIUM_ANNUAL_CHECKOUT_URL);
 }

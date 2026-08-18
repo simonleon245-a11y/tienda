@@ -36,7 +36,7 @@ import { maybeShowInterstitial } from '@/services/ads';
 import {
   checkPremiumStatus,
   openUpgradeFlow,
-  openLifetimeUpgradeFlow,
+  openAnnualUpgradeFlow,
   FREE_REROLLS_PER_PERIOD,
 } from '@/services/premium';
 import { openTipFlow } from '@/services/tip';
@@ -157,8 +157,8 @@ export default function HomeScreen() {
     );
   };
 
-  const handleLifetimePress = () => {
-    openLifetimeUpgradeFlow(language).catch((err) =>
+  const handleAnnualPress = () => {
+    openAnnualUpgradeFlow(language).catch((err) =>
       showAlert(t.subscriptionUnavailableTitle, err.message)
     );
   };
@@ -405,7 +405,7 @@ export default function HomeScreen() {
         </RecommendationCard>
 
         {!isPremium && (
-          <PremiumUpsellCard onSubscribe={handleUpgradePress} onLifetime={handleLifetimePress} />
+          <PremiumUpsellCard onSubscribe={handleUpgradePress} onAnnual={handleAnnualPress} />
         )}
 
         <Pressable onPress={handleTipPress} style={styles.tipButton}>

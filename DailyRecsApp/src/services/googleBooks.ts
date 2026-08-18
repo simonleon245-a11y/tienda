@@ -33,6 +33,26 @@ function isLowQualityEdition(title: string): boolean {
   return PARTIAL_VOLUME_PATTERN.test(title) || SPECIAL_FORMAT_PATTERN.test(title);
 }
 
+const RETRY_DELAYS_MS = [500, 1500, 3000];
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// Google Books devuelve 429 en ráfagas cortas de peticiones aunque la cuota
+// diaria esté casi vacía (es un límite de tasa por segundo, no de cuota).
+// Reintentamos con espera creciente antes de mostrarle el error al usuario.
+async function fetchWithRetry(url: string): Promise<Response> {
+  let lastRes: Response | undefined;
+  for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+    const res = await fetch(url);
+    if (res.status !== 429) return res;
+    lastRes = res;
+    if (attempt < RETRY_DELAYS_MS.length) await sleep(RETRY_DELAYS_MS[attempt]);
+  }
+  return lastRes!;
+}
+
 async function fetchBookPool(subject: string, language: Language): Promise<GoogleBookVolume[]> {
   const cacheKey = `googlebooks-pool:${subject}:${language}:${monthKey()}`;
   const cached = await getCached<GoogleBookVolume[]>(cacheKey);
@@ -44,7 +64,7 @@ async function fetchBookPool(subject: string, language: Language): Promise<Googl
     subject
   )}&orderBy=relevance&maxResults=${POOL_SIZE}&printType=books&langRestrict=${language}${keyParam}`;
 
-  const res = await fetch(url);
+  const res = await fetchWithRetry(url);
   if (!res.ok) {
     throw new Error(t.googleBooksError(res.status));
   }
