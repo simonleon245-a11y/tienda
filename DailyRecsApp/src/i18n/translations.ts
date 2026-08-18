@@ -90,6 +90,7 @@ export interface UIStrings {
   savedItemsEmpty: string;
   removeSavedAction: string;
   openAction: string;
+  buyOnAmazon: string;
 }
 
 export const translations: Record<Language, UIStrings> = {
@@ -193,6 +194,7 @@ export const translations: Record<Language, UIStrings> = {
     savedItemsEmpty: 'Todavía no has guardado nada. Toca "Guardar" en cualquier recomendación.',
     removeSavedAction: 'Quitar',
     openAction: 'Abrir',
+    buyOnAmazon: 'Comprar en Amazon',
   },
   en: {
     appTitle: 'Your recommendations',
@@ -293,5 +295,6 @@ export const translations: Record<Language, UIStrings> = {
     savedItemsEmpty: 'Nothing saved yet. Tap "Save" on any recommendation.',
     removeSavedAction: 'Remove',
     openAction: 'Open',
+    buyOnAmazon: 'Buy on Amazon',
   },
 };

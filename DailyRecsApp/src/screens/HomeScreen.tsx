@@ -6,6 +6,7 @@ import RecommendationCard from '@/components/RecommendationCard';
 import GenrePickerModal from '@/components/GenrePickerModal';
 import BannerAd from '@/components/BannerAd';
 import MusicLinks from '@/components/MusicLinks';
+import BookLinks from '@/components/BookLinks';
 import WatchProviders from '@/components/WatchProviders';
 import PremiumUpsellCard from '@/components/PremiumUpsellCard';
 import ColorPickerModal from '@/components/ColorPickerModal';
@@ -17,6 +18,7 @@ import { MUSIC_GENRES, MOVIE_GENRES, BOOK_GENRES, genreLabel } from '@/constants
 import { DEFAULT_ACCENT_COLOR, isPremiumColor } from '@/constants/colors';
 import { colorForItem } from '@/utils/itemColor';
 import { shareText } from '@/utils/share';
+import { buildAmazonBookLink } from '@/utils/amazonLink';
 import { useLanguage } from '@/i18n/LanguageContext';
 import {
   getGenrePreferences,
@@ -399,6 +401,10 @@ export default function HomeScreen() {
                 <Text style={styles.itemSubtitle} numberOfLines={4}>
                   {book.data.description}
                 </Text>
+                <BookLinks
+                  infoUrl={book.data.infoUrl}
+                  amazonUrl={buildAmazonBookLink(book.data.title, book.data.authors)}
+                />
               </View>
             </View>
           )}

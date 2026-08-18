@@ -74,6 +74,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     PREMIUM_CHECKOUT_URL: process.env.PREMIUM_CHECKOUT_URL || '',
     PREMIUM_ANNUAL_CHECKOUT_URL: process.env.PREMIUM_ANNUAL_CHECKOUT_URL || '',
     TIP_CHECKOUT_URL: process.env.TIP_CHECKOUT_URL || '',
+    AMAZON_ASSOCIATE_TAG: process.env.AMAZON_ASSOCIATE_TAG || '',
     eas: {
       // Fijo (no depende del .env) porque el CLI de EAS no puede
       // escribir este valor solo en un app.config.ts dinámico.
