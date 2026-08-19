@@ -92,6 +92,11 @@ export interface UIStrings {
   openAction: string;
   buyOnAmazon: string;
   amazonDisclosure: string;
+  affiliateLinkNote: string;
+  privacyPolicyLink: string;
+  cookieConsentMessage: string;
+  cookieConsentAccept: string;
+  cookieConsentReject: string;
   donorShoutoutButtonLabel: string;
   donorShoutoutModalTitle: string;
   donorShoutoutIntro: string;
@@ -207,6 +212,12 @@ export const translations: Record<Language, UIStrings> = {
     openAction: 'Abrir',
     buyOnAmazon: 'Comprar en Amazon',
     amazonDisclosure: 'Como Afiliado de Amazon, Recos Diarias gana por compras que califican.',
+    affiliateLinkNote: 'Enlace de afiliado',
+    privacyPolicyLink: 'Política de privacidad',
+    cookieConsentMessage:
+      'Este espacio muestra anuncios de Google AdSense, que puede usar cookies para personalizarlos. ¿Los aceptas?',
+    cookieConsentAccept: 'Aceptar',
+    cookieConsentReject: 'Rechazar',
     donorShoutoutButtonLabel: '¿Ya nos invitaste un café? Sal en la página de agradecimientos →',
     donorShoutoutModalTitle: 'Página de agradecimientos',
     donorShoutoutIntro:
@@ -320,6 +331,12 @@ export const translations: Record<Language, UIStrings> = {
     openAction: 'Open',
     buyOnAmazon: 'Buy on Amazon',
     amazonDisclosure: 'As an Amazon Associate, Recos Diarias earns from qualifying purchases.',
+    affiliateLinkNote: 'Affiliate link',
+    privacyPolicyLink: 'Privacy Policy',
+    cookieConsentMessage:
+      'This space shows Google AdSense ads, which may use cookies to personalize them. Do you accept?',
+    cookieConsentAccept: 'Accept',
+    cookieConsentReject: 'Reject',
     donorShoutoutButtonLabel: 'Already bought us a coffee? Get featured on the thank-you page →',
     donorShoutoutModalTitle: 'Thank-you page',
     donorShoutoutIntro:

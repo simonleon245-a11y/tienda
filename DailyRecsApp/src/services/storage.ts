@@ -13,6 +13,7 @@ const KEYS = {
   accentColor: 'recos:accentColor',
   language: 'recos:language',
   savedItems: 'recos:savedItems',
+  cookieConsent: 'recos:cookieConsent',
 };
 
 const MAX_SAVED_ITEMS = 100;
@@ -162,4 +163,19 @@ export async function getLanguage(): Promise<Language> {
 
 export async function setLanguage(language: Language): Promise<void> {
   await AsyncStorage.setItem(KEYS.language, language);
+}
+
+export type CookieConsent = 'accepted' | 'rejected' | null;
+
+// Solo relevante en web: si es "accepted", se puede cargar AdSense (el
+// único script de terceros que corre dentro de la app). Sin respuesta
+// (null) o "rejected", nunca se carga — no hay anuncios sin consentimiento
+// explícito, y no se vuelve a preguntar una vez la persona elige.
+export async function getCookieConsent(): Promise<CookieConsent> {
+  const raw = await AsyncStorage.getItem(KEYS.cookieConsent);
+  return raw === 'accepted' || raw === 'rejected' ? raw : null;
+}
+
+export async function setCookieConsent(value: 'accepted' | 'rejected'): Promise<void> {
+  await AsyncStorage.setItem(KEYS.cookieConsent, value);
 }

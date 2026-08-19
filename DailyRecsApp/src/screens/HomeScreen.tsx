@@ -7,6 +7,7 @@ import {
   Image,
   StatusBar,
   Pressable,
+  Linking,
   useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -57,6 +58,7 @@ import { showAlert } from '@/utils/alert';
 import { AlbumPick, BookPick, Category, GenrePreferences, MoviePick, SavedItem } from '@/types';
 
 const SHARE_URL = 'https://recosdiarias.com';
+const PRIVACY_URL = 'https://recosdiarias.com/privacy.html';
 
 type Variants = Record<Category, number>;
 
@@ -474,6 +476,9 @@ export default function HomeScreen() {
           <Text style={styles.tipButtonText}>{t.bandSubmissionButton}</Text>
         </Pressable>
         <Text style={styles.amazonDisclosure}>{t.amazonDisclosure}</Text>
+        <Pressable onPress={() => Linking.openURL(PRIVACY_URL)} style={styles.privacyLink}>
+          <Text style={styles.privacyLinkText}>{t.privacyPolicyLink}</Text>
+        </Pressable>
         </View>
       </ScrollView>
 
@@ -621,6 +626,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: theme.spacing(2),
     paddingHorizontal: theme.spacing(2),
+  },
+  privacyLink: {
+    alignItems: 'center',
+    paddingVertical: theme.spacing(1.5),
+  },
+  privacyLinkText: {
+    color: theme.colors.subtext,
+    fontSize: 12,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
   },
   itemRow: {
     flexDirection: 'row',

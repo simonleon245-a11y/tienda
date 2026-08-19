@@ -6,15 +6,15 @@
 <title data-es="Recos Diarias — un álbum, una película y un libro cada día" data-en="Recos Diarias — a new album, movie, and book every day">Recos Diarias — un álbum, una película y un libro cada día</title>
 <meta name="description" id="meta-description" data-es="Recos Diarias te recomienda un álbum y una película nuevos cada día, y un libro cada mes, según los géneros que elijas. Instálala gratis desde el navegador." data-en="Recos Diarias recommends a new album and movie every day, and a new book every month, based on the genres you pick. Install it free from your browser." content="Recos Diarias te recomienda un álbum y una película nuevos cada día, y un libro cada mes, según los géneros que elijas. Instálala gratis desde el navegador." />
 <link rel="icon" href="assets/favicon.png" />
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9527002715948451"
-     crossorigin="anonymous"></script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3G1MXY1LD7"></script>
+<!--
+  AdSense y Google Analytics (gtag.js) solo se cargan si la persona
+  acepta el aviso de cookies al final de la página — ver el bloque
+  "Consentimiento de cookies" cerca del final de este archivo. Antes
+  estos dos scripts cargaban sin condición alguna.
+-->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-3G1MXY1LD7');
 </script>
 <style>
   :root {
@@ -202,6 +202,38 @@
     font-size: 13px;
   }
 
+  .cookie-banner {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    background: var(--card);
+    border-top: 1px solid var(--card-border);
+    padding: 16px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px 20px;
+    box-shadow: 0 -8px 24px rgba(0,0,0,0.35);
+  }
+  .cookie-banner p {
+    margin: 0;
+    color: var(--text);
+    font-size: 13px;
+    max-width: 560px;
+  }
+  .cookie-banner-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .cookie-banner .btn {
+    padding: 8px 18px;
+    font-size: 13px;
+  }
+
   @media (max-width: 640px) {
     nav.links a { display: none; }
   }
@@ -340,6 +372,16 @@
   <p data-es="Como Afiliado de Amazon, Recos Diarias gana por compras que califican." data-en="As an Amazon Associate, Recos Diarias earns from qualifying purchases.">Como Afiliado de Amazon, Recos Diarias gana por compras que califican.</p>
 </footer>
 
+<!-- Consentimiento de cookies: hasta que la persona elija, no se carga
+     ni Google Analytics ni AdSense (ver <head> y el script al final). -->
+<div id="cookie-banner" class="cookie-banner" hidden>
+  <p data-es="Usamos Google Analytics y Google AdSense, que pueden usar cookies para medir visitas y personalizar anuncios. ¿Los aceptas?" data-en="We use Google Analytics and Google AdSense, which may use cookies to measure visits and personalize ads. Do you accept?">Usamos Google Analytics y Google AdSense, que pueden usar cookies para medir visitas y personalizar anuncios. ¿Los aceptas?</p>
+  <div class="cookie-banner-actions">
+    <button id="cookie-reject" class="btn btn-ghost" type="button" data-es="Rechazar" data-en="Reject">Rechazar</button>
+    <button id="cookie-accept" class="btn btn-primary" type="button" data-es="Aceptar" data-en="Accept">Aceptar</button>
+  </div>
+</div>
+
 <script>
   // Reemplaza esta URL por tu link de cobro recurrente (por ejemplo, de
   // Wompi) cuando lo tengas. Mientras esté vacío, el botón avisa que la
@@ -392,6 +434,47 @@
     } else {
       window.location.href = PREMIUM_CHECKOUT_URL;
     }
+  });
+
+  // Consentimiento de cookies: Analytics y AdSense no cargan hasta que
+  // la persona toque "Aceptar" aquí. Si ya eligió antes (aceptar o
+  // rechazar), no se le vuelve a preguntar.
+  const GA_MEASUREMENT_ID = "G-3G1MXY1LD7";
+  const ADSENSE_CLIENT_ID = "ca-pub-9527002715948451";
+
+  function loadAnalyticsAndAds() {
+    const gaScript = document.createElement("script");
+    gaScript.async = true;
+    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_MEASUREMENT_ID;
+    document.head.appendChild(gaScript);
+    gtag("js", new Date());
+    gtag("config", GA_MEASUREMENT_ID);
+
+    const adsScript = document.createElement("script");
+    adsScript.async = true;
+    adsScript.crossOrigin = "anonymous";
+    adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + ADSENSE_CLIENT_ID;
+    document.head.appendChild(adsScript);
+  }
+
+  const cookieBanner = document.getElementById("cookie-banner");
+  const cookieConsent = localStorage.getItem("recos:cookieConsent");
+
+  if (cookieConsent === "accepted") {
+    loadAnalyticsAndAds();
+  } else if (cookieConsent !== "rejected") {
+    cookieBanner.hidden = false;
+  }
+
+  document.getElementById("cookie-accept").addEventListener("click", function () {
+    localStorage.setItem("recos:cookieConsent", "accepted");
+    cookieBanner.hidden = true;
+    loadAnalyticsAndAds();
+  });
+
+  document.getElementById("cookie-reject").addEventListener("click", function () {
+    localStorage.setItem("recos:cookieConsent", "rejected");
+    cookieBanner.hidden = true;
   });
 </script>
 

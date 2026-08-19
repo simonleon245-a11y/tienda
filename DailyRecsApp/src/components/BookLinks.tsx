@@ -20,13 +20,16 @@ export default function BookLinks({ infoUrl, amazonUrl }: Props) {
         <View style={[styles.dot, { backgroundColor: '#4285F4' }]} />
         <Text style={styles.pillText}>Google Books</Text>
       </Pressable>
-      <Pressable
-        style={[styles.pill, { borderColor: '#FF9900' }]}
-        onPress={() => Linking.openURL(amazonUrl)}
-      >
-        <View style={[styles.dot, { backgroundColor: '#FF9900' }]} />
-        <Text style={styles.pillText}>{t.buyOnAmazon}</Text>
-      </Pressable>
+      <View style={styles.amazonGroup}>
+        <Pressable
+          style={[styles.pill, { borderColor: '#FF9900' }]}
+          onPress={() => Linking.openURL(amazonUrl)}
+        >
+          <View style={[styles.dot, { backgroundColor: '#FF9900' }]} />
+          <Text style={styles.pillText}>{t.buyOnAmazon}</Text>
+        </Pressable>
+        <Text style={styles.affiliateNote}>{t.affiliateLinkNote}</Text>
+      </View>
     </View>
   );
 }
@@ -56,5 +59,13 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontSize: 12,
     fontWeight: '600',
+  },
+  amazonGroup: {
+    gap: 2,
+  },
+  affiliateNote: {
+    color: theme.colors.subtext,
+    fontSize: 10,
+    marginLeft: 2,
   },
 });
