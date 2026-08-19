@@ -18,7 +18,6 @@ import DonorShoutoutModal from '@/components/DonorShoutoutModal';
 import SavedItemsModal from '@/components/SavedItemsModal';
 import { MUSIC_GENRES, MOVIE_GENRES, BOOK_GENRES, genreLabel } from '@/constants/genres';
 import { DEFAULT_ACCENT_COLOR, isPremiumColor } from '@/constants/colors';
-import { colorForItem } from '@/utils/itemColor';
 import { shareText } from '@/utils/share';
 import { buildAmazonBookLink } from '@/utils/amazonLink';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -262,7 +261,7 @@ export default function HomeScreen() {
           loading={album.loading}
           error={album.error}
           accentColor={accentColor}
-          itemTintColor={album.data ? colorForItem(album.data.id) : undefined}
+          itemTintColor={album.data ? accentColor : undefined}
           isSaved={album.data ? isItemSaved('album', album.data.id) : false}
           onSave={
             album.data
@@ -316,7 +315,7 @@ export default function HomeScreen() {
           loading={movie.loading}
           error={movie.error}
           accentColor={accentColor}
-          itemTintColor={movie.data ? colorForItem(String(movie.data.id)) : undefined}
+          itemTintColor={movie.data ? accentColor : undefined}
           isSaved={movie.data ? isItemSaved('movie', String(movie.data.id)) : false}
           onSave={
             movie.data
@@ -372,7 +371,7 @@ export default function HomeScreen() {
           loading={book.loading}
           error={book.error}
           accentColor={accentColor}
-          itemTintColor={book.data ? colorForItem(book.data.id) : undefined}
+          itemTintColor={book.data ? accentColor : undefined}
           isSaved={book.data ? isItemSaved('book', book.data.id) : false}
           onSave={
             book.data
