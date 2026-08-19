@@ -1,5 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, StatusBar, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Image,
+  StatusBar,
+  Pressable,
+  useWindowDimensions,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/theme';
@@ -66,6 +75,8 @@ function daysUntilNextMonth(): number {
 
 export default function HomeScreen() {
   const { t, language } = useLanguage();
+  const { width: windowWidth } = useWindowDimensions();
+  const isDesktop = windowWidth >= 720;
   const [prefs, setPrefs] = useState<GenrePreferences | null>(null);
   const [album, setAlbum] = useState<AsyncSlice<AlbumPick>>({ data: null, loading: true, error: null });
   const [movie, setMovie] = useState<AsyncSlice<MoviePick>>({ data: null, loading: true, error: null });
@@ -222,6 +233,7 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safe}>
       <StatusBar barStyle="light-content" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={[styles.contentWrap, isDesktop && styles.contentWrapDesktop]}>
         <View style={styles.headingSection}>
           <Text style={styles.heading}>{t.appTitle}</Text>
           <Text style={styles.subheading}>{t.appSubtitle}</Text>
@@ -286,9 +298,18 @@ export default function HomeScreen() {
             <>
               <View style={styles.itemRow}>
                 {album.data.coverUrl ? (
-                  <Image source={{ uri: album.data.coverUrl }} style={styles.coverSquare} />
+                  <Image
+                    source={{ uri: album.data.coverUrl }}
+                    style={[styles.coverSquare, isDesktop && styles.coverSquareDesktop]}
+                  />
                 ) : (
-                  <View style={[styles.coverSquare, styles.coverPlaceholder]} />
+                  <View
+                    style={[
+                      styles.coverSquare,
+                      isDesktop && styles.coverSquareDesktop,
+                      styles.coverPlaceholder,
+                    ]}
+                  />
                 )}
                 <View style={styles.itemText}>
                   <Text style={styles.itemTitle} numberOfLines={2}>
@@ -340,9 +361,18 @@ export default function HomeScreen() {
             <>
               <View style={styles.itemRow}>
                 {movie.data.posterUrl ? (
-                  <Image source={{ uri: movie.data.posterUrl }} style={styles.coverPortrait} />
+                  <Image
+                    source={{ uri: movie.data.posterUrl }}
+                    style={[styles.coverPortrait, isDesktop && styles.coverPortraitDesktop]}
+                  />
                 ) : (
-                  <View style={[styles.coverPortrait, styles.coverPlaceholder]} />
+                  <View
+                    style={[
+                      styles.coverPortrait,
+                      isDesktop && styles.coverPortraitDesktop,
+                      styles.coverPlaceholder,
+                    ]}
+                  />
                 )}
                 <View style={styles.itemText}>
                   <Text style={styles.itemTitle} numberOfLines={2}>
@@ -398,9 +428,18 @@ export default function HomeScreen() {
           {book.data && (
             <View style={styles.itemRow}>
               {book.data.coverUrl ? (
-                <Image source={{ uri: book.data.coverUrl }} style={styles.coverPortrait} />
+                <Image
+                  source={{ uri: book.data.coverUrl }}
+                  style={[styles.coverPortrait, isDesktop && styles.coverPortraitDesktop]}
+                />
               ) : (
-                <View style={[styles.coverPortrait, styles.coverPlaceholder]} />
+                <View
+                  style={[
+                    styles.coverPortrait,
+                    isDesktop && styles.coverPortraitDesktop,
+                    styles.coverPlaceholder,
+                  ]}
+                />
               )}
               <View style={styles.itemText}>
                 <Text style={styles.itemTitle} numberOfLines={2}>
@@ -435,6 +474,7 @@ export default function HomeScreen() {
           <Text style={styles.tipButtonText}>{t.bandSubmissionButton}</Text>
         </Pressable>
         <Text style={styles.amazonDisclosure}>{t.amazonDisclosure}</Text>
+        </View>
       </ScrollView>
 
       {!isPremium && <BannerAd />}
@@ -512,8 +552,16 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
   },
   scrollContent: {
+    flexGrow: 1,
+    alignItems: 'center',
+  },
+  contentWrap: {
+    width: '100%',
     padding: theme.spacing(2),
     paddingBottom: theme.spacing(1),
+  },
+  contentWrapDesktop: {
+    maxWidth: 680,
   },
   headingSection: {
     marginBottom: theme.spacing(2.5),
@@ -583,10 +631,20 @@ const styles = StyleSheet.create({
     height: 88,
     borderRadius: 10,
   },
+  coverSquareDesktop: {
+    width: 152,
+    height: 152,
+    borderRadius: 14,
+  },
   coverPortrait: {
     width: 88,
     height: 132,
     borderRadius: 10,
+  },
+  coverPortraitDesktop: {
+    width: 152,
+    height: 228,
+    borderRadius: 14,
   },
   coverPlaceholder: {
     backgroundColor: theme.colors.chip,
