@@ -38,7 +38,11 @@ function Swatch({
           locked && styles.swatchLocked,
         ]}
       >
-        {locked && <Text style={styles.lockIcon}>🔒</Text>}
+        {locked && (
+          <View style={styles.lockBadge}>
+            <Text style={styles.lockIcon}>🔒</Text>
+          </View>
+        )}
       </View>
       <Text style={styles.swatchLabel}>{color.label[language]}</Text>
     </Pressable>
@@ -165,10 +169,20 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.text,
   },
   swatchLocked: {
-    opacity: 0.45,
+    opacity: 0.75,
+  },
+  lockBadge: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.85)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   lockIcon: {
-    fontSize: 16,
+    fontSize: 13,
   },
   swatchLabel: {
     color: theme.colors.subtext,
