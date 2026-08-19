@@ -351,9 +351,12 @@ export default function HomeScreen() {
                   <Text style={styles.itemSubtitle} numberOfLines={4}>
                     {movie.data.overview || t.noSynopsis}
                   </Text>
-                  <Text style={[styles.ratingText, { color: accentColor }]}>
-                    ⭐ {movie.data.rating.toFixed(1)}
-                  </Text>
+                  <View style={[styles.ratingBadge, { borderColor: accentColor }]}>
+                    <Ionicons name="star" size={13} color={accentColor} />
+                    <Text style={[styles.ratingText, { color: accentColor }]}>
+                      {movie.data.rating.toFixed(1)}
+                    </Text>
+                  </View>
                 </View>
               </View>
               <WatchProviders
@@ -595,16 +598,29 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     color: theme.colors.text,
-    fontSize: 15,
-    fontFamily: theme.fonts.heading,
+    fontSize: 18,
+    fontFamily: theme.fonts.headingExtraBold,
+    marginBottom: 2,
   },
   itemSubtitle: {
     color: theme.colors.subtext,
-    fontSize: 13,
+    fontSize: 14,
+    fontWeight: '500',
+    lineHeight: 20,
+  },
+  ratingBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: 4,
+    marginTop: theme.spacing(0.75),
+    paddingHorizontal: theme.spacing(1),
+    paddingVertical: 3,
+    borderRadius: theme.radius.chip,
+    borderWidth: 1,
   },
   ratingText: {
-    fontSize: 12,
-    fontWeight: '700',
-    marginTop: 2,
+    fontSize: 13,
+    fontWeight: '800',
   },
 });

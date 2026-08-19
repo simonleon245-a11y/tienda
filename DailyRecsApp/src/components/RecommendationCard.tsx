@@ -142,9 +142,11 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing(1.5),
   },
   categoryLabel: {
-    color: theme.colors.text,
-    fontSize: 16,
-    fontFamily: theme.fonts.heading,
+    color: theme.colors.subtext,
+    fontSize: 12,
+    fontFamily: theme.fonts.semiBold,
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
   },
   frequencyLabel: {
     color: theme.colors.subtext,
