@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, StatusBar, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/theme';
 import RecommendationCard from '@/components/RecommendationCard';
 import GenrePickerModal from '@/components/GenrePickerModal';
@@ -230,19 +231,25 @@ export default function HomeScreen() {
               <View style={[styles.colorSwatch, { backgroundColor: accentColor }]} />
               <Text style={styles.colorButtonText}>{t.colorButtonLabel}</Text>
             </Pressable>
-            <Pressable style={styles.colorButton} onPress={() => setLanguagePickerVisible(true)}>
+            <Pressable
+              style={[styles.colorButton, styles.colorButtonMuted]}
+              onPress={() => setLanguagePickerVisible(true)}
+            >
               <Text style={styles.languageFlag}>{language === 'en' ? '🇬🇧' : '🇪🇸'}</Text>
               <Text style={styles.colorButtonText}>{t.languageButtonLabel}</Text>
             </Pressable>
             <Pressable style={styles.colorButton} onPress={() => setSavedItemsVisible(true)}>
-              <Text style={styles.languageFlag}>🔖</Text>
+              <Ionicons name="bookmark" size={16} color={theme.colors.subtext} />
               <Text style={styles.colorButtonText}>
                 {t.savedItemsButtonLabel}
                 {savedItems.length > 0 ? ` (${savedItems.length})` : ''}
               </Text>
             </Pressable>
-            <Pressable style={styles.colorButton} onPress={() => setFeedbackVisible(true)}>
-              <Text style={styles.languageFlag}>💬</Text>
+            <Pressable
+              style={[styles.colorButton, styles.colorButtonMuted]}
+              onPress={() => setFeedbackVisible(true)}
+            >
+              <Ionicons name="chatbubble-ellipses" size={16} color={theme.colors.subtext} />
               <Text style={styles.colorButtonText}>{t.feedbackButtonLabel}</Text>
             </Pressable>
           </View>
@@ -532,6 +539,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing(1.25),
     paddingVertical: theme.spacing(0.75),
     gap: 4,
+  },
+  colorButtonMuted: {
+    opacity: 0.72,
   },
   colorSwatch: {
     width: 20,

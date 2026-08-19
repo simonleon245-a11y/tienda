@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Pressable, Animated } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { theme } from '@/theme';
 import { useLanguage } from '@/i18n/LanguageContext';
 
@@ -62,14 +63,20 @@ export default function RecommendationCard({
       {!loading && !error && (onSave || onShare) && (
         <View style={styles.actionRow}>
           {onSave && (
-            <Pressable onPress={onSave} hitSlop={8}>
+            <Pressable style={styles.actionPressable} onPress={onSave} hitSlop={8}>
+              <Ionicons
+                name={isSaved ? 'bookmark' : 'bookmark-outline'}
+                size={15}
+                color={accentColor}
+              />
               <Text style={[styles.actionText, { color: accentColor }]}>
                 {isSaved ? t.savedAction : t.saveAction}
               </Text>
             </Pressable>
           )}
           {onShare && (
-            <Pressable onPress={onShare} hitSlop={8}>
+            <Pressable style={styles.actionPressable} onPress={onShare} hitSlop={8}>
+              <Ionicons name="share-outline" size={15} color={accentColor} />
               <Text style={[styles.actionText, { color: accentColor }]}>{t.shareAction}</Text>
             </Pressable>
           )}
@@ -103,10 +110,12 @@ export default function RecommendationCard({
           <Text style={styles.chipText}>{genreLabel}</Text>
         </View>
         <View style={styles.footerButtons}>
-          <Pressable style={styles.changeButton} onPress={onReroll} disabled={loading}>
+          <Pressable style={[styles.changeButton, styles.actionPressable]} onPress={onReroll} disabled={loading}>
+            <Ionicons name="shuffle" size={14} color={accentColor} />
             <Text style={[styles.changeButtonText, { color: accentColor }]}>{t.reroll}</Text>
           </Pressable>
-          <Pressable style={styles.changeButton} onPress={onChangeGenre}>
+          <Pressable style={[styles.changeButton, styles.actionPressable]} onPress={onChangeGenre}>
+            <Ionicons name="swap-horizontal" size={14} color={accentColor} />
             <Text style={[styles.changeButtonText, { color: accentColor }]}>
               {t.changeGenre}
             </Text>
@@ -146,6 +155,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     gap: theme.spacing(2),
     marginBottom: theme.spacing(1),
+  },
+  actionPressable: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
   },
   actionText: {
     fontSize: 12,
