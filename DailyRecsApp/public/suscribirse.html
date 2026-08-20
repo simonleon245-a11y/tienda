@@ -197,7 +197,11 @@
       });
       const tokenJson = await tokenRes.json();
       if (!tokenRes.ok) {
-        throw new Error(tokenJson?.error?.reason || 'La tarjeta no pudo ser validada por Wompi.');
+        const messages = tokenJson?.error?.messages;
+        const firstMessage = messages ? Object.values(messages).flat()[0] : undefined;
+        throw new Error(
+          tokenJson?.error?.reason || firstMessage || 'La tarjeta no pudo ser validada por Wompi.'
+        );
       }
       const cardToken = tokenJson.data.id;
 
