@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { verifyWebhookChecksum } from './_lib/wompi';
 import { supabaseAdmin } from './_lib/supabase';
+import { nextChargeDate } from './_lib/dates';
 
 /** Wompi manda un POST acá cada vez que el estado de una transacción
  * cambia. Hay que configurar esta URL en el dashboard de Wompi
@@ -39,7 +40,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const supabase = supabaseAdmin();
   const { data: subscriber } = await supabase
     .from('subscribers')
-    .select('id, status')
+    .select('id, status, plan, next_charge_at')
     .eq('payment_source_id', transaction.payment_source_id)
     .maybeSingle();
 
@@ -54,10 +55,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     if (transaction.status === 'APPROVED' && subscriber.status !== 'canceled') {
-      await supabase.from('subscribers').update({ status: 'active' }).eq('id', subscriber.id);
+      // Si todavía no tenía próxima fecha de cobro (primer cobro, que se
+      // creó en estado "pending" desde subscribe.ts), la fijamos ahora que
+      // Wompi confirma el pago — así el ciclo de facturación arranca desde
+      // la confirmación real, no desde el intento inicial.
+      await supabase
+        .from('subscribers')
+        .update({
+          status: 'active',
+          next_charge_at: subscriber.next_charge_at || nextChargeDate(subscriber.plan),
+        })
+        .eq('id', subscriber.id);
     } else if (
       (transaction.status === 'DECLINED' || transaction.status === 'ERROR') &&
-      subscriber.status === 'active'
+      subscriber.status !== 'canceled'
     ) {
       await supabase.from('subscribers').update({ status: 'past_due' }).eq('id', subscriber.id);
     }

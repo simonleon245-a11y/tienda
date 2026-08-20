@@ -1,13 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { chargePaymentSource } from './_lib/wompi';
 import { supabaseAdmin } from './_lib/supabase';
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-function nextChargeDate(plan: 'monthly' | 'annual'): string {
-  const days = plan === 'monthly' ? 30 : 365;
-  return new Date(Date.now() + days * DAY_MS).toISOString();
-}
+import { nextChargeDate } from './_lib/dates';
 
 /** Se ejecuta una vez al día (configurado en vercel.json -> "crons").
  * Busca a quién le toca cobrar hoy y cobra usando la tarjeta ya guardada

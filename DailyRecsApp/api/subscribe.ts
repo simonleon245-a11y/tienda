@@ -2,19 +2,13 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createPaymentSource, chargePaymentSource } from './_lib/wompi';
 import { supabaseAdmin } from './_lib/supabase';
 import { allowCors } from './_lib/cors';
+import { nextChargeDate } from './_lib/dates';
 
 // Precios fijos en pesos colombianos (Wompi cobra en COP, no en USD).
 // Ajusta estos valores si la tasa de cambio se mueve mucho — no se
 // recalculan solos a propósito, para no depender de otra API externa.
 const MONTHLY_COP = Number(process.env.WOMPI_MONTHLY_AMOUNT_COP || 9900);
 const ANNUAL_COP = Number(process.env.WOMPI_ANNUAL_AMOUNT_COP || 71900);
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-function nextChargeDate(plan: 'monthly' | 'annual'): string {
-  const days = plan === 'monthly' ? 30 : 365;
-  return new Date(Date.now() + days * DAY_MS).toISOString();
-}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (allowCors(req, res)) return;
@@ -57,7 +51,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       paymentSourceId: paymentSource.id,
     });
 
+    // Wompi crea toda transacción nueva en estado PENDING — la confirmación
+    // real (APPROVED/DECLINED) llega después, de forma asíncrona, por el
+    // webhook (ver wompi-webhook.ts). Solo DECLINED/ERROR/VOIDED en este
+    // primer intento son un fallo real; PENDING es el camino normal.
     const approved = transaction.status === 'APPROVED';
+    const failed = transaction.status === 'DECLINED' || transaction.status === 'ERROR' || transaction.status === 'VOIDED';
 
     const { data: subscriber, error: upsertError } = await supabase
       .from('subscribers')
@@ -65,7 +64,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         {
           email,
           plan,
-          status: approved ? 'active' : 'past_due',
+          status: approved ? 'active' : failed ? 'past_due' : 'pending',
           payment_source_id: paymentSource.id,
           amount_in_cents: amountInCents,
           currency: 'COP',
@@ -89,7 +88,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       raw_event: transaction,
     });
 
-    if (!approved) {
+    if (failed) {
       res.status(402).json({
         success: false,
         error: 'El primer cobro no fue aprobado. Intenta con otra tarjeta.',
@@ -100,6 +99,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     res.status(200).json({
       success: true,
+      pending: !approved,
       cancelUrl: `/api/cancel?email=${encodeURIComponent(email)}&token=${subscriber.cancel_token}`,
     });
   } catch (err) {
