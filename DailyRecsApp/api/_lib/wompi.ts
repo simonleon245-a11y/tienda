@@ -110,6 +110,19 @@ export function chargePaymentSource(params: {
   });
 }
 
+/** Consulta el estado actual de una transacción por su id (endpoint
+ * público de Wompi, no necesita llave). Sirve de respaldo cuando el
+ * webhook de confirmación nunca llega — sin esto, un suscriptor que se
+ * queda en "pending" se queda así para siempre. */
+export async function getTransaction(transactionId: string): Promise<WompiTransaction> {
+  const res = await fetch(`${baseUrl()}/transactions/${transactionId}`);
+  const json = await res.json();
+  if (!res.ok) {
+    throw new Error(json?.error?.reason || json?.error?.type || `Wompi respondió ${res.status}`);
+  }
+  return json.data as WompiTransaction;
+}
+
 /** Verifica que un webhook realmente venga de Wompi (no de cualquiera que
  * le pegue a esta URL). Algoritmo exacto de Wompi:
  * sha256(valores_de_signature.properties_concatenados + timestamp + events_secret). */
