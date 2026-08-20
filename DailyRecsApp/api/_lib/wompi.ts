@@ -78,6 +78,19 @@ export function createPaymentSource(params: {
   });
 }
 
+/** Firma de integridad que Wompi exige en cada transacción (para que
+ * nadie pueda alterar el monto/referencia entre que se calcula y que se
+ * cobra): sha256(referencia + monto_en_centavos + moneda + secreto). */
+function integritySignature(reference: string, amountInCents: number, currency: string): string {
+  const secret = process.env.WOMPI_INTEGRITY_SECRET;
+  if (!secret) throw new Error('Falta WOMPI_INTEGRITY_SECRET en las variables de entorno.');
+  const crypto = require('crypto') as typeof import('crypto');
+  return crypto
+    .createHash('sha256')
+    .update(`${reference}${amountInCents}${currency}${secret}`)
+    .digest('hex');
+}
+
 /** Cobra a una fuente de pago ya guardada, sin que la persona tenga que
  * estar presente — así es como se cobra cada mes/año automáticamente. */
 export function chargePaymentSource(params: {
@@ -92,6 +105,7 @@ export function chargePaymentSource(params: {
     customer_email: params.customerEmail,
     payment_method: { installments: 1 },
     reference: params.reference,
+    signature: integritySignature(params.reference, params.amountInCents, 'COP'),
     payment_source_id: params.paymentSourceId,
   });
 }
