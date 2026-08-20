@@ -48,8 +48,15 @@ async function wompiPost<T>(path: string, body: unknown): Promise<T> {
   });
   const json = await res.json();
   if (!res.ok) {
-    const message = json?.error?.reason || json?.error?.type || `Wompi respondió ${res.status}`;
-    throw new Error(message);
+    // Wompi devuelve el detalle real en "reason" (transacciones) o en
+    // "messages" (un objeto campo -> [mensajes], en validaciones como
+    // fuentes de pago) — sin esto, cualquier error de validación se veía
+    // solo como el genérico "INPUT_VALIDATION_ERROR".
+    const messages = json?.error?.messages;
+    const firstMessage = messages ? Object.values(messages).flat()[0] : undefined;
+    const message =
+      json?.error?.reason || firstMessage || json?.error?.type || `Wompi respondió ${res.status}`;
+    throw new Error(String(message));
   }
   return json.data as T;
 }
