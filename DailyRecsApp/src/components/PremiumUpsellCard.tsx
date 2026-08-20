@@ -6,9 +6,10 @@ import { useLanguage } from '@/i18n/LanguageContext';
 interface Props {
   onSubscribe: () => void;
   onAnnual: () => void;
+  onRestore: () => void;
 }
 
-export default function PremiumUpsellCard({ onSubscribe, onAnnual }: Props) {
+export default function PremiumUpsellCard({ onSubscribe, onAnnual, onRestore }: Props) {
   const { t } = useLanguage();
   return (
     <View style={styles.card}>
@@ -24,6 +25,9 @@ export default function PremiumUpsellCard({ onSubscribe, onAnnual }: Props) {
       </Pressable>
       <Pressable onPress={onAnnual}>
         <Text style={styles.annualLink}>{t.annualButton}</Text>
+      </Pressable>
+      <Pressable onPress={onRestore}>
+        <Text style={styles.annualLink}>{t.restoreLink}</Text>
       </Pressable>
     </View>
   );

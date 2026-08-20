@@ -9,6 +9,7 @@ const KEYS = {
   cachePrefix: 'recos:cache:',
   genreChangeCount: 'recos:genreChangeCount',
   isPremium: 'recos:isPremium',
+  premiumEmail: 'recos:premiumEmail',
   rerollPrefix: 'recos:reroll:',
   accentColor: 'recos:accentColor',
   language: 'recos:language',
@@ -76,6 +77,19 @@ export async function getIsPremium(): Promise<boolean> {
 
 export async function setIsPremium(value: boolean): Promise<void> {
   await AsyncStorage.setItem(KEYS.isPremium, value ? 'true' : 'false');
+}
+
+// El correo con el que la persona confirmó su suscripción — no hay
+// cuentas/login, así que esto es lo único que identifica "quién es
+// premium" entre reinicios de la app o si cambia de dispositivo (con el
+// botón "Restaurar compra").
+export async function getPremiumEmail(): Promise<string | null> {
+  return AsyncStorage.getItem(KEYS.premiumEmail);
+}
+
+export async function setPremiumEmail(email: string | null): Promise<void> {
+  if (email) await AsyncStorage.setItem(KEYS.premiumEmail, email);
+  else await AsyncStorage.removeItem(KEYS.premiumEmail);
 }
 
 /** `scopeKey` debe incluir el período (día o mes) para que el contador se

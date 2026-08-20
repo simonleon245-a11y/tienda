@@ -64,6 +64,14 @@ export interface UIStrings {
   feedbackNotConfigured: string;
   feedbackEmptyError: string;
   annualButton: string;
+  restoreLink: string;
+  restoreModalTitle: string;
+  restoreIntro: string;
+  restoreSubmit: string;
+  restoreChecking: string;
+  restoreFound: string;
+  restoreNotFound: string;
+  restoreNetworkError: string;
   annualNotConfigured: string;
   tipButton: string;
   tipNotConfigured: string;
@@ -182,6 +190,15 @@ export const translations: Record<Language, UIStrings> = {
     feedbackNotConfigured: 'El formulario de comentarios todavía no está configurado.',
     feedbackEmptyError: 'Escribe algo antes de enviar.',
     annualButton: 'O ahorra con el plan anual: $22.99 USD/año →',
+    restoreLink: '¿Ya pagaste? Verifica tu correo',
+    restoreModalTitle: 'Verificar suscripción',
+    restoreIntro:
+      'Escribe el correo con el que pagaste — lo revisamos contra tu suscripción real, sin necesidad de cuenta.',
+    restoreSubmit: 'Verificar',
+    restoreChecking: 'Verificando...',
+    restoreFound: '¡Listo! Ya activamos tu Premium en este dispositivo.',
+    restoreNotFound: 'No encontramos una suscripción activa con ese correo.',
+    restoreNetworkError: 'No se pudo verificar. Intenta de nuevo en un momento.',
     annualNotConfigured:
       'El plan anual todavía no está configurado (falta PREMIUM_ANNUAL_CHECKOUT_URL en .env).',
     tipButton: '☕ Invítanos un café',
@@ -301,6 +318,15 @@ export const translations: Record<Language, UIStrings> = {
     feedbackNotConfigured: "The feedback form isn't set up yet.",
     feedbackEmptyError: 'Write something before sending.',
     annualButton: 'Or save with the annual plan: $22.99 USD/year →',
+    restoreLink: 'Already paid? Verify your email',
+    restoreModalTitle: 'Verify subscription',
+    restoreIntro:
+      "Enter the email you paid with — we'll check it against your real subscription, no account needed.",
+    restoreSubmit: 'Verify',
+    restoreChecking: 'Checking...',
+    restoreFound: "You're all set! Premium is now active on this device.",
+    restoreNotFound: "We couldn't find an active subscription with that email.",
+    restoreNetworkError: "Couldn't verify it. Please try again in a moment.",
     annualNotConfigured:
       "The annual plan isn't set up yet (missing PREMIUM_ANNUAL_CHECKOUT_URL in .env).",
     tipButton: '☕ Buy us a coffee',

@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { supabaseAdmin } from './_lib/supabase';
+import { allowCors } from './_lib/cors';
 
 /** Cancela una suscripción. Acepta GET (para que el link de la pantalla
  * de confirmación funcione con un solo clic) y POST. El "token" es el
@@ -7,6 +8,7 @@ import { supabaseAdmin } from './_lib/supabase';
  * token correcto no se puede cancelar, así nadie puede cancelar la
  * suscripción de otra persona solo sabiendo su correo. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (allowCors(req, res)) return;
   if (req.method !== 'GET' && req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
     return;

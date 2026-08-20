@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createPaymentSource, chargePaymentSource } from './_lib/wompi';
 import { supabaseAdmin } from './_lib/supabase';
+import { allowCors } from './_lib/cors';
 
 // Precios fijos en pesos colombianos (Wompi cobra en COP, no en USD).
 // Ajusta estos valores si la tasa de cambio se mueve mucho — no se
@@ -16,6 +17,7 @@ function nextChargeDate(plan: 'monthly' | 'annual'): string {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (allowCors(req, res)) return;
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
     return;

@@ -1,10 +1,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { supabaseAdmin } from './_lib/supabase';
+import { allowCors } from './_lib/cors';
 
 /** La app llama esto (GET /api/premium-status?email=...) para saber si un
  * correo tiene una suscripción activa de verdad, en vez de confiar solo
  * en una bandera guardada en el teléfono. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (allowCors(req, res)) return;
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
     return;

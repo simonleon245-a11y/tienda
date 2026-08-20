@@ -20,6 +20,7 @@ import MusicLinks from '@/components/MusicLinks';
 import BookLinks from '@/components/BookLinks';
 import WatchProviders from '@/components/WatchProviders';
 import PremiumUpsellCard from '@/components/PremiumUpsellCard';
+import RestorePurchaseModal from '@/components/RestorePurchaseModal';
 import ColorPickerModal from '@/components/ColorPickerModal';
 import LanguagePickerModal from '@/components/LanguagePickerModal';
 import FeedbackModal from '@/components/FeedbackModal';
@@ -47,7 +48,8 @@ import { getDailyMovie } from '@/services/tmdb';
 import { getMonthlyBook } from '@/services/googleBooks';
 import { maybeShowInterstitial } from '@/services/ads';
 import {
-  checkPremiumStatus,
+  refreshPremiumStatus,
+  verifyPremiumByEmail,
   openUpgradeFlow,
   openAnnualUpgradeFlow,
   FREE_REROLLS_PER_PERIOD,
@@ -92,6 +94,7 @@ export default function HomeScreen() {
   const [feedbackVisible, setFeedbackVisible] = useState(false);
   const [bandSubmissionVisible, setBandSubmissionVisible] = useState(false);
   const [donorShoutoutVisible, setDonorShoutoutVisible] = useState(false);
+  const [restoreVisible, setRestoreVisible] = useState(false);
   const [savedItems, setSavedItems] = useState<SavedItem[]>([]);
   const [savedItemsVisible, setSavedItemsVisible] = useState(false);
 
@@ -132,7 +135,7 @@ export default function HomeScreen() {
       loadMovie(loaded.movie);
       loadBook(loaded.book);
     });
-    checkPremiumStatus().then(setIsPremium);
+    refreshPremiumStatus(language).then(setIsPremium);
     getAccentColor().then(setAccentColorState);
     getSavedItems().then(setSavedItems);
   }, [loadAlbum, loadMovie, loadBook]);
@@ -169,15 +172,19 @@ export default function HomeScreen() {
   };
 
   const handleUpgradePress = () => {
-    openUpgradeFlow(language).catch((err) =>
-      showAlert(t.subscriptionUnavailableTitle, err.message)
-    );
+    openUpgradeFlow().catch((err) => showAlert(t.subscriptionUnavailableTitle, err.message));
   };
 
   const handleAnnualPress = () => {
-    openAnnualUpgradeFlow(language).catch((err) =>
-      showAlert(t.subscriptionUnavailableTitle, err.message)
-    );
+    openAnnualUpgradeFlow().catch((err) => showAlert(t.subscriptionUnavailableTitle, err.message));
+  };
+
+  const handleRestorePress = () => setRestoreVisible(true);
+
+  const handleRestoreSubmit = async (email: string) => {
+    const result = await verifyPremiumByEmail(email, language);
+    setIsPremium(result.premium);
+    return result;
   };
 
   const handleTipPress = () => {
@@ -463,7 +470,11 @@ export default function HomeScreen() {
         </RecommendationCard>
 
         {!isPremium && (
-          <PremiumUpsellCard onSubscribe={handleUpgradePress} onAnnual={handleAnnualPress} />
+          <PremiumUpsellCard
+            onSubscribe={handleUpgradePress}
+            onAnnual={handleAnnualPress}
+            onRestore={handleRestorePress}
+          />
         )}
 
         <Pressable onPress={handleTipPress} style={styles.tipButton}>
@@ -539,6 +550,12 @@ export default function HomeScreen() {
         visible={donorShoutoutVisible}
         accentColor={accentColor}
         onClose={() => setDonorShoutoutVisible(false)}
+      />
+      <RestorePurchaseModal
+        visible={restoreVisible}
+        accentColor={accentColor}
+        onSubmit={handleRestoreSubmit}
+        onClose={() => setRestoreVisible(false)}
       />
       <SavedItemsModal
         visible={savedItemsVisible}

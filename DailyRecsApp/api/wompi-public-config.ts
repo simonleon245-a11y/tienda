@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { allowCors } from './_lib/cors';
 
 /** La llave pública de Wompi es, por diseño, segura para usar desde el
  * navegador (solo sirve para tokenizar tarjetas, no para cobrar) — pero
@@ -6,6 +7,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
  * archivos estáticos de /public, se la servimos a la página de
  * suscripción a través de este endpoint. */
 export default function handler(req: VercelRequest, res: VercelResponse) {
+  if (allowCors(req, res)) return;
   const env = process.env.WOMPI_ENV === 'production' ? 'production' : 'sandbox';
   res.status(200).json({
     publicKey: process.env.WOMPI_PUBLIC_KEY || '',
