@@ -123,9 +123,13 @@ export function verifyWebhookChecksum(payload: {
   const { properties, timestamp, checksum } = payload.signature;
   let concatenated = '';
   for (const propPath of properties) {
+    // Cada propiedad es una ruta completa dentro de "data", ej.
+    // "transaction.id" -> payload.data.transaction.id. Antes se descartaba
+    // el primer segmento ("transaction"), así que siempre se leía
+    // undefined y la firma nunca coincidía con la real de Wompi.
     const parts = propPath.split('.');
     let value: any = payload.data;
-    for (const part of parts.slice(1)) value = value?.[part];
+    for (const part of parts) value = value?.[part];
     concatenated += String(value ?? '');
   }
   concatenated += String(timestamp) + eventsSecret;
