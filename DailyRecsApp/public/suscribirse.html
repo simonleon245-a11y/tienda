@@ -115,8 +115,8 @@
     </div>
 
     <button type="submit" class="submit" id="submit-btn">Suscribirme</button>
-    <div id="form-msg"></div>
   </form>
+  <div id="form-msg"></div>
 
   <p class="fineprint">
     El pago lo procesa Wompi directamente — nosotros nunca vemos ni guardamos el número de tu tarjeta.
@@ -223,7 +223,7 @@
 
       const cancelLink = location.origin + subscribeJson.cancelUrl;
       const introText = subscribeJson.pending
-        ? 'Recibimos tu pago y lo estamos confirmando con el banco (puede tardar unos minutos). Te avisamos por correo apenas quede activo.'
+        ? 'Recibimos tu pago y lo estamos confirmando con el banco (puede tardar unos minutos). Vuelve a abrir la app en un rato y usa "Restaurar compra" con este correo para ver cuándo quede activo.'
         : '¡Listo! Ya eres Premium.';
       showMsg(
         'success',
