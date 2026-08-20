@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Suscribirme — Recos Diarias</title>
+<link rel="icon" href="/icon-192.png" />
+<style>
+  :root {
+    --bg: #121214;
+    --card: #1b1b1e;
+    --card-border: #2c2c30;
+    --primary: #8b5cf6;
+    --primary-text: #ffffff;
+    --text: #f5f3ff;
+    --subtext: #b9aedd;
+    --error: #f87171;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 420px; margin: 0 auto; padding: 40px 20px 80px; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  p.sub { color: var(--subtext); font-size: 14px; margin: 0 0 24px; }
+  .plan-toggle { display: flex; gap: 10px; margin-bottom: 24px; }
+  .plan-btn {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 12px;
+    color: var(--text);
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .plan-btn.active { border-color: var(--primary); background: rgba(139,92,246,0.12); }
+  .plan-btn small { display: block; color: var(--subtext); margin-top: 2px; }
+  label { display: block; font-size: 13px; color: var(--subtext); margin: 16px 0 6px; }
+  input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-size: 15px;
+  }
+  .row { display: flex; gap: 10px; }
+  .row > div { flex: 1; }
+  button.submit {
+    width: 100%;
+    margin-top: 24px;
+    background: var(--primary);
+    color: var(--primary-text);
+    border: none;
+    border-radius: 999px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  button.submit:disabled { opacity: 0.6; cursor: default; }
+  .msg { margin-top: 16px; font-size: 14px; text-align: center; }
+  .msg.error { color: var(--error); }
+  .msg.success { color: var(--text); background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px; }
+  .msg.success a { color: var(--primary); word-break: break-all; }
+  .fineprint { color: var(--subtext); font-size: 12px; margin-top: 20px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Recos Premium</h1>
+  <p class="sub">Sin anuncios y "ver otra opción" ilimitado.</p>
+
+  <div class="plan-toggle">
+    <div class="plan-btn active" id="plan-monthly" data-plan="monthly">
+      Mensual
+      <small id="monthly-price">…</small>
+    </div>
+    <div class="plan-btn" id="plan-annual" data-plan="annual">
+      Anual
+      <small id="annual-price">…</small>
+    </div>
+  </div>
+
+  <form id="subscribe-form">
+    <label for="email">Correo</label>
+    <input id="email" type="email" required autocomplete="email" />
+
+    <label for="card-holder">Nombre en la tarjeta</label>
+    <input id="card-holder" type="text" required autocomplete="cc-name" />
+
+    <label for="card-number">Número de tarjeta</label>
+    <input id="card-number" type="text" inputmode="numeric" required autocomplete="cc-number" placeholder="4242 4242 4242 4242" />
+
+    <div class="row">
+      <div>
+        <label for="exp-month">Mes</label>
+        <input id="exp-month" type="text" inputmode="numeric" required maxlength="2" placeholder="MM" autocomplete="cc-exp-month" />
+      </div>
+      <div>
+        <label for="exp-year">Año</label>
+        <input id="exp-year" type="text" inputmode="numeric" required maxlength="2" placeholder="AA" autocomplete="cc-exp-year" />
+      </div>
+      <div>
+        <label for="cvc">CVC</label>
+        <input id="cvc" type="text" inputmode="numeric" required maxlength="4" placeholder="123" autocomplete="cc-csc" />
+      </div>
+    </div>
+
+    <button type="submit" class="submit" id="submit-btn">Suscribirme</button>
+    <div id="form-msg"></div>
+  </form>
+
+  <p class="fineprint">
+    El pago lo procesa Wompi directamente — nosotros nunca vemos ni guardamos el número de tu tarjeta.
+    Puedes cancelar cuando quieras desde el link que te damos al confirmar.
+  </p>
+</div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  let plan = params.get('plan') === 'annual' ? 'annual' : 'monthly';
+
+  let config = null;
+  let acceptanceToken = null;
+  let acceptPersonalAuth = null;
+
+  function formatCop(cents) {
+    return (cents).toLocaleString('es-CO') + ' COP';
+  }
+
+  function selectPlan(newPlan) {
+    plan = newPlan;
+    document.getElementById('plan-monthly').classList.toggle('active', plan === 'monthly');
+    document.getElementById('plan-annual').classList.toggle('active', plan === 'annual');
+  }
+  document.getElementById('plan-monthly').addEventListener('click', () => selectPlan('monthly'));
+  document.getElementById('plan-annual').addEventListener('click', () => selectPlan('annual'));
+  selectPlan(plan);
+
+  async function init() {
+    const configRes = await fetch('/api/wompi-public-config');
+    config = await configRes.json();
+    document.getElementById('monthly-price').textContent = formatCop(config.monthlyAmountCop) + '/mes';
+    document.getElementById('annual-price').textContent = formatCop(config.annualAmountCop) + '/año';
+
+    if (!config.publicKey) {
+      showMsg('error', 'Los pagos todavía no están configurados (falta WOMPI_PUBLIC_KEY).');
+      document.getElementById('submit-btn').disabled = true;
+      return;
+    }
+
+    const merchantRes = await fetch(`${config.baseUrl}/merchants/${config.publicKey}`);
+    const merchantJson = await merchantRes.json();
+    acceptanceToken = merchantJson?.data?.presigned_acceptance?.acceptance_token;
+    acceptPersonalAuth = merchantJson?.data?.presigned_personal_data_auth?.acceptance_token;
+  }
+  init();
+
+  function showMsg(type, text) {
+    const el = document.getElementById('form-msg');
+    el.className = 'msg ' + type;
+    el.innerHTML = text;
+  }
+
+  document.getElementById('subscribe-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById('submit-btn');
+    submitBtn.disabled = true;
+    showMsg('', 'Procesando...');
+
+    try {
+      if (!acceptanceToken || !acceptPersonalAuth) {
+        throw new Error('No se pudo cargar la configuración de Wompi. Recarga la página.');
+      }
+
+      const tokenRes = await fetch(`${config.baseUrl}/tokens/cards`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${config.publicKey}`,
+        },
+        body: JSON.stringify({
+          number: document.getElementById('card-number').value.replace(/\s+/g, ''),
+          exp_month: document.getElementById('exp-month').value.padStart(2, '0'),
+          exp_year: document.getElementById('exp-year').value.padStart(2, '0'),
+          cvc: document.getElementById('cvc').value,
+          card_holder: document.getElementById('card-holder').value,
+        }),
+      });
+      const tokenJson = await tokenRes.json();
+      if (!tokenRes.ok) {
+        throw new Error(tokenJson?.error?.reason || 'La tarjeta no pudo ser validada por Wompi.');
+      }
+      const cardToken = tokenJson.data.id;
+
+      const subscribeRes = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: document.getElementById('email').value,
+          plan,
+          cardToken,
+          acceptanceToken,
+          acceptPersonalAuth,
+        }),
+      });
+      const subscribeJson = await subscribeRes.json();
+      if (!subscribeRes.ok || !subscribeJson.success) {
+        throw new Error(subscribeJson.error || 'No se pudo procesar el pago.');
+      }
+
+      const cancelLink = location.origin + subscribeJson.cancelUrl;
+      showMsg(
+        'success',
+        '¡Listo! Ya eres Premium. Guarda este link para cancelar cuando quieras: <br /><a href="' +
+          cancelLink +
+          '">' +
+          cancelLink +
+          '</a>'
+      );
+      document.getElementById('subscribe-form').style.display = 'none';
+    } catch (err) {
+      showMsg('error', err.message);
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

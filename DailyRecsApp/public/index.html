@@ -14,13 +14,22 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Recos Diarias" />
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-65SN5082YE"></script>
+    <!-- Google tag (gtag.js): solo se carga si la persona ya aceptó el
+         aviso de cookies (ver el botón "Aceptar" del banner de AdSense
+         dentro de la app, en BannerAd.web.tsx) — antes cargaba sin
+         ningún consentimiento. -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-65SN5082YE');
+      (function () {
+        if (localStorage.getItem('recos:cookieConsent') !== 'accepted') return;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-65SN5082YE';
+        document.head.appendChild(s);
+        gtag('js', new Date());
+        gtag('config', 'G-65SN5082YE');
+      })();
     </script>
     <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
     <style id="expo-reset">

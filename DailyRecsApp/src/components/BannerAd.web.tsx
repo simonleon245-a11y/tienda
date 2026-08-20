@@ -19,6 +19,31 @@ function ensureAdSenseScript(clientId: string): void {
   document.head.appendChild(script);
 }
 
+const GA_LOADER_ID = 'ga4-loader';
+const GA_MEASUREMENT_ID = 'G-65SN5082YE';
+
+/** El gtag/dataLayer ya está definido en public/index.html (sin cargar el
+ * script hasta que haya consentimiento) — esto solo dispara esa carga
+ * cuando la persona acepta desde este mismo banner, sin esperar a un
+ * refresh de página. */
+function ensureAnalyticsScript(): void {
+  if (document.getElementById(GA_LOADER_ID)) return;
+  const script = document.createElement('script');
+  script.id = GA_LOADER_ID;
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+  document.head.appendChild(script);
+  const w = window as unknown as { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void };
+  w.dataLayer = w.dataLayer || [];
+  w.gtag =
+    w.gtag ||
+    function gtag() {
+      w.dataLayer!.push(arguments);
+    };
+  w.gtag('js', new Date());
+  w.gtag('config', GA_MEASUREMENT_ID);
+}
+
 function pushAdSlot(container: HTMLElement, clientId: string, slotId: string): void {
   if (container.querySelector('ins.adsbygoogle')) return;
   const ins = document.createElement('ins');
@@ -63,6 +88,7 @@ export default function BannerAd() {
 
   useEffect(() => {
     if (consent !== 'accepted') return;
+    ensureAnalyticsScript();
     const { ADSENSE_CLIENT_ID: clientId, ADSENSE_SLOT_ID: slotId } = ENV;
     if (!clientId || !slotId) return;
 
