@@ -59,8 +59,36 @@ export async function getCached<T>(key: string): Promise<T | null> {
   }
 }
 
+async function clearCache(): Promise<void> {
+  try {
+    const allKeys = await AsyncStorage.getAllKeys();
+    const cacheKeys = allKeys.filter((k) => k.startsWith(KEYS.cachePrefix));
+    if (cacheKeys.length > 0) await AsyncStorage.multiRemove(cacheKeys);
+  } catch {
+    // Si ni esto funciona, no hay nada más que hacer.
+  }
+}
+
 export async function setCached<T>(key: string, value: T): Promise<void> {
-  await AsyncStorage.setItem(KEYS.cachePrefix + key, JSON.stringify(value));
+  const fullKey = KEYS.cachePrefix + key;
+  const payload = JSON.stringify(value);
+  try {
+    await AsyncStorage.setItem(fullKey, payload);
+  } catch {
+    // El caché es solo una optimización (evita repetir llamadas a las
+    // APIs) — nunca debe tumbar una recomendación que ya se calculó. En
+    // web, localStorage tiene cupo limitado (~5-10MB) y las claves de
+    // caché de días anteriores nunca se limpiaban solas, así que con el
+    // tiempo se llenaba y todo setItem empezaba a fallar. Si falla por
+    // eso, botamos el caché viejo y reintentamos una vez.
+    await clearCache();
+    try {
+      await AsyncStorage.setItem(fullKey, payload);
+    } catch {
+      // Seguimos sin caché esta vez; no es crítico, la recomendación ya
+      // se calculó y se puede mostrar igual.
+    }
+  }
 }
 
 export async function incrementGenreChangeCount(): Promise<number> {
