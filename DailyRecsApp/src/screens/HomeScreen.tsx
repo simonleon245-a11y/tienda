@@ -493,7 +493,7 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      {!isPremium && <BannerAd />}
+      {!isPremium && (album.data || movie.data || book.data) && <BannerAd />}
 
       <GenrePickerModal
         visible={activePicker === 'album'}
