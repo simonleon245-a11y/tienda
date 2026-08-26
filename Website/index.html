@@ -7,10 +7,13 @@
 <meta name="description" id="meta-description" data-es="Recos Diarias te recomienda un álbum y una película nuevos cada día, y un libro cada mes, según los géneros que elijas. Instálala gratis desde el navegador." data-en="Recos Diarias recommends a new album and movie every day, and a new book every month, based on the genres you pick. Install it free from your browser." content="Recos Diarias te recomienda un álbum y una película nuevos cada día, y un libro cada mes, según los géneros que elijas. Instálala gratis desde el navegador." />
 <link rel="icon" href="assets/favicon.png" />
 <!--
-  AdSense y Google Analytics (gtag.js) solo se cargan si la persona
-  acepta el aviso de cookies al final de la página — ver el bloque
-  "Consentimiento de cookies" cerca del final de este archivo. Antes
-  estos dos scripts cargaban sin condición alguna.
+  Google Analytics (gtag.js) solo se carga si la persona acepta el
+  aviso de cookies al final de la página — ver el bloque
+  "Consentimiento de cookies" cerca del final de este archivo.
+
+  Sin AdSense a propósito: esta landing es solo una página de
+  descarga, no contenido — Google la marcó como "bajo valor". Los
+  anuncios reales van dentro de la app (recos-diarias-app.vercel.app).
 -->
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -373,9 +376,9 @@
 </footer>
 
 <!-- Consentimiento de cookies: hasta que la persona elija, no se carga
-     ni Google Analytics ni AdSense (ver <head> y el script al final). -->
+     Google Analytics (ver <head> y el script al final). -->
 <div id="cookie-banner" class="cookie-banner" hidden>
-  <p data-es="Usamos Google Analytics y Google AdSense, que pueden usar cookies para medir visitas y personalizar anuncios. ¿Los aceptas?" data-en="We use Google Analytics and Google AdSense, which may use cookies to measure visits and personalize ads. Do you accept?">Usamos Google Analytics y Google AdSense, que pueden usar cookies para medir visitas y personalizar anuncios. ¿Los aceptas?</p>
+  <p data-es="Usamos Google Analytics, que puede usar cookies para medir visitas. ¿Lo aceptas?" data-en="We use Google Analytics, which may use cookies to measure visits. Do you accept?">Usamos Google Analytics, que puede usar cookies para medir visitas. ¿Lo aceptas?</p>
   <div class="cookie-banner-actions">
     <button id="cookie-reject" class="btn btn-ghost" type="button" data-es="Rechazar" data-en="Reject">Rechazar</button>
     <button id="cookie-accept" class="btn btn-primary" type="button" data-es="Aceptar" data-en="Accept">Aceptar</button>
@@ -436,32 +439,25 @@
     }
   });
 
-  // Consentimiento de cookies: Analytics y AdSense no cargan hasta que
-  // la persona toque "Aceptar" aquí. Si ya eligió antes (aceptar o
-  // rechazar), no se le vuelve a preguntar.
+  // Consentimiento de cookies: Analytics no carga hasta que la persona
+  // toque "Aceptar" aquí. Si ya eligió antes (aceptar o rechazar), no
+  // se le vuelve a preguntar.
   const GA_MEASUREMENT_ID = "G-3G1MXY1LD7";
-  const ADSENSE_CLIENT_ID = "ca-pub-9527002715948451";
 
-  function loadAnalyticsAndAds() {
+  function loadAnalytics() {
     const gaScript = document.createElement("script");
     gaScript.async = true;
     gaScript.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_MEASUREMENT_ID;
     document.head.appendChild(gaScript);
     gtag("js", new Date());
     gtag("config", GA_MEASUREMENT_ID);
-
-    const adsScript = document.createElement("script");
-    adsScript.async = true;
-    adsScript.crossOrigin = "anonymous";
-    adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + ADSENSE_CLIENT_ID;
-    document.head.appendChild(adsScript);
   }
 
   const cookieBanner = document.getElementById("cookie-banner");
   const cookieConsent = localStorage.getItem("recos:cookieConsent");
 
   if (cookieConsent === "accepted") {
-    loadAnalyticsAndAds();
+    loadAnalytics();
   } else if (cookieConsent !== "rejected") {
     cookieBanner.hidden = false;
   }
@@ -469,7 +465,7 @@
   document.getElementById("cookie-accept").addEventListener("click", function () {
     localStorage.setItem("recos:cookieConsent", "accepted");
     cookieBanner.hidden = true;
-    loadAnalyticsAndAds();
+    loadAnalytics();
   });
 
   document.getElementById("cookie-reject").addEventListener("click", function () {
